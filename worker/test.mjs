@@ -32,7 +32,7 @@ r = await call('/api/admin/content', { token: token + 'x' }); t('tampered token 
 r = await call('/api/admin/content', { token }); const c = await r.json(); t('read content from repo', r.status === 200 && !!c.files['quests.json']);
 r = await call('/api/admin/content', { token, origin: 'https://evil.example' }); t('CORS: foreign origin gets no allow header', !r.headers.get('access-control-allow-origin'));
 
-const goodBundle = { quests: { q_t1: { id: 'q_t1', title: 'מבחן', giver: 'uncle', summary: 's', offer: [{ who: 'uncle', text: '{f:תוכלי|m:תוכל} לעזור?' }], steps: [{ type: 'talk', npc: 'grandma', text: 'לדבר עם סבתא', lines: [{ who: 'grandma', text: 'היי' }] }], reward: { coins: 20, xp: 20, shard: { id: 'shard_t1', title: 'ט', story: 'ס' } } } } };
+const goodBundle = { quests: { q_t1: { id: 'q_t1', title: 'מבחן', giver: 'anat', summary: 's', offer: [{ who: 'anat', text: '{f:תוכלי|m:תוכל} לעזור?' }], steps: [{ type: 'talk', npc: 'yitzhak', text: 'לדבר עם אבא', lines: [{ who: 'yitzhak', text: 'היי' }] }], reward: { coins: 20, xp: 20, shard: { id: 'shard_t1', title: 'ט', story: 'ס' } } } } };
 anthropicReply = '```json\n' + JSON.stringify(goodBundle) + '\n```';
 r = await call('/api/admin/generate', { method: 'POST', token, body: { story: 'סיפור מבחן שמכיל מספיק טקסט כדי לעבור', context: {} } }); let g = await r.json();
 t('generate: valid bundle accepted', r.status === 200 && g.errors.length === 0, JSON.stringify(g.errors));
