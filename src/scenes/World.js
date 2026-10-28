@@ -74,7 +74,7 @@ export default class World extends Phaser.Scene {
   loadMap(id, tx, ty, dir = 0) {
     const map = content.maps[id]; if (!map) return;
     this.clearWorld();
-    this.map = map; S.state.map = id;
+    this.map = map; S.state.map = id; this.lastChar = S.state.activeChar;
     const W = map.tiles[0].length, H = map.tiles.length;
     this.mapW = W; this.mapH = H;
     const key = 'map_' + id;
@@ -133,6 +133,7 @@ export default class World extends Phaser.Scene {
   }
   addNpc(n) {
     const def = content.npcs[n.id]; if (!def) return;
+    if (def.character && def.character === S.state.activeChar) return;     // you are this person right now
     const key = characterTexture(this, 'n_' + n.id, def.look);
     const spr = this.add.sprite(n.x * TILE + 8, n.y * TILE + 15, key, 0).setOrigin(0.5, 1);
     spr.play(`${key}_idle${n.dir || 0}`);
@@ -408,6 +409,8 @@ export default class World extends Phaser.Scene {
 
   refreshPlayerLook() {
     if (!this.player) return;
+    if (this.lastChar && this.lastChar !== S.state.activeChar) { this.lastChar = S.state.activeChar; this.loadMap(S.state.map, S.state.x, S.state.y, this.player.dir); return; }
+    this.lastChar = S.state.activeChar;
     const look = equippedLook(S.state.activeChar);
     this.playerKey = characterTexture(this, 'p_' + S.state.activeChar + '_' + JSON.stringify(look), look);
     this.player.setTexture(this.playerKey, 0);

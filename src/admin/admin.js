@@ -16,7 +16,9 @@ let session = (() => { try { return JSON.parse(sessionStorage.getItem(SESSION_KE
 let tab = 'family', sel = { kind: 'characters', id: null }, mapSel = 'house', gen = null, placing = null, busy = '';
 const app = document.getElementById('app');
 
-const saveDraft = () => { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch { /* quota */ } };
+// NPC twins of playable characters (npc.character) always mirror the character's name and look
+function syncTwins() { for (const n of Object.values(draft.npcs)) { const c = n.character && draft.characters[n.character]; if (c) { n.name = c.name; n.look = JSON.parse(JSON.stringify(c.look)); } } }
+const saveDraft = () => { syncTwins(); try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch { /* quota */ } };
 function h(tag, attrs, ...kids) {
   const e = document.createElement(tag);
   for (const [k, v] of Object.entries(attrs || {})) {
@@ -104,7 +106,7 @@ function personEditor(kind, id) {
   const color = (label, key) => { const i = h('input', { type: 'color', value: p.look[key] || '#000000' }); i.addEventListener('input', () => { p.look[key] = i.value; upd(); }); return h('div', {}, h('label', {}, label), i); };
   const hatOn = h('input', { type: 'checkbox', checked: !!p.look.hat }); hatOn.addEventListener('change', () => { p.look.hat = hatOn.checked ? (p.look.hat || '#e84b4b') : null; upd(); render(); });
   card.append(h('h3', {}, 'מראה (פיקסלים)'), prev, h('div', { class: 'grid4' }, color('עור', 'skin'), color('שיער', 'hair'), color('חולצה', 'shirt'), color('מכנסיים', 'pants')),
-    h('div', { class: 'grid4' }, sct('סגנון שיער', 'hairStyle', HAIR_STYLES.map((x) => [x, { short: 'קצר', long: 'ארוך', curly: 'מתולתל', bun: 'אסוף', bald: 'קירח' }[x]]), p.look, upd), sct('אביזר', 'accessory', ACCESSORIES.map((x) => [x, { none: 'ללא', glasses: 'משקפיים', beard: 'זקן' }[x]]), p.look, upd), h('div', {}, h('label', {}, 'כובע'), hatOn), p.look.hat ? color('צבע כובע', 'hat') : h('div')));
+    h('div', { class: 'grid4' }, sct('סגנון שיער', 'hairStyle', HAIR_STYLES.map((x) => [x, { short: 'קצר', long: 'ארוך', curly: 'מתולתל', bun: 'אסוף', bald: 'קירח' }[x]]), p.look, upd), sct('אביזר', 'accessory', ACCESSORIES.map((x) => [x, { none: 'ללא', glasses: 'משקפיים', beard: 'זקן', both: 'משקפיים וזקן' }[x]]), p.look, upd), h('div', {}, h('label', {}, 'כובע'), hatOn), p.look.hat ? color('צבע כובע', 'hat') : h('div')));
   // photo -> look
   const file = h('input', { type: 'file', accept: 'image/*' });
   const btn = h('button', { class: 'btn alt', onclick: async () => {

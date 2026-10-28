@@ -179,14 +179,14 @@ export function drawCharFrame(ctx, ox, oy, dir, f, look) {
   if (dir === 0) {            // facing front
     PX('#1a1020', 6, 5 + hy, 1, 2); PX('#1a1020', 9, 5 + hy, 1, 2); PX('#fff', 6, 5 + hy, 1, 1); PX('#fff', 9, 5 + hy, 1, 1);
     PX('#d9786a', 7, 7 + hy, 2, 1);
-    if (o.accessory === 'glasses') { PX('#222', 5, 4 + hy, 3, 1); PX('#222', 8, 4 + hy, 3, 1); PX('#222', 5, 7 + hy - 1, 3, 1); PX('#222', 8, 7 + hy - 1, 3, 1); PX('#222', 5, 4 + hy, 1, 3); PX('#222', 10, 4 + hy, 1, 3); PX('#222', 7, 4 + hy, 2, 1); }
-    if (o.accessory === 'beard') { PX('#3a2a20', 4, 6 + hy, 8, 3); PX('#d9786a', 7, 7 + hy, 2, 1); PX('#3a2a20', 5, 9 + hy - 1, 6, 1); }
+    if (o.accessory === 'glasses' || o.accessory === 'both') { PX('#222', 5, 4 + hy, 3, 1); PX('#222', 8, 4 + hy, 3, 1); PX('#222', 5, 7 + hy - 1, 3, 1); PX('#222', 8, 7 + hy - 1, 3, 1); PX('#222', 5, 4 + hy, 1, 3); PX('#222', 10, 4 + hy, 1, 3); PX('#222', 7, 4 + hy, 2, 1); }
+    if (o.accessory === 'beard' || o.accessory === 'both') { PX('#3a2a20', 4, 6 + hy, 8, 3); PX('#d9786a', 7, 7 + hy, 2, 1); PX('#3a2a20', 5, 9 + hy - 1, 6, 1); }
   } else if (dir === 1) {     // back
     PX(o.hair, 4, 1 + hy, 8, 7); PX(o.hair, 5, 0 + hy, 6, 1); PX(hairD, 5, 7 + hy, 6, 1);
   } else {                    // side
     PX('#1a1020', 5, 5 + hy, 1, 2); PX('#fff', 5, 5 + hy, 1, 1); PX(skinD, 4, 7 + hy, 1, 1);
-    if (o.accessory === 'glasses') { PX('#222', 4, 4 + hy, 3, 1); PX('#222', 4, 4 + hy, 1, 3); }
-    if (o.accessory === 'beard') { PX('#3a2a20', 4, 6 + hy, 3, 3); }
+    if (o.accessory === 'glasses' || o.accessory === 'both') { PX('#222', 4, 4 + hy, 3, 1); PX('#222', 4, 4 + hy, 1, 3); }
+    if (o.accessory === 'beard' || o.accessory === 'both') { PX('#3a2a20', 4, 6 + hy, 3, 3); }
   }
   // hair
   const hs = o.hairStyle;

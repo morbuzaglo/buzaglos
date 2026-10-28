@@ -143,26 +143,52 @@
   ],
   "npcs": [
    {
-    "id": "grandma",
+    "id": "anat",
     "x": 5,
     "y": 8,
     "dir": 0
    },
    {
-    "id": "uncle",
+    "id": "yitzhak",
     "x": 14,
     "y": 8,
     "dir": 2
+   },
+   {
+    "id": "eden",
+    "x": 13,
+    "y": 5,
+    "dir": 0
+   },
+   {
+    "id": "maayan",
+    "x": 10,
+    "y": 11,
+    "dir": 0
+   },
+   {
+    "id": "tohar",
+    "x": 4,
+    "y": 11,
+    "dir": 0
    }
   ],
   "pickups": [
    {
-    "id": "remote_pickup",
-    "item": "remote",
-    "x": 17,
+    "id": "boots_pk",
+    "item": "boots",
+    "x": 3,
+    "y": 12,
+    "hidden": true,
+    "needsQuest": "q_cat"
+   },
+   {
+    "id": "cat_hat_pk",
+    "item": "cat_hat",
+    "x": 16,
     "y": 9,
     "hidden": true,
-    "needsQuest": "q_remote"
+    "needsQuest": "q_cat"
    }
   ],
   "doors": [
@@ -365,25 +391,55 @@
   ],
   "npcs": [
    {
-    "id": "aunt",
-    "x": 17,
+    "id": "rinat",
+    "x": 12,
     "y": 11,
-    "dir": 2
+    "dir": 0
    },
    {
-    "id": "cousin",
-    "x": 30,
+    "id": "yoav",
+    "x": 22,
+    "y": 14,
+    "dir": 0
+   },
+   {
+    "id": "terry",
+    "x": 12,
     "y": 14,
     "dir": 1
    },
    {
-    "id": "neighbor",
-    "x": 12,
-    "y": 11,
-    "dir": 0
+    "id": "mordechai",
+    "x": 30,
+    "y": 14,
+    "dir": 1
    }
   ],
-  "pickups": [],
+  "pickups": [
+   {
+    "id": "cloth1",
+    "item": "cloth",
+    "x": 10,
+    "y": 11,
+    "needsQuest": "q_barcelona"
+   },
+   {
+    "id": "cloth2",
+    "item": "cloth",
+    "x": 22,
+    "y": 12,
+    "hidden": true,
+    "needsQuest": "q_barcelona"
+   },
+   {
+    "id": "cloth3",
+    "item": "cloth",
+    "x": 34,
+    "y": 11,
+    "hidden": true,
+    "needsQuest": "q_barcelona"
+   }
+  ],
   "doors": [
    {
     "x": 7,
@@ -514,7 +570,16 @@
     "dir": 0
    }
   ],
-  "pickups": [],
+  "pickups": [
+   {
+    "id": "phone_pk",
+    "item": "phone_anat",
+    "x": 12,
+    "y": 6,
+    "hidden": true,
+    "needsQuest": "q_phone"
+   }
+  ],
   "doors": [
    {
     "x": 7,
@@ -635,36 +700,8 @@
     }
    }
   ],
-  "npcs": [
-   {
-    "id": "lifeguard",
-    "x": 10,
-    "y": 8,
-    "dir": 0
-   }
-  ],
-  "pickups": [
-   {
-    "id": "shell1",
-    "item": "shell",
-    "x": 5,
-    "y": 6
-   },
-   {
-    "id": "shell2",
-    "item": "shell",
-    "x": 18,
-    "y": 13,
-    "hidden": true
-   },
-   {
-    "id": "shell3",
-    "item": "shell",
-    "x": 27,
-    "y": 11,
-    "hidden": true
-   }
-  ],
+  "npcs": [],
+  "pickups": [],
   "doors": [
    {
     "x": 0,

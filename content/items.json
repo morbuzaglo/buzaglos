@@ -1,9 +1,10 @@
 {
-  "remote": { "id": "remote", "name": "השלט של הטלוויזיה", "type": "quest", "icon": "remote", "color": "#e84b4b", "desc": "אבד בפעם המאה." },
+  "phone_anat": { "id": "phone_anat", "name": "הטלפון של אמא", "type": "quest", "icon": "phone", "color": "#e84b4b", "desc": "נשכח שוב בחנות." },
+  "cloth": { "id": "cloth", "name": "בגד לקשירת מזוודות", "type": "quest", "icon": "shirt", "color": "#e8a13a", "desc": "יקשור את המזוודה לגג הרכב." },
+  "boots": { "id": "boots", "name": "מגפיים", "type": "quest", "icon": "shoe", "color": "#6b4423", "desc": "חצי מהתחפושת של החתול במגפיים." },
+  "cat_hat": { "id": "cat_hat", "name": "כובע חתול", "type": "quest", "icon": "hat", "color": "#c9892b", "desc": "החצי השני של התחפושת." },
   "snack": { "id": "snack", "name": "נשנוש", "type": "consumable", "icon": "food", "color": "#ffd23f", "price": 8, "desc": "מעלה את מצב הרוח. +10 ניסיון כשאוכלים.", "use": { "xp": 10 } },
   "juice": { "id": "juice", "name": "מיץ סחוט", "type": "consumable", "icon": "potion", "color": "#ff8a3d", "price": 15, "desc": "מאפס את זמן הטעינה של היכולת.", "use": { "resetCooldown": true } },
-  "shell": { "id": "shell", "name": "צדף", "type": "collectible", "icon": "gem", "color": "#ff9aa8", "desc": "נוצץ, חולי וצדפי." },
-  "toast": { "id": "toast", "name": "טוסט מושלם", "type": "quest", "icon": "food", "color": "#d9a05b", "desc": "זהוב ופריך. בניגוד לקודם." },
   "album_key": { "id": "album_key", "name": "מפתח עליית הגג", "type": "key", "icon": "key", "color": "#ffd23f", "desc": "פותח את עליית הגג." },
   "cap_red": { "id": "cap_red", "name": "כובע אדום", "type": "outfit", "icon": "hat", "color": "#e84b4b", "price": 25, "look": { "hat": "#e84b4b" }, "desc": "כובע ספורטיבי אדום." },
   "shirt_gold": { "id": "shirt_gold", "name": "חולצה מוזהבת", "type": "outfit", "icon": "shirt", "color": "#ffd23f", "price": 40, "look": { "shirt": "#e8b33a" }, "desc": "נוצצת. נוצצת מאוד." },

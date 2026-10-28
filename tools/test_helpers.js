@@ -56,3 +56,39 @@ Object.assign(T, {
   },
 });
 1;
+
+Object.assign(T, {
+  go: async (map, x, y) => { T.tp(map, x, y); await T.sleep(900); },
+  playQuiz: async () => { for (let k = 0; k < 8; k++) { const c = document.querySelector('.mg .choice'); if (!c) { await T.sleep(300); if (!document.querySelector('.mg')) break; continue; } c.click(); await T.sleep(900); } return 1; },
+  doAccept: async (map, npc) => { await T.go(map, 8, 9); T.near(npc); T.w().onA(); await T.accept(); },
+  playthrough2: async (log) => {
+    const L = (m) => log.push(m + ' :: ' + T.state());
+    const talkMg = async (npc, clicks, game) => { T.near(npc); T.w().onA(); await T.sleep(500); await T.click(clicks); await T.sleep(500); if (game === 'quiz') await T.playQuiz(); if (game === 'timing') await T.playTiming(); if (game === 'memory') await T.playMemory(); if (game === 'reaction') await T.playReaction(); await T.sleep(1500); await T.rewardFlow(); };
+    // japan (yitzhak, house)
+    await T.doAccept('house', 'yitzhak'); await talkMg('yitzhak', 2, 'quiz'); L('japan');
+    // phone (anat)
+    await T.doAccept('house', 'anat'); await T.go('market', 7, 8); T.at('market', 12, 6); await T.sleep(1200); await T.go('house', 8, 9); await T.talk('anat', 6); await T.rewardFlow(); L('phone');
+    // barcelona
+    await T.doAccept('house', 'anat'); await T.go('street', 9, 11); for (const [x, y] of [[10, 11], [22, 12], [34, 11]]) { T.at('street', x, y); await T.sleep(1000); }
+    await T.go('house', 8, 9); await talkMg('anat', 2, 'timing'); await T.talk('anat', 4); await T.rewardFlow(); L('barcelona');
+    // cruise
+    await T.doAccept('house', 'anat'); await talkMg('anat', 1, 'quiz'); L('cruise');
+    // dinner
+    await T.doAccept('house', 'anat'); await talkMg('anat', 2, 'memory'); await T.talk('yitzhak', 6); await T.rewardFlow(); L('dinner');
+    // pikanto + seven (tohar)
+    await T.doAccept('house', 'tohar'); await talkMg('tohar', 3, 'quiz'); L('pikanto');
+    await T.doAccept('house', 'tohar'); await talkMg('tohar', 2, 'reaction'); L('seven');
+    // terry (eden)
+    await T.doAccept('house', 'eden'); await T.go('street', 11, 14); await T.talk('terry', 8); await T.go('house', 8, 9); await talkMg('eden', 0, 'quiz'); L('terry');
+    // cat (maayan)
+    await T.doAccept('house', 'maayan'); for (const [x, y] of [[3, 12], [16, 9]]) { T.at('house', x, y); await T.sleep(1000); } await T.talk('eden', 8); await T.rewardFlow(); L('cat');
+    // rinat + yoav (street)
+    await T.doAccept('street', 'rinat'); await talkMg('rinat', 2, 'quiz'); L('rinat');
+    await T.go('street', 21, 13); T.near('yoav'); T.w().onA(); await T.accept(); await talkMg('yoav', 2, 'reaction'); L('yoav');
+    // ending
+    await T.go('house', 19, 3); T.nearProp('attic_door'); T.w().onA(); await T.sleep(500); await T.click(4); await T.sleep(1500);
+    T.nearProp('album_chest'); T.w().onA(); await T.sleep(500); await T.click(12); await T.sleep(800);
+    return 'done';
+  },
+});
+1;

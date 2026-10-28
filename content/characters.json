@@ -1,66 +1,204 @@
 {
-  "mordechai": {
-    "name": "מרדכי", "role": "אח", "gender": "m", "placeholder": true,
-    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
-    "look": { "skin": "#f1c9a0", "hair": "#3a2415", "hairStyle": "short", "shirt": "#3a7bd5", "pants": "#2c3e72", "accessory": "none" },
-    "ability": { "type": "fix", "name": "תיקון מהיר", "desc": "מתקן דברים שבורים בקרבת מקום.", "cooldown": 5 },
-    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
-    "theme": "#3a7bd5"
+ "mordechai": {
+  "name": "מרדכי",
+  "role": "אח",
+  "gender": "m",
+  "bio": "מהנדס מכונות, מצייר ומנגן בגיטרה ובפסנתר, שר ומדפיס בתלת-מימד. אובססיבי לסרטי דיסני הישנים (יודע את כל השירים) ולסדרה ״יומני הערפד״. נחמד, עוזר ומייעץ לכולם, ואוהב לתת מתנות שהכין בעצמו.",
+  "relations": "תאום של עדן (החברים הכי טובים). מאוד קרוב לאמא אנט. ״מאבק״ על מי האהוב על אמא עם טוהר.",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#2b1a0e",
+   "hairStyle": "short",
+   "shirt": "#f4f4f4",
+   "pants": "#4a6a9a",
+   "accessory": "none"
   },
-  "eden": {
-    "name": "עדן", "role": "אחות", "gender": "f", "placeholder": true,
-    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
-    "look": { "skin": "#f1c9a0", "hair": "#3a2415", "hairStyle": "long", "shirt": "#3fae6b", "pants": "#2e2e48", "accessory": "none" },
-    "ability": { "type": "sniff", "name": "חוש גילוי", "desc": "חושף חפצים נסתרים בקרבת מקום.", "cooldown": 8 },
-    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
-    "theme": "#3fae6b"
+  "ability": {
+   "type": "fix",
+   "name": "הנדסה",
+   "desc": "מתקן ובונה דברים בקרבת מקום.",
+   "cooldown": 5
   },
-  "maayan": {
-    "name": "מעיין", "role": "אחות", "gender": "f", "placeholder": true,
-    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
-    "look": { "skin": "#e8b98a", "hair": "#7a2d1c", "hairStyle": "long", "shirt": "#e8a13a", "pants": "#3d3a66", "accessory": "none" },
-    "ability": { "type": "charm", "name": "קסם אישי", "desc": "אנשים בקרבת מקום נפתחים ונותנים טיפ.", "cooldown": 6 },
-    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
-    "theme": "#e8a13a"
+  "strength": "בונה ומתקן כל דבר",
+  "weakness": "לא יכול לספר על העבודה (ביטחוני)",
+  "catchphrase": "אני יכול לבנות לך את זה.",
+  "theme": "#f4f4f4"
+ },
+ "eden": {
+  "name": "עדן",
+  "role": "אחות (תאומה של מרדכי)",
+  "gender": "f",
+  "bio": "עוזרת בחברה פיננסית גדולה ומנהלת את המשרד בישראל. חמודה, לא פראיירית, פלפלית, אוהבת שהכול מתוקתק ומסודר, אוהבת פילאטיס וטניס ואוהבת לעצב את הבית. תמיד יש לה מה להעיר בבית של ההורים.",
+  "relations": "החברה הכי טובה של מרדכי. חולקת בגדים עם מעיין. בן זוגה טרי (מאוסטרליה) בקשר מרחוק.",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#3a2415",
+   "hairStyle": "long",
+   "shirt": "#f6f6f6",
+   "pants": "#4a6a9a",
+   "accessory": "none"
   },
-  "rinat": {
-    "name": "רינת", "role": "אחות", "gender": "f", "placeholder": true,
-    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
-    "look": { "skin": "#d9a679", "hair": "#1c1c28", "hairStyle": "bun", "shirt": "#8556c4", "pants": "#3a2d5c", "accessory": "none" },
-    "ability": { "type": "dash", "name": "ספרינט", "desc": "פרץ של מהירות.", "cooldown": 4 },
-    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
-    "theme": "#8556c4"
+  "ability": {
+   "type": "sniff",
+   "name": "עין של עדן",
+   "desc": "מזהה מה שלא במקום ומגלה חפצים נסתרים.",
+   "cooldown": 7
   },
-  "tohar": {
-    "name": "טוהר", "role": "אחות", "gender": "f", "placeholder": true,
-    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
-    "look": { "skin": "#f6d3b0", "hair": "#c9892b", "hairStyle": "curly", "shirt": "#e84b4b", "pants": "#2c3e72", "accessory": "glasses" },
-    "ability": { "type": "sniff", "name": "אף של מזל", "desc": "חושף חפצים נסתרים (טעינה קצרה יותר).", "cooldown": 6 },
-    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
-    "theme": "#e84b4b"
+  "strength": "סדר ועין חדה",
+  "weakness": "תמיד יש לה מה להעיר",
+  "catchphrase": "מעעיייייין!",
+  "theme": "#f6f6f6"
+ },
+ "maayan": {
+  "name": "מעיין",
+  "role": "אחות",
+  "gender": "f",
+  "bio": "מתכנתת (בעיקר פרונטאנד) שמחליפה סטארטאפ כל שנה-שנתיים. משחקת טניס, אוהבת לרוץ, חמודה ותמיד עוזרת. אוהבת לצחוק, לשתות קוקטייל מדי פעם ולספר חידות של חכמים.",
+  "relations": "חולקת בגדים עם עדן. גרה לבד ברמת גן.",
+  "look": {
+   "skin": "#a8774e",
+   "hair": "#14141a",
+   "hairStyle": "long",
+   "shirt": "#1c1c22",
+   "pants": "#4a6a9a",
+   "accessory": "none"
   },
-  "yoav": {
-    "name": "יואב", "role": "אח", "gender": "m", "placeholder": true,
-    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
-    "look": { "skin": "#f1c9a0", "hair": "#4a2c17", "hairStyle": "short", "shirt": "#2fa39a", "pants": "#333a55", "accessory": "none", "hat": "#222233" },
-    "ability": { "type": "dash", "name": "מהירות הבזק", "desc": "פרץ של מהירות.", "cooldown": 4 },
-    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
-    "theme": "#2fa39a"
+  "ability": {
+   "type": "dash",
+   "name": "ריצת בוקר",
+   "desc": "פרץ של מהירות.",
+   "cooldown": 4
   },
-  "anat": {
-    "name": "אנט", "role": "אמא", "gender": "f", "placeholder": true,
-    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
-    "look": { "skin": "#f1c9a0", "hair": "#5a3418", "hairStyle": "long", "shirt": "#c2417c", "pants": "#3d3a66", "accessory": "none" },
-    "ability": { "type": "charm", "name": "מבט של אמא", "desc": "אנשים בקרבת מקום נפתחים ונותנים טיפ.", "cooldown": 6 },
-    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
-    "theme": "#c2417c"
+  "strength": "ריצה, טניס ופתרון חידות",
+  "weakness": "מפתיעה את כולם",
+  "catchphrase": "יש לי חידה בשבילך.",
+  "theme": "#1c1c22"
+ },
+ "rinat": {
+  "name": "רינת",
+  "role": "אחות",
+  "gender": "f",
+  "bio": "עובדת סוציאלית ואמא לאביגיל ולאדל-שירה, נשואה לאליאור. אמא מעולה שמתקתקת עניינים, מסדרת את הבנות ומכינה אוכל לבעלה. לאחרונה מתעניינת בפוליטיקה.",
+  "relations": "החברה הכי טובה של טוהר מאז שהיו קטנות (״אבוז׳יבו״ ו״אבוז׳יבה״).",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#3a2415",
+   "hairStyle": "bald",
+   "shirt": "#7a5ca8",
+   "pants": "#3a2d5c",
+   "accessory": "none",
+   "hat": "#d8c8f0"
   },
-  "yitzhak": {
-    "name": "יצחק", "role": "אבא", "gender": "m", "placeholder": true,
-    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
-    "look": { "skin": "#e8b98a", "hair": "#2b2b2b", "hairStyle": "short", "shirt": "#4a6fa5", "pants": "#4a3b2c", "accessory": "glasses" },
-    "ability": { "type": "fix", "name": "תיקון של אבא", "desc": "מתקן דברים שבורים בקרבת מקום.", "cooldown": 5 },
-    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
-    "theme": "#4a6fa5"
-  }
+  "ability": {
+   "type": "charm",
+   "name": "אמא מתקתקת",
+   "desc": "מסדרת את כולם: אנשים בקרבת מקום נפתחים ונותנים טיפ.",
+   "cooldown": 6
+  },
+  "strength": "מתקתקת עניינים",
+  "weakness": "",
+  "catchphrase": "אבוז׳יבה!",
+  "theme": "#7a5ca8"
+ },
+ "tohar": {
+  "name": "טוהר",
+  "role": "אחות",
+  "gender": "f",
+  "bio": "סטודנטית לסיעוד ועובדת במוקד טלפוני של חברה רפואית. מצחיקה, קלילה, דואגת לכולם, חוגגת ימי הולדת בזמן ומארגנת מפגשים. חייבת בית מסודר, גם אם זה אומר לדחוף דברים למקומות שאף אחד לא יודע איפה הם.",
+  "relations": "החברה הכי טובה של רינת. מתייעצת הרבה עם מרדכי. ״מאבק״ עם מרדכי על מי האהוב על אמא.",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#4a2c17",
+   "hairStyle": "bun",
+   "shirt": "#f6f6f6",
+   "pants": "#4a6a9a",
+   "accessory": "none"
+  },
+  "ability": {
+   "type": "dash",
+   "name": "שבע דקות",
+   "desc": "פרץ מהירות של מי שמתארגנת תוך שבע דקות.",
+   "cooldown": 4
+  },
+  "strength": "ארגון ומהירות",
+  "weakness": "מסתירה דברים במקומות מסודרים מדי",
+  "catchphrase": "שבע דקותתת?!",
+  "theme": "#f6f6f6"
+ },
+ "yoav": {
+  "name": "יואב",
+  "role": "אח",
+  "gender": "m",
+  "bio": "קשוח ולא מחייך הרבה, אבל מאוד מאוד נקי ומסודר: אוהב לסדר ולנקות הכול (הגינה, גינות ציבוריות, רכבים, בתים של אחרים).",
+  "relations": "מדבר לפעמים עם טוהר או רינת. קצת מנותק מכולם.",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#b0885a",
+   "hairStyle": "short",
+   "shirt": "#1d1d24",
+   "pants": "#1d1d24",
+   "accessory": "none"
+  },
+  "ability": {
+   "type": "sniff",
+   "name": "עין של מנקה",
+   "desc": "מזהה כל פירור ומגלה חפצים נסתרים.",
+   "cooldown": 6
+  },
+  "strength": "ניקיון וסדר",
+  "weakness": "לא מחייך הרבה",
+  "catchphrase": "",
+  "theme": "#1d1d24"
+ },
+ "anat": {
+  "name": "אנט",
+  "role": "אמא",
+  "gender": "f",
+  "bio": "גידלה את כולם. עבדה כמתווכת, צלמת וגננת, והיום סייעת בגן ונהגת כלות ביום החתונה. מבשלת לכולם, ובארוחת שישי יש 12 סוגי סלטים צבעוניים ודג מרוקאי. חייכנית עם צחוק גדול ויפה, אוהבת הפלגות, תכשיטים ויהלומים, אבל לא אוהבת לשלם הרבה.",
+  "relations": "אוהבת מאוד את בעלה יצחק. הכי אוהבת את מרדכי (ואולי לא פחות את טוהר). אומרים שהיא ועדן דומות מאוד.",
+  "look": {
+   "skin": "#f4dcc2",
+   "hair": "#b88a4a",
+   "hairStyle": "short",
+   "shirt": "#f5d94a",
+   "pants": "#16161a",
+   "accessory": "glasses"
+  },
+  "ability": {
+   "type": "charm",
+   "name": "התמקחות",
+   "desc": "מתמקחת עם כל מי שבסביבה ויוצאת עם טיפ (ומטבעות).",
+   "cooldown": 6
+  },
+  "strength": "התמקחות ובישול מדהים",
+  "weakness": "שוכחת את הטלפון בחנויות",
+  "catchphrase": "כמה זה עולה? אני אקח בחצי.",
+  "theme": "#f5d94a"
+ },
+ "yitzhak": {
+  "name": "יצחק",
+  "role": "אבא",
+  "gender": "m",
+  "bio": "חשמלאי בהכשרה, עובד בשיפוצים ועבודות מזדמנות ועוזר לכולם בבית. לומד הרבה תורה, אוהב חיות ויש לו דג ענק באקווריום ענק. מספר המון בדיחות קרש, ובכל ארוחה חייב להגיד דבר תורה.",
+  "relations": "אוהב מאוד את אשתו אנט (שצריכה לשכנע אותו לטוס לחו״ל). עוזר לעדן ולמעיין לעבור דירה, יחד עם מרדכי.",
+  "look": {
+   "skin": "#a8774e",
+   "hair": "#8a8a90",
+   "hairStyle": "short",
+   "shirt": "#4a6fa5",
+   "pants": "#3a3a46",
+   "accessory": "both",
+   "hat": "#101014"
+  },
+  "ability": {
+   "type": "fix",
+   "name": "תיקון של אבא",
+   "desc": "חשמלאי בכל מצב: מתקן דברים שבורים בקרבת מקום.",
+   "cooldown": 5
+  },
+  "strength": "תיקונים ועזרה לכולם",
+  "weakness": "צריך לשכנע אותו לטוס",
+  "catchphrase": "יש לי דבר תורה.",
+  "theme": "#4a6fa5"
+ }
 }

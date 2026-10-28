@@ -1,37 +1,22 @@
 {
-  "grandma": {
-    "id": "grandma", "name": "סבתא", "role": "קרובת משפחה", "placeholder": true,
-    "look": { "skin": "#f1d3b5", "hair": "#d8d8e0", "hairStyle": "bun", "shirt": "#a8658c", "pants": "#4a3a5a", "accessory": "glasses" },
-    "dialogues": [ { "when": { "quest": "q_toast", "state": "done" }, "id": "grandma_after" }, { "id": "grandma_default" } ]
-  },
-  "uncle": {
-    "id": "uncle", "name": "דוד", "role": "קרוב משפחה", "placeholder": true,
-    "look": { "skin": "#d9a679", "hair": "#3a2a20", "hairStyle": "short", "shirt": "#b3503a", "pants": "#2e3a55", "accessory": "beard" },
-    "dialogues": [ { "when": { "quest": "q_remote", "state": "done" }, "id": "uncle_after" }, { "id": "uncle_default" } ]
-  },
-  "aunt": {
-    "id": "aunt", "name": "דודה", "role": "קרובת משפחה", "placeholder": true,
-    "look": { "skin": "#e8b98a", "hair": "#7a2d1c", "hairStyle": "long", "shirt": "#2fa39a", "pants": "#3a3a66", "accessory": "none" },
-    "dialogues": [ { "when": { "quest": "q_market", "state": "done" }, "id": "aunt_after" }, { "id": "aunt_default" } ]
-  },
-  "cousin": {
-    "id": "cousin", "name": "בן דוד", "role": "קרוב משפחה", "placeholder": true,
-    "look": { "skin": "#f1c9a0", "hair": "#e8c25a", "hairStyle": "curly", "shirt": "#e84b4b", "pants": "#2e2e48", "accessory": "none", "hat": "#3a7bd5" },
-    "dialogues": [ { "when": { "quest": "q_cousin", "state": "done" }, "id": "cousin_after" }, { "id": "cousin_default" } ]
-  },
-  "neighbor": {
-    "id": "neighbor", "name": "השכן", "role": "חבר", "placeholder": true,
-    "look": { "skin": "#c68a5c", "hair": "#222222", "hairStyle": "bald", "shirt": "#6a7a3a", "pants": "#444444", "accessory": "glasses" },
-    "dialogues": [ { "id": "neighbor_default" } ]
-  },
-  "shopkeeper": {
-    "id": "shopkeeper", "name": "המוכר", "role": "חנות", "placeholder": true, "shop": "shopkeeper",
-    "look": { "skin": "#e8b98a", "hair": "#6b3a1a", "hairStyle": "short", "shirt": "#ffffff", "pants": "#22304a", "accessory": "none", "hat": "#2fa39a" },
-    "dialogues": [ { "id": "shopkeeper_default" } ]
-  },
-  "lifeguard": {
-    "id": "lifeguard", "name": "המציל", "role": "חבר", "placeholder": true,
-    "look": { "skin": "#d9a679", "hair": "#f0d070", "hairStyle": "short", "shirt": "#ff5d3a", "pants": "#ffffff", "accessory": "none" },
-    "dialogues": [ { "when": { "quest": "q_beach", "state": "done" }, "id": "lifeguard_after" }, { "id": "lifeguard_default" } ]
-  }
+  "anat": { "id": "anat", "character": "anat", "name": "אנט", "role": "אמא", "look": { "skin": "#f4dcc2", "hair": "#b88a4a", "hairStyle": "short", "shirt": "#f5d94a", "pants": "#16161a", "accessory": "glasses" },
+    "dialogues": [ { "id": "anat_talk" } ] },
+  "yitzhak": { "id": "yitzhak", "character": "yitzhak", "name": "יצחק", "role": "אבא", "look": { "skin": "#a8774e", "hair": "#8a8a90", "hairStyle": "short", "shirt": "#4a6fa5", "pants": "#3a3a46", "accessory": "both", "hat": "#101014" },
+    "dialogues": [ { "id": "yitzhak_talk" } ] },
+  "mordechai": { "id": "mordechai", "character": "mordechai", "name": "מרדכי", "role": "אח", "look": { "skin": "#f1d3b5", "hair": "#2b1a0e", "hairStyle": "short", "shirt": "#f4f4f4", "pants": "#4a6a9a", "accessory": "none" },
+    "dialogues": [ { "id": "mordechai_talk" } ] },
+  "eden": { "id": "eden", "character": "eden", "name": "עדן", "role": "אחות (תאומה של מרדכי)", "look": { "skin": "#f1d3b5", "hair": "#3a2415", "hairStyle": "long", "shirt": "#f6f6f6", "pants": "#4a6a9a", "accessory": "none" },
+    "dialogues": [ { "id": "eden_talk" } ] },
+  "maayan": { "id": "maayan", "character": "maayan", "name": "מעיין", "role": "אחות", "look": { "skin": "#a8774e", "hair": "#14141a", "hairStyle": "long", "shirt": "#1c1c22", "pants": "#4a6a9a", "accessory": "none" },
+    "dialogues": [ { "id": "maayan_talk" } ] },
+  "rinat": { "id": "rinat", "character": "rinat", "name": "רינת", "role": "אחות", "look": { "skin": "#f1d3b5", "hair": "#3a2415", "hairStyle": "bald", "shirt": "#7a5ca8", "pants": "#3a2d5c", "accessory": "none", "hat": "#d8c8f0" },
+    "dialogues": [ { "id": "rinat_talk" } ] },
+  "tohar": { "id": "tohar", "character": "tohar", "name": "טוהר", "role": "אחות", "look": { "skin": "#f1d3b5", "hair": "#4a2c17", "hairStyle": "bun", "shirt": "#f6f6f6", "pants": "#4a6a9a", "accessory": "none" },
+    "dialogues": [ { "id": "tohar_talk" } ] },
+  "yoav": { "id": "yoav", "character": "yoav", "name": "יואב", "role": "אח", "look": { "skin": "#f1d3b5", "hair": "#b0885a", "hairStyle": "short", "shirt": "#1d1d24", "pants": "#1d1d24", "accessory": "none" },
+    "dialogues": [ { "id": "yoav_talk" } ] },
+  "terry": { "id": "terry", "name": "Terry", "role": "בן זוג של עדן (אוסטרלי)", "placeholder": true, "look": { "skin": "#f1d3b5", "hair": "#6b4a2b", "hairStyle": "short", "shirt": "#2fa39a", "pants": "#3a3a46", "accessory": "none" },
+    "dialogues": [ { "id": "terry_talk" } ] },
+  "shopkeeper": { "id": "shopkeeper", "name": "המוכר", "role": "חנות", "shop": "shopkeeper", "placeholder": true, "look": { "skin": "#e8b98a", "hair": "#6b3a1a", "hairStyle": "short", "shirt": "#ffffff", "pants": "#22304a", "accessory": "none", "hat": "#2fa39a" },
+    "dialogues": [ { "id": "shopkeeper_default" } ] }
 }

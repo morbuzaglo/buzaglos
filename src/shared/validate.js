@@ -7,7 +7,7 @@ export const MINIGAMES = ['timing', 'memory', 'reaction', 'quiz'];
 export const ABILITIES = ['dash', 'sniff', 'charm', 'fix'];
 export const ITEM_TYPES = ['quest', 'consumable', 'collectible', 'key', 'outfit', 'upgrade', 'character'];
 export const HAIR_STYLES = ['short', 'long', 'curly', 'bun', 'bald'];
-export const ACCESSORIES = ['none', 'glasses', 'beard'];
+export const ACCESSORIES = ['none', 'glasses', 'beard', 'both'];
 export const ICONS = ['food', 'key', 'gem', 'book', 'hat', 'shoe', 'potion', 'toy', 'star', 'phone', 'remote', 'ticket', 'shirt', 'coin', 'default'];
 export const PROP_TYPES = ['tree', 'bush', 'rock', 'table', 'sofa', 'bed', 'fridge', 'stove', 'tv', 'plant', 'sign', 'chest', 'shelf', 'counter', 'umbrella', 'lamp', 'door', 'mat', 'boat'];
 const COLOR = /^#[0-9a-fA-F]{6}$/;
@@ -44,6 +44,7 @@ export function validateContent(c) {
     if (!ID.test(id)) E.push(`דמות משנית ${id}: מזהה לא תקין`);
     if (!textOk(n.name)) E.push(`דמות משנית ${id}: חסר שם`);
     validateLook(n.look, `דמות משנית ${id}`, E);
+    if (n.character && !chars[n.character]) E.push(`דמות משנית ${id}: הדמות הראשית לא קיימת (${n.character})`);
     for (const d of n.dialogues || []) if (!dialogues[d.id]) E.push(`דמות משנית ${id}: דיאלוג חסר (${d.id})`);
     if (n.shop && !(c.shop || {})[n.shop]) W.push(`דמות משנית ${id}: חנות ללא רשימת מוצרים (${n.shop})`);
   }

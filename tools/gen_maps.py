@@ -42,8 +42,8 @@ maps['house'] = dict(id='house', name='הבית של בוזגלו', music='home'
         dict(type='door', x=20, y=2, id='attic_door', interact=dict(dialogue='attic_door')),
         dict(type='sign', x=14, y=9, interact=dict(dialogue='house_sign')),
     ],
-    npcs=[dict(id='grandma', x=5, y=8, dir=0), dict(id='uncle', x=14, y=8, dir=2)],
-    pickups=[dict(id='remote_pickup', item='remote', x=17, y=9, hidden=True, needsQuest='q_remote')],
+    npcs=[dict(id='anat', x=5, y=8, dir=0), dict(id='yitzhak', x=14, y=8, dir=2), dict(id='eden', x=13, y=5, dir=0), dict(id='maayan', x=10, y=11, dir=0), dict(id='tohar', x=4, y=11, dir=0)],
+    pickups=[dict(id='boots_pk', item='boots', x=3, y=12, hidden=True, needsQuest='q_cat'), dict(id='cat_hat_pk', item='cat_hat', x=16, y=9, hidden=True, needsQuest='q_cat')],
     doors=[dict(x=10, y=14, to='street', tx=7, ty=8, dir=0, label='החוצה')],
     spawn=dict(x=8, y=9))
 
@@ -73,8 +73,8 @@ maps['street'] = dict(id='street', name='רחוב בוזגלו', music='town', l
         dict(type='sign', x=11, y=17, id='broken_fence', ability='fix', flag='fence_fixed', interact=dict(dialogue='broken_fence')),
         dict(type='umbrella', x=34, y=14),
     ],
-    npcs=[dict(id='aunt', x=17, y=11, dir=2), dict(id='cousin', x=30, y=14, dir=1), dict(id='neighbor', x=12, y=11, dir=0)],
-    pickups=[],
+    npcs=[dict(id='rinat', x=12, y=11, dir=0), dict(id='yoav', x=22, y=14, dir=0), dict(id='terry', x=12, y=14, dir=1), dict(id='mordechai', x=30, y=14, dir=1)],
+    pickups=[dict(id='cloth1', item='cloth', x=10, y=11, needsQuest='q_barcelona'), dict(id='cloth2', item='cloth', x=22, y=12, hidden=True, needsQuest='q_barcelona'), dict(id='cloth3', item='cloth', x=34, y=11, hidden=True, needsQuest='q_barcelona')],
     doors=[
         dict(x=7, y=7, to='house', tx=10, ty=13, dir=1, label='הביתה'),
         dict(x=25, y=7, to='market', tx=7, ty=10, dir=1, label='מכולת'),
@@ -92,7 +92,7 @@ maps['market'] = dict(id='market', name='המכולת המשפחתית', music='
     props=[dict(type='counter', x=6, y=3, id='shop_counter'), dict(type='shelf', x=2, y=2), dict(type='shelf', x=3, y=2), dict(type='shelf', x=12, y=2),
            dict(type='plant', x=13, y=9), dict(type='plant', x=2, y=9), dict(type='sign', x=11, y=9, interact=dict(dialogue='market_sign'))],
     npcs=[dict(id='shopkeeper', x=7, y=2, dir=0)],
-    pickups=[], doors=[dict(x=7, y=11, to='street', tx=25, ty=8, dir=0, label='רחוב')], spawn=dict(x=7, y=10))
+    pickups=[dict(id='phone_pk', item='phone_anat', x=12, y=6, hidden=True, needsQuest='q_phone')], doors=[dict(x=7, y=11, to='street', tx=25, ty=8, dir=0, label='רחוב')], spawn=dict(x=7, y=10))
 
 # ---------------------------------------------------------------- BEACH 30x18
 g = grid(30, 18, 's')
@@ -103,8 +103,8 @@ maps['beach'] = dict(id='beach', name='החוף', music='beach', legend=LEG, til
            dict(type='tree', x=3, y=16), dict(type='tree', x=12, y=16), dict(type='tree', x=24, y=16),
            dict(type='chest', x=26, y=5, id='secret_chest', interact=dict(dialogue='secret_chest')),
            dict(type='sign', x=2, y=11, interact=dict(dialogue='beach_info'))],
-    npcs=[dict(id='lifeguard', x=10, y=8, dir=0)],
-    pickups=[dict(id='shell1', item='shell', x=5, y=6), dict(id='shell2', item='shell', x=18, y=13, hidden=True), dict(id='shell3', item='shell', x=27, y=11, hidden=True)],
+    npcs=[],
+    pickups=[],
     doors=[dict(x=0, y=9, to='street', tx=38, ty=11, dir=2, label='רחוב'), dict(x=0, y=10, to='street', tx=38, ty=12, dir=2, label='רחוב')],
     spawn=dict(x=2, y=9))
 

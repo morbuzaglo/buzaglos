@@ -173,9 +173,9 @@ function tabFamily(body) {
   S.state.unlockedChars.forEach((id) => {
     const ch = content.characters[id]; if (!ch) return;
     const c = card(''); const row = el('div', 'row'); const cv = el('canvas'); paintPortrait(cv, equippedLook(id));
-    const real = (v) => v && !String(v).includes('יתווסף בקרוב');
+    const real = (v) => v && !['—', '...', '-'].includes(String(v).trim()) && !String(v).includes('יתווסף בקרוב');
     const extra = [real(ch.strength) ? `<span class="sub">${STR.family.strength}:</span> ${esc(ch.strength)}` : '', real(ch.weakness) ? `<span class="sub">${STR.family.weakness}:</span> ${esc(ch.weakness)}` : ''].filter(Boolean).join(' &nbsp; ');
-    const info = el('div', 'grow', `<b>${esc(ch.name)}</b> <span class="sub">${esc(ch.role)}</span>${ch.placeholder ? '' : `<br>${esc(ch.bio)}`}<br><span class="sub">${STR.family.ability}:</span> ${esc(ch.ability.name)}<br><span class="sub">${esc(ch.ability.desc)}</span>${extra ? `<br>${extra}` : ''}`);
+    const info = el('div', 'grow', `<b>${esc(ch.name)}</b> <span class="sub">${esc(ch.role)}</span><br>${esc(ch.bio || '')}<br><span class="sub">${STR.family.ability}:</span> ${esc(ch.ability.name)}<br><span class="sub">${esc(ch.ability.desc)}</span>${extra ? `<br>${extra}` : ''}`);
     const act = S.state.activeChar === id;
     const btn = el('button', 'btn' + (act ? ' alt' : ''), act ? STR.family.active : STR.family.playAs); btn.disabled = act;
     btn.onclick = () => { S.state.activeChar = id; sfx('pickup'); saveGame(); hooks.charChanged?.(); refreshHud(); openMenu(); toast(STR.family.nowPlaying(ch.name)); };

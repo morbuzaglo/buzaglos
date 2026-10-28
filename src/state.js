@@ -11,7 +11,7 @@ export function newState() {
     activeChar: cfg.startChar,
     map: cfg.startMap, x: cfg.startX, y: cfg.startY, dir: 0,
     coins: cfg.startCoins, xp: 0, level: 1,
-    inv: {}, flags: {}, quests: {}, shards: [], achievements: [], collected: {},
+    inv: {}, flags: { ...(cfg.startFlags || {}) }, quests: {}, shards: [], achievements: [], collected: {},
     owned: { outfits: [], upgrades: [] },
     equipped: {},               // charId -> outfit item id
     stats: { steps: 0, talks: 0, minigames: 0, coinsEarned: 0, abilityUses: 0, purchases: 0 },
