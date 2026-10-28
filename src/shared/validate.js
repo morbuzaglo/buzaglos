@@ -7,7 +7,8 @@ export const MINIGAMES = ['timing', 'memory', 'reaction', 'quiz', 'drive', 'sequ
 export const ABILITIES = ['dash', 'sniff', 'charm', 'fix'];
 export const ITEM_TYPES = ['quest', 'consumable', 'collectible', 'key', 'outfit', 'upgrade', 'character'];
 export const HAIR_STYLES = ['short', 'long', 'curly', 'bun', 'ponytail', 'bald'];
-export const ACCESSORIES = ['none', 'glasses', 'catglasses', 'beard', 'both'];
+export const ACCESSORIES = ['none', 'glasses', 'catglasses', 'sunglasses', 'round', 'beard', 'both'];
+export const EXTRAS = ['freckles', 'earrings', 'necklace', 'bowtie', 'headphones', 'mustache'];
 export const ICONS = ['food', 'key', 'gem', 'book', 'hat', 'shoe', 'potion', 'toy', 'star', 'phone', 'remote', 'ticket', 'shirt', 'coin', 'default'];
 export const PROP_TYPES = ['tree', 'bush', 'rock', 'table', 'sofa', 'bed', 'fridge', 'stove', 'tv', 'plant', 'sign', 'chest', 'shelf', 'counter', 'umbrella', 'lamp', 'door', 'mat', 'boat', 'deer', 'car', 'suitcase', 'salad', 'crib', 'album', 'ship', 'desk', 'lantern', 'torii', 'podium'];
 const COLOR = /^#[0-9a-fA-F]{6}$/;
@@ -18,6 +19,8 @@ export function validateLook(look, where, E) {
   if (!look || typeof look !== 'object') { E.push(`${where}: חסר מראה (look)`); return; }
   for (const k of ['skin', 'hair', 'shirt', 'pants']) if (!COLOR.test(look[k] || '')) E.push(`${where}: צבע לא תקין ב-${k}`);
   if (look.hat && !COLOR.test(look.hat)) E.push(`${where}: צבע כובע לא תקין`);
+  if (look.eyes && !COLOR.test(look.eyes)) E.push(`${where}: צבע עיניים לא תקין`);
+  for (const x of look.extras || []) if (!EXTRAS.includes(x)) E.push(`${where}: אביזר נוסף לא מוכר (${x})`);
   if (!HAIR_STYLES.includes(look.hairStyle)) E.push(`${where}: סגנון שיער לא מוכר (${look.hairStyle})`);
   if (look.accessory && !ACCESSORIES.includes(look.accessory)) E.push(`${where}: אביזר לא מוכר (${look.accessory})`);
 }

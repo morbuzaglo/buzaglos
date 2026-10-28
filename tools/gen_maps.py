@@ -41,7 +41,7 @@ maps['house'] = dict(id='house', name='הבית של בוזגלו', music='home'
         dict(type='mat', x=10, y=13, solid=False),
         dict(type='door', x=20, y=2, id='attic_door', interact=dict(dialogue='attic_door')),
         dict(type='sign', x=14, y=9, interact=dict(dialogue='house_sign')),
-        dict(type='album', x=9, y=10, id='album_portal', interact=dict(action='stories')),
+        dict(type='album', x=9, y=10, id='album_portal', interact=dict(dialogue='album_progress')),
     ],
     npcs=[dict(id='anat', x=5, y=8, dir=0), dict(id='yitzhak', x=14, y=8, dir=2), dict(id='eden', x=13, y=5, dir=0), dict(id='maayan', x=13, y=11, dir=0), dict(id='tohar', x=4, y=11, dir=0)],
     pickups=[],

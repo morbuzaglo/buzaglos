@@ -3,7 +3,7 @@
 // secure Worker (no keys or passwords live in this page). Without a Worker it still works in local mode:
 // edit, validate, and download the JSON files to commit by hand.
 import { content as bundled } from '../content.js';
-import { validateContent, mergeBundle, HAIR_STYLES, ACCESSORIES, ABILITIES, ICONS, MINIGAMES } from '../shared/validate.js';
+import { validateContent, mergeBundle, HAIR_STYLES, ACCESSORIES, EXTRAS, ABILITIES, ICONS, MINIGAMES } from '../shared/validate.js';
 import { drawCharFrame, DEFAULT_LOOK, CHAR_W, CHAR_H, makeCanvas, tileAtlasCanvas, renderMapCanvas, propCanvas, TILE } from '../art.js';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
@@ -106,9 +106,12 @@ function personEditor(kind, id) {
   const color = (label, key) => { const i = h('input', { type: 'color', value: p.look[key] || '#000000' }); i.addEventListener('input', () => { p.look[key] = i.value; upd(); }); return h('div', {}, h('label', {}, label), i); };
   const hatOn = h('input', { type: 'checkbox', checked: !!p.look.hat }); hatOn.addEventListener('change', () => { p.look.hat = hatOn.checked ? (p.look.hat || '#e84b4b') : null; upd(); render(); });
   card.append(h('h3', {}, 'מראה (פיקסלים)'), prev, h('div', { class: 'grid4' }, color('עור', 'skin'), color('שיער', 'hair'), color('חולצה', 'shirt'), color('מכנסיים', 'pants')),
-    h('div', { class: 'grid4' }, sct('סגנון שיער', 'hairStyle', HAIR_STYLES.map((x) => [x, { short: 'קצר', long: 'ארוך', curly: 'מתולתל', bun: 'אסוף', ponytail: 'קוקו', bald: 'קירח' }[x]]), p.look, upd), sct('אביזר', 'accessory', ACCESSORIES.map((x) => [x, { none: 'ללא', glasses: 'משקפיים', catglasses: 'משקפי חתולה', beard: 'זקן', both: 'משקפיים וזקן' }[x]]), p.look, upd), h('div', {}, h('label', {}, 'כובע'), hatOn), p.look.hat ? color('צבע כובע', 'hat') : h('div')));
+    h('div', { class: 'grid4' }, sct('סגנון שיער', 'hairStyle', HAIR_STYLES.map((x) => [x, { short: 'קצר', long: 'ארוך', curly: 'מתולתל', bun: 'אסוף', ponytail: 'קוקו', bald: 'קירח' }[x]]), p.look, upd), sct('אביזר', 'accessory', ACCESSORIES.map((x) => [x, { none: 'ללא', glasses: 'משקפיים', catglasses: 'משקפי חתולה', sunglasses: 'משקפי שמש', round: 'משקפיים עגולים', beard: 'זקן', both: 'משקפיים וזקן' }[x]]), p.look, upd), h('div', {}, h('label', {}, 'כובע'), hatOn), p.look.hat ? color('צבע כובע', 'hat') : h('div')));
   const flag = (label, key) => { const c = h('input', { type: 'checkbox', checked: !!p.look[key] }); c.addEventListener('change', () => { if (c.checked) p.look[key] = true; else delete p.look[key]; upd(); }); return h('label', { style: 'display:flex;gap:6px;align-items:center;margin:6px 0' }, c, label); };
   const optColor = (label, key) => { const i = h('input', { type: 'color', value: p.look[key] || '#ffffff' }); i.addEventListener('input', () => { p.look[key] = i.value; upd(); }); return h('div', {}, h('label', {}, label), i); };
+  const exName = { freckles: 'נמשים', earrings: 'עגילים', necklace: 'שרשרת', bowtie: 'עניבת פרפר', headphones: 'אוזניות', mustache: 'שפם' };
+  const exChip = (x) => h('span', { class: 'chip' + ((p.look.extras || []).includes(x) ? ' on' : ''), onclick: (e) => { const a = new Set(p.look.extras || []); a.has(x) ? a.delete(x) : a.add(x); p.look.extras = [...a]; if (!p.look.extras.length) delete p.look.extras; e.target.classList.toggle('on'); upd(); } }, exName[x]);
+  card.append(h('h3', {}, 'עיניים ואביזרים'), h('div', { class: 'grid4' }, optColor('צבע עיניים', 'eyes')), h('div', { class: 'chips', style: 'margin:6px 0' }, EXTRAS.map(exChip)));
   card.append(h('h3', {}, 'פרטים נוספים'), h('div', { class: 'grid4' }, sct('סוג כיסוי ראש', 'hatStyle', [['', 'כובע'], ['kippah', 'כיפה'], ['scarf', 'כיסוי ראש']], p.look, upd), sct('לבוש תחתון', 'bottom', [['', 'מכנסיים'], ['skirt', 'חצאית לברך'], ['longskirt', 'חצאית ארוכה']], p.look, upd), sct('שרוולים', 'sleeves', [['', 'ארוכים'], ['short', 'קצרים'], ['none', 'בלי (גופייה)']], p.look, upd), optColor('נעליים', 'shoes')),
     h('div', { class: 'grid4' }, optColor('צבע זקן', 'beardColor'), flag('תיק צד', 'bag'), flag('ספר/סידור ביד', 'book'), flag('פסים (אדידס)', 'stripes')), h('div', { class: 'grid4' }, flag('הדפס על החולצה', 'print'), flag('צווארון פולו', 'collar'), flag('מכנסיים רחבים', 'wide')));
   // photo -> look

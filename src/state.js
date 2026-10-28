@@ -29,22 +29,30 @@ let saveTimer = null;
 export function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(() => { if (S.started) saveGame(); }, 500); }
 export const emit = (type, data) => { listeners.forEach((fn) => fn(type, data)); if (SAVE_EVENTS.has(type)) scheduleSave(); };
 
+const slotKey = (id) => `buzaglos-save-v2:${id}`;
+const LAST_KEY = 'buzaglos-last-char';
 export function saveGame() {
   S.state.savedAt = Date.now();
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(S.state)); } catch (e) { /* storage blocked */ }
+  try { localStorage.setItem(slotKey(S.state.activeChar), JSON.stringify(S.state)); localStorage.setItem(LAST_KEY, S.state.activeChar); } catch (e) { /* storage blocked */ }
 }
-export function hasSave() { try { return !!localStorage.getItem(SAVE_KEY); } catch (e) { return false; } }
-export function loadGame() {
+/** Moves a pre-v2 single save into its character's slot. */
+function migrateOld() {
   try {
-    const raw = localStorage.getItem(SAVE_KEY);
-    if (!raw) return false;
-    S.state = migrate(JSON.parse(raw));
-    return true;
-  } catch (e) { return false; }
+    const raw = localStorage.getItem(SAVE_KEY); if (!raw) return;
+    const old = JSON.parse(raw);
+    if (old?.activeChar && !localStorage.getItem(slotKey(old.activeChar))) localStorage.setItem(slotKey(old.activeChar), JSON.stringify(old));
+    localStorage.removeItem(SAVE_KEY);
+  } catch (e) { /* ignore */ }
 }
+export function peekSave(id) { migrateOld(); try { const raw = localStorage.getItem(slotKey(id)); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
+export const hasSave = (id) => !!peekSave(id);
+export const lastChar = () => { try { return localStorage.getItem(LAST_KEY); } catch (e) { return null; } };
+export function loadGame(id) {
+  const saved = peekSave(id); if (!saved) return false;
+  S.state = migrate(saved); return true;
+}
+export function clearSave(id) { try { localStorage.removeItem(slotKey(id)); } catch (e) { /* ignore */ } }
 export function startNewGame(charId) { S.state = newState(); if (charId) S.state.activeChar = charId; S.state.chosen = !!charId; }
-export function peekSave() { try { const raw = localStorage.getItem(SAVE_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
-export function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } }
 function migrate(saved) {
   const base = newState();
   const merged = { ...base, ...saved, stats: { ...base.stats, ...saved.stats }, settings: { ...base.settings, ...saved.settings }, owned: { ...base.owned, ...saved.owned } };

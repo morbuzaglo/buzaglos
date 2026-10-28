@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { content } from '../content.js';
-import { S, saveGame, bonus, check, addItem, addCoins, setFlag, getFlag, equippedLook, onChange } from '../state.js';
+import { S, saveGame, bonus, check, addItem, addCoins, addXp, setFlag, getFlag, equippedLook, onChange } from '../state.js';
 import {
   TILE, TILE_NAMES, TILE_SOLID, buildTileAtlas, buildProps, renderMapCanvas, characterTexture, iconCanvas, PROP_SIZE, CHAR_W, CHAR_H,
 } from '../art.js';
@@ -115,7 +115,8 @@ export default class World extends Phaser.Scene {
     UI.toast(map.name, 1600);
     this.timer = null; UI.setTimer(null);
     this.makeLabel(this.player, nameOf(S.state.activeChar), true);
-    this.time.delayedCall(700, () => this.runAuto());
+    this.setupMission(); this.setupCompanion();
+    this.time.delayedCall(700, () => { this.runAuto(); if (this.callerId && !this.announced?.[this.mission.id]) { (this.announced ||= {})[this.mission.id] = true; this.announceMission(); } });
   }
 
   footprint(p) {
@@ -142,6 +143,7 @@ export default class World extends Phaser.Scene {
   }
   addNpc(n) {
     const def = content.npcs[n.id]; if (!def) return;
+    if (this.callerId && !n.call && n.id === this.callerId) return;           // the caller stands at the call point instead
     if (def.character && def.character === S.state.activeChar) return;     // you are this person right now
     const key = characterTexture(this, 'n_' + n.id, def.look);
     const spr = this.add.sprite(n.x * TILE + 8, n.y * TILE + 15, key, 0).setOrigin(0.5, 32 / 34);
@@ -164,7 +166,7 @@ export default class World extends Phaser.Scene {
   updateLabels() {
     const cam = this.cameras.main, wv = cam.worldView, z = cam.zoom;
     for (const l of this.labels || []) {
-      const x = (l.spr.x - wv.x) * z, y = (l.spr.y - 31 * l.scale - wv.y) * z;
+      const x = (l.spr.x - wv.x) * z, y = (l.spr.y - 31 * l.scale - wv.y) * z - (l.extra || 0);
       l.el.style.transform = `translate(calc(${Math.round(x)}px - 50%), calc(${Math.round(y)}px - 100%))`;
       l.el.style.display = x < -60 || y < -40 || x > this.scale.width + 60 || y > this.scale.height + 60 ? 'none' : '';
     }
@@ -231,7 +233,7 @@ export default class World extends Phaser.Scene {
     // interaction hint
     this.updateHint();
     this.tickStory(dt);
-    this.updateLabels();
+    this.updateCompanion(); this.updateLabels(); this.updateGuide(); this.abilityHintT = (this.abilityHintT || 0) - dt; if (this.abilityHintT <= 0) { this.abilityHintT = 0.35; this.updateAbilityHint(); }
     // periodic
     this.gotoT += dt; if (this.gotoT > 0.5) { this.gotoT = 0; if (Q.checkGoto(this.map.id, tx, ty)) this.afterQuestChange(); }
     this.saveT += dt; if (this.saveT > 20) { this.saveT = 0; saveGame(); }
@@ -317,6 +319,7 @@ export default class World extends Phaser.Scene {
   async talkNpc(n) {
     this.faceTowards(n); S.state.stats.talks++; sfx('tap');
     const id = n.id;
+    if (n.entry?.call) { await this.startMission(); return; }
     if (n.entry?.gives) { await this.giveFromProp({ id: n.entry.uid || n.id, gives: n.entry.gives, givesText: n.entry.givesText, emptyText: n.entry.emptyText }); this.afterQuestChange(); return; }
     // 1. an active step that talks to this NPC / plays a mini-game with them
     let m = Q.matchStep('talk', id);
@@ -369,6 +372,7 @@ export default class World extends Phaser.Scene {
     const im = Q.matchStep('interact', p.id);
     if (im) { await this.runInteractStep(im); this.afterQuestChange(); return; }
     if (p.gives) { await this.giveFromProp(p); this.afterQuestChange(); return; }
+    if (p.ability && p.flag && getFlag(p.flag) && p.id !== 'broken_fence') { await UI.say([{ who: 'narrator', text: STR.world.alreadyFixed }]); return; }
     if (p.interact?.dialogue) await UI.runDialogue(p.interact.dialogue);
     this.afterQuestChange();
   }
@@ -394,6 +398,19 @@ export default class World extends Phaser.Scene {
   }
 
   // ------------------------------------------------------------------ abilities
+  /** Makes the ability button glow (with a short hint) whenever the ability can do something useful right here. */
+  updateAbilityHint() {
+    const ch = content.characters[S.state.activeChar], type = ch?.ability?.type, p = this.player; let hint = null;
+    if (p && !this.busy && type) {
+      if (type === 'fix') { for (const r of this.props || []) if (r.p.ability === 'fix' && !getFlag(r.p.flag) && !r.hidden && Math.hypot(r.p.x * TILE + 8 - p.x, (r.p.y + 1) * TILE - 8 - p.y) < 56) hint = STR.ability.fix; }
+      if (type === 'sniff') { for (const pk of this.pickups || []) if (pk.p.hidden && pk.spr.alpha < 0.2 && Math.hypot(pk.spr.x - p.x, pk.spr.y - p.y) < 150) hint = STR.ability.sniff; }
+      if (type === 'charm') { for (const n of this.npcs || []) if (!getFlag('charm_' + n.id) && n.def.phrases && Math.hypot(n.spr.x - p.x, n.spr.y - p.y) < 46) hint = STR.ability.charm; }
+      if (type === 'dash' && this.timer) hint = STR.ability.dash;
+      if (this.abilityCd > 0) hint = null;
+    }
+    UI.setAbilityHint(hint ? `${hint} (${ch.ability.name})` : null);
+  }
+
   useAbility() {
     initAudio(); resumeAudio();
     if (this.busy || this.transitioning || !this.player || UI.panelOpen() || UI.dialogueOpen()) return;
@@ -437,6 +454,7 @@ export default class World extends Phaser.Scene {
       const f = r.p.fp, cx = r.p.x * TILE + (f.fw * TILE) / 2, cy = (r.p.y + 1) * TILE - 8;
       if (Math.hypot(cx - p.x, cy - p.y) > 40) continue;
       setFlag(r.p.flag); done = true; sfx('win'); UI.queueToast(STR.world.fixed);
+      if (r.p.reward) { if (r.p.reward.coins) { addCoins(r.p.reward.coins); UI.queueToast(STR.coinsGot(r.p.reward.coins)); } if (r.p.reward.xp) addXp(r.p.reward.xp); }
       const m = Q.matchStep('use', r.p.id, 'fix'); if (m) { Q.completeStep(m.quest.id); }
       this.afterQuestChange(); this.flushRewards();
     }

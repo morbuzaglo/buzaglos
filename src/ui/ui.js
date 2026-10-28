@@ -2,7 +2,7 @@
 import { content } from '../content.js';
 import {
   S, onChange, saveGame, equippedLook, buy, check, addCoins, addXp, addItem, removeItem, setFlag, getFlag,
-  xpForLevel, exportCode, importCode, startNewGame, hasSave, loadGame, cloudEnabled, cloudSave, cloudLoad, validCode, peekSave, clearSave,
+  xpForLevel, exportCode, importCode, startNewGame, hasSave, loadGame, cloudEnabled, cloudSave, cloudLoad, validCode, peekSave, clearSave, lastChar,
 } from '../state.js';
 import { paintPortrait, paintIcon, paintTitleBanner } from '../art.js';
 import * as Q from '../systems/quests.js';
@@ -42,6 +42,10 @@ export function buildHud() {
   paintIcon($('hudCoin'), 'coin');
   refreshHud();
 }
+export function setAbilityHint(text) {
+  const b = $('btnB'), h = $('abHint'); if (!b || !h) return;
+  b.classList.toggle('pulse', !!text); if (text) { h.textContent = text; h.classList.remove('hidden'); } else h.classList.add('hidden');
+}
 export function setTimer(text) { const t = $('timerBox'); if (!t) return; if (text) { t.textContent = text; t.classList.remove('hidden'); } else t.classList.add('hidden'); }
 export function refreshHud() {
   const st = S.state, ch = content.characters[st.activeChar]; if (!ch || !$('hudName')) return;
@@ -52,7 +56,7 @@ export function refreshHud() {
   $('hudCoins').textContent = st.coins;
   $('hudShards').textContent = `${st.shards.length}/${content.config.finalShards} ◆`;
   const tq = Q.trackedQuest();
-  $('hudQuest').innerHTML = tq ? `<b>${T(tq.title)}</b><br>${T(Q.objective(tq.id))}` : `<span class="dim">${st.shards.length >= content.config.finalShards ? STR.goAttic : STR.explore}</span>`;
+  $('hudQuest').innerHTML = tq ? `<b>${T(tq.title)}</b><br>${T(Q.objective(tq.id))}` : `<span class="dim">${st.shards.length >= content.config.finalShards ? STR.goAttic : (Q.currentMission() ? STR.mission.hint : STR.explore)}</span>`;
   const b = $('btnB'); const ab = ch.ability; b.innerHTML = `B<small>${esc(ab?.name || '')}</small><span class="cd"></span>`;
 }
 
@@ -244,6 +248,9 @@ function tabSettings(body) {
   const bi = el('button', 'btn', STR.settings.import); bi.onclick = () => { if (importCode(ta.value)) { toast(STR.settings.imported); hooks.continueGame?.(); closePanel(); } else toast(STR.settings.badCode); };
   const btns = el('div', 'row'); btns.style.justifyContent = 'flex-start'; btns.append(bx, bi);
   sv.append(ta, btns); body.appendChild(sv);
+  const rs = el('button', 'btn red', STR.settings.restart(content.characters[S.state.activeChar].name)); rs.style.marginBottom = '8px';
+  rs.onclick = () => { if (confirm(STR.settings.restartAsk)) { const id = S.state.activeChar; S.started = false; clearSave(id); closePanel(); startNewGame(id); S.started = true; hooks.newGame?.(); } };
+  body.appendChild(rs);
   const nb = el('button', 'btn red', STR.settings.backTitle); nb.onclick = () => { closePanel(); saveGame(); hooks.toTitle?.(); }; body.appendChild(nb);
 }
 
@@ -298,36 +305,30 @@ function titleHeader(t) {
 export function showTitle() {
   const t = $('title'); t.classList.remove('hidden'); t.innerHTML = '';
   titleHeader(t);
-  const saved = peekSave();
-  const ch = saved && content.characters[saved.activeChar];
-  if (ch && saved.chosen) {
-    const who = el('div', 'card'); who.style.cssText = 'display:flex;gap:10px;align-items:center;min-width:240px';
-    const cv = el('canvas'); cv.style.cssText = 'width:44px;height:44px'; paintPortrait(cv, equippedLook(saved.activeChar));
-    who.append(cv, el('div', '', `<b>${esc(ch.name)}</b><br><span class="sub">${STR.title.shards(saved.shards?.length || 0, content.config.finalShards)}</span>`));
-    const play = el('button', 'btn', STR.title.cont); play.id = 'btnPlay';
-    play.onclick = () => { sfx('tap'); t.classList.add('hidden'); loadGame(); hooks.continueGame?.(); };
-    const nb = el('button', 'btn alt', STR.title.newGame);
-    nb.onclick = () => { if (confirm(STR.title.confirmNew)) { clearSave(); showPicker(); } };
-    t.append(who, play, nb);
-  } else showPicker();
-  t.appendChild(el('p', '', STR.title.tip));
-}
-function showPicker() {
-  const t = $('title'); t.classList.remove('hidden'); t.innerHTML = '';
-  titleHeader(t);
   t.appendChild(el('h3', '', STR.title.who));
+  const last = lastChar();
   const grid = el('div', 'picker');
   for (const [id, c] of Object.entries(content.characters)) {
-    const b = el('button', 'pick'); const cv = el('canvas'); paintPortrait(cv, c.look);
-    b.append(cv, el('span', '', esc(c.name))); b.dataset.id = id;
-    b.onclick = () => { sfx('tap'); if (confirm(STR.title.confirmPick(c.name))) { t.classList.add('hidden'); startNewGame(id); hooks.newGame?.(); } };
+    const saved = peekSave(id);
+    const b = el('button', 'pick' + (id === last ? ' last' : '')); const cv = el('canvas'); paintPortrait(cv, c.look);
+    b.append(cv, el('span', '', esc(c.name)), el('small', saved ? 'has' : '', saved ? STR.title.progress(saved.shards?.length || 0, content.config.finalShards) : STR.title.newTag));
+    b.dataset.id = id;
+    b.onclick = () => {
+      sfx('tap');
+      if (saved) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; }
+      if (confirm(STR.title.confirmPick(c.name))) { t.classList.add('hidden'); startNewGame(id); hooks.newGame?.(); }
+    };
     grid.appendChild(b);
   }
-  t.append(grid, el('p', '', STR.title.pickHelp));
+  t.append(grid, el('p', '', STR.title.pickHelp), el('p', '', STR.title.tip));
 }
 export function hideTitle() { $('title').classList.add('hidden'); }
 
-export async function showIntro() { await say(content.config.intro.map((text) => ({ who: 'narrator', text }))); }
+export async function showIntro() {
+  await say(content.config.intro.map((text) => ({ who: 'narrator', text })));
+  const ab = content.characters[S.state.activeChar]?.ability;
+  if (ab) await say([{ who: 'narrator', text: STR.ability.tutorial(ab.name, ab.desc) }]);
+}
 export async function showEnding() {
   await say(content.config.outro.map((text) => ({ who: 'narrator', text })));
   setFlag('game_complete'); saveGame();

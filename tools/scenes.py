@@ -25,6 +25,8 @@ class M:
     def prop(self, type_, x, y, **kw): self.props.append(dict(type=type_, x=x, y=y, **kw)); return self
     def npc(self, id_, x, y, d=0, **kw): self.npcs.append(dict(id=id_, x=x, y=y, dir=d, **kw)); return self
     def pick(self, id_, item, x, y, qid, hidden=False): self.pickups.append(dict(id=id_, item=item, x=x, y=y, hidden=hidden, needsQuest=qid)); return self
+    def broken(self, x, y, n=1):
+        return self.prop('sign', x, y, id=f'broken_{self.id}_{n}', ability='fix', flag=f'fixed_{self.id}_{n}', reward=dict(coins=15, xp=10), interact=dict(dialogue='broken_generic'))
     def exit(self, x, y): return self.prop('door', x, y, id='exit', interact=dict(action='exit'))
 
     def out(self):
@@ -59,6 +61,7 @@ def build():
         m.prop('deer', x, y, id=f'deer{i}', gives='deer_photo', givesText='קליק! צילום מושלם של איל שמסתובב לו חופשי ברחוב.', emptyText='האיל כבר צולם. הוא קצת עייף מכל הפפראצי.')
     for i, (x, y) in enumerate([(3, 3), (5, 3), (7, 3), (3, 6), (5, 6), (8, 6), (14, 3), (21, 3), (24, 8), (22, 14)], 1):
         m.npc('jp_man' if i % 4 == 1 else f'jp_man{(i - 1) % 4 + 1}', x, y, 0, gives='minyan_man', uid=f'man{i}', givesText='״בשמחה! אני מצטרף למניין.״', emptyText='הוא כבר איתנו במניין.')
+    m.broken(22, 12)
     maps['jp'] = m.out()
     item('deer_photo', 'צילום של איל', 'star', '#c58d4a', 'איל ביפן, ממש ברחוב.')
     item('minyan_man', 'משתתף למניין', 'toy', '#f4f4f8', 'עוד אחד לעשרה.')
@@ -81,6 +84,7 @@ def build():
         m.prop('counter', x, y, id=f'stall{i}', interact=dict(dialogue=f'stall{i}'))
     m.prop('plant', 3, 9).prop('plant', 24, 9).prop('lamp', 13, 9)
     m.pick('phone_pk', 'phone_anat', 11, 5, 'q_phone', hidden=True)
+    m.broken(7, 10)
     maps['mall'] = m.out()
     quests['q_phone'] = dict(id='q_phone', title='איפה הטלפון?!', summary='אמא שוב שכחה את הטלפון באחת החנויות.', scene=dict(map='mall', x=3, y=11), maps=['mall'], steps=[
         dict(type='cutscene', lines=[L('narrator', 'שוק גדול, ארבע חנויות, ואמא מתמקחת בכל אחת.'), L('anat', 'כמה זה עולה? בחצי?'), L('narrator', 'שעה אחר כך, ליד הקופה האחרונה...'), L('anat', 'רגע. איפה הטלפון שלי?! אוי, אוי, אוי!')]),
@@ -96,6 +100,7 @@ def build():
     m.prop('desk', 10, 4, id='rental', interact=dict(dialogue='rental_look')).prop('sign', 18, 4, interact=dict(dialogue='gate_sign'))
     m.prop('car', 17, 9, id='rental_car', interact=dict(dialogue='car_look')).prop('suitcase', 15, 9).prop('suitcase', 20, 9)
     for i, (x, y) in enumerate([(5, 5), (13, 8), (21, 6)], 1): m.pick(f'cloth{i}', 'cloth', x, y, 'q_barcelona', hidden=(i > 1))
+    m.broken(12, 5)
     maps['airport'] = m.out()
     m = M('road', 'הדרך לברצלונה', 12, 8, 'A', 'town', (2, 4)); m.rect(0, 3, 12, 2, 'L'); maps['road'] = m.out()
     m = M('port', 'נמל ברצלונה', 22, 12, 'D', 'beach', (2, 9))
@@ -120,6 +125,7 @@ def build():
     m.prop('ship', 14, 4, id='ship2'); m.prop('desk', 6, 6, id='checkin', interact=dict(dialogue='checkin_look'))
     m.npc('agent', 8, 6, 0)
     for i, (x, y) in enumerate([(4, 4), (12, 9), (20, 8)], 1): m.pick(f'form{i}', 'form', x, y, 'q_cruise', hidden=(i == 3))
+    m.broken(10, 9)
     maps['terminal'] = m.out()
     item('form', 'טופס צ׳ק-אין', 'book', '#f4f4f8', 'מסמך שהנציגה ביקשה.')
     quests['q_cruise'] = dict(id='q_cruise', title='הפלגה עם סיפור', summary='כמעט לא העלו את יואב להפלגה. הפתרון הגיע בטלפון.', scene=dict(map='terminal', x=3, y=9), maps=['terminal'], steps=[
@@ -139,6 +145,7 @@ def build():
     m.rect(1, 1, 22, 1, 'W'); m.rect(1, 2, 8, 4, 't'); m.rect(10, 6, 12, 5, 'r'); m.exit(1, 11)
     m.prop('fridge', 1, 2).prop('stove', 2, 2, id='fish', interact=dict(dialogue='fish_look')).prop('counter', 4, 2).prop('table', 12, 8).prop('table', 15, 8).prop('table', 18, 8)
     for i, (x, y) in enumerate([(4, 4), (6, 4), (8, 4), (5, 5), (7, 5), (9, 5), (11, 3), (14, 3), (17, 3), (20, 3), (21, 6), (11, 12)], 1): m.pick(f'salad{i}', 'salad', x, y, 'q_dinner', hidden=(i % 4 == 0))
+    m.broken(20, 11)
     maps['dining'] = m.out()
     item('salad', 'סלט', 'food', '#5be37d', 'אחד מ-12 סוגי הסלטים.')
     quests['q_dinner'] = dict(id='q_dinner', title='ארוחת שישי: 12 סלטים', summary='אמא מבשלת, אבא אומר דבר תורה, ובכל זאת צריך עזרה.', scene=dict(map='dining', x=3, y=11), maps=['dining'], steps=[
@@ -175,6 +182,7 @@ def build():
     m.rect(1, 1, 16, 1, 'W'); m.rect(2, 6, 6, 4, 'c'); m.exit(1, 9)
     m.prop('bed', 14, 4).prop('shelf', 3, 2).prop('plant', 16, 2).prop('table', 8, 3)
     for i, (x, y) in enumerate([(5, 3), (9, 6), (13, 8), (3, 7), (15, 6), (10, 9), (7, 3)], 1): m.pick(f'ready{i}', 'ready_item', x, y, 'q_seven', hidden=(i in (3, 6)))
+    m.broken(10, 4)
     maps['room'] = m.out()
     item('ready_item', 'משהו לצאת איתו', 'default', '#f4f4f8', 'בגד, תיק, מפתחות. הכול נחוץ.')
     quests['q_seven'] = dict(id='q_seven', title='שבע דקות', summary='מרדכי בדרך, וטוהר באמצע להתארגן.', scene=dict(map='room', x=3, y=9), maps=['room'], steps=[
@@ -195,10 +203,10 @@ def build():
         dict(type='talk', npc='terry', text='לגשת לטרי ליד הבריכה (הוא מדבר רק אנגלית).', lines=[L('terry', 'Hi! Nice pool, right?'), L('terry', "I'm only here for a friend's wedding, but I think I'm going to love this place."), L('player', 'Welcome to Israel!')]),
         dict(type='minigame', auto=True, game='memory', text='לשחק משחק זיכרון על הבריכה.', config=dict(pairs=6, faces=['🏊', '🍹', '☀️', '🌴', '✈️', '🏨']), lines=[L('narrator', 'השיחה נמשכת ונמשכת. בינתיים כל המלון עסוק במשחקי בריכה.')]),
         dict(type='cutscene', lines=[L('narrator', 'למחרת בבוקר.'), L('terry', 'What are you doing tomorrow? Want to fly to Dubai with me?')]),
-        dict(type='choice', who='terry', question='טרי שואל: ״Want to fly to Dubai with me?״ מה עונים?', options=[
-            dict(text='״Are you crazy? We just met!״', reply=[L('terry', 'Come on, live a little!')]),
-            dict(text='״Why not? Let us go!״', correct=True, reply=[L('terry', 'Amazing! Pack a bag!')]),
-            dict(text='״I need to ask my mother first.״', reply=[L('terry', "Ha! Okay... but I'll wait.")])]),
+        dict(type='choice', who='terry', question="So... want to fly to Dubai with me tomorrow?", options=[
+            dict(text='Are you crazy? We just met!', reply=[L('terry', 'Come on, live a little!')]),
+            dict(text="Why not? Let's go!", correct=True, reply=[L('terry', 'Amazing! Pack a bag!')]),
+            dict(text='I need to ask my mother first.', reply=[L('terry', "Ha! Okay... but I'll wait.")])]),
         dict(type='teleport', map='dubai', x=3, y=9),
         dict(type='cutscene', lines=[L('narrator', 'דובאי. יום אחד אחרי שהכירו. סיפור מטורף.'), L('terry', 'Best decision I ever made.'), L('narrator', 'היום הם ביחד כמה חודשים, בקשר מרחוק, וטסים אחד לשנייה.')])],
         reward=dict(coins=45, xp=60, shard=dict(id='shard_terry', title='בריכה בתל אביב', story='עדן הכירה את טרי, אוסטרלי שהגיע לחתונה של חבר, בבריכה של מלון בתל אביב, ולמחרת הוא שכנע אותה לטוס איתו לדובאי.')))
@@ -209,6 +217,7 @@ def build():
     m.prop('table', 11, 8).prop('table', 14, 8).prop('plant', 3, 3).prop('plant', 19, 3).prop('door', 10, 2, id='mirror', interact=dict(dialogue='mirror_look'))
     m.npc('guest', 12, 6, 0).npc('guest', 16, 6, 0)
     m.pick('boots_pk', 'boots', 4, 6, 'q_cat', hidden=True).pick('cat_hat_pk', 'cat_hat', 18, 11, 'q_cat', hidden=True)
+    m.broken(6, 8)
     maps['purim'] = m.out()
     quests['q_cat'] = dict(id='q_cat', title='החתול במגפיים', summary='בפורים רצו ארוחה בסגנון שרק, ורק מעיין התחפשה.', scene=dict(map='purim', x=3, y=11), maps=['purim'], steps=[
         dict(type='cutscene', lines=[L('narrator', 'פורים. המשפחה רצתה ארוחה בסגנון שרק, עם תחפושות.'), L('narrator', 'בסוף לא הסתדר, ואף אחד לא התחפש. כמעט אף אחד.'), L('maayan', 'אני מתחפשת! צריך רק למצוא מגפיים וכובע.')]),
@@ -248,6 +257,7 @@ def build():
     m.rect(1, 6, 20, 1, 'p'); m.exit(1, 11)
     m.prop('car', 14, 9, id='car_y', interact=dict(dialogue='car_dirty')).prop('tree', 4, 4).prop('tree', 18, 4).prop('bush', 8, 3).prop('lamp', 11, 7)
     for i, (x, y) in enumerate([(5, 8), (8, 10), (11, 3), (16, 6), (19, 11), (7, 5), (13, 12), (3, 6)], 1): m.pick(f'litter{i}', 'litter', x, y, 'q_yoav', hidden=(i % 3 == 0))
+    m.broken(10, 9)
     maps['yard'] = m.out()
     m = M('flash', 'זיכרון: הבית החדש', 16, 10, '.', 'home', (3, 7)); m.rect(0, 0, 16, 1, '#'); m.rect(1, 1, 14, 1, 'W'); m.rect(4, 4, 8, 4, 'r'); m.exit(1, 7)
     m.npc('yoav_kid', 8, 5, 0).prop('sofa', 5, 3).prop('plant', 13, 3)
@@ -263,6 +273,7 @@ def build():
         reward=dict(coins=45, xp=60, shard=dict(id='shard_yoav', title='הגינה של יואב', story='אימצנו את יואב כשהיה בן 4, ילד מתוק ובלונדיני עם שיער ארוך. היום הוא קשוח ומסודר, ואוהב לנקות את הכול.')))
 
     dialogues = {
+        'broken_generic': {'start': {'who': 'narrator', 'text': 'משהו שבור. מי שיש לו יכולת תיקון (כפתור B) יכול לסדר אותו ולקבל פרס.', 'next': None}},
         'sumo_look': {'start': {'who': 'narrator', 'text': 'זירת סומו. מרדכי כבר מתלהב.', 'next': None}},
         'stall1': {'start': {'who': 'narrator', 'text': 'חנות הבגדים. אמא התמקחה כאן על חולצה.', 'next': None}},
         'stall2': {'start': {'who': 'narrator', 'text': 'חנות התכשיטים. נוצצת במיוחד.', 'next': None}},
@@ -277,4 +288,43 @@ def build():
         'mirror_look': {'start': {'who': 'narrator', 'text': 'מראה גדולה. אפשר להתחפש מולה.', 'next': None}},
         'car_dirty': {'start': {'who': 'narrator', 'text': 'הרכב מלוכלך. יואב לא יסלח.', 'next': None}},
     }
+    # ---------------- levels: order, who calls the player, and the mission briefing (adventure style, not a memory)
+    LEVELS = [
+        ('q_phone', ['anat', 'yitzhak', 'mordechai', 'eden'],
+         ['הטלפון שלי נעלם בשוק, ואני כבר מרגישה את הפאניקה!', 'המשימה: לחזור לשוק, לשחזר את המסלול שלי בין החנויות ולמצוא אותו. {f:תבואי|m:תבוא} איתי?'],
+         ['יש לנו משימה דחופה! אנט שוב שכחה את הטלפון בחנות, והיא כבר נבהלת.', 'המשימה: לרוץ לשוק, לשחזר באיזה סדר היא עברה בין החנויות ולמצוא את הטלפון. {f:מוכנה|m:מוכן}?']),
+        ('q_japan', ['yitzhak', 'mordechai', 'anat', 'eden'],
+         ['יש לי הרפתקה בשבילכם: אנחנו טסים ליפן!', 'המשימה: לצלם 3 איילים ברחוב, להתמודד בקרב סומו ולהרכיב מניין של עשרה לתפילה. {f:מוכנה|m:מוכן}?'],
+         ['אבא ואני טסים ליפן לשלושה שבועות, וצריך עוד ידיים!', 'המשימה: לצלם 3 איילים ברחוב, להתמודד בקרב סומו ולהרכיב מניין של עשרה לתפילה. {f:מוכנה|m:מוכן}?']),
+        ('q_seven', ['tohar', 'mordechai', 'rinat', 'maayan'],
+         ['מהר! מרדכי בדרך, יש לי שבע דקות להתארגן, ואני לא מוצאת כלום!', 'המשימה: לאסוף 7 דברים לפני שהשעון נגמר. {f:תעזרי|m:תעזור} לי?'],
+         ['טוהר בצרה: מרדכי התקשר שהוא בדרך, ״שבע דקות״, והיא לא מוכנה בכלל!', 'המשימה: לעזור לה לאסוף 7 דברים לפני שהשעון נגמר. {f:מוכנה|m:מוכן}?']),
+        ('q_cat', ['maayan', 'eden', 'tohar', 'mordechai'],
+         ['פורים! רציתי ארוחה בסגנון שרק, ואף אחד לא מתחפש. אז אני כן!', 'המשימה: למצוא מגפיים וכובע, להתחפש לחתול במגפיים ולהיכנס לארוחה בהפתעה. {f:תבואי|m:תבוא} איתי?'],
+         ['מעיין מתכננת הפתעה בפורים: להגיע לארוחה בתחפושת חתול במגפיים.', 'המשימה: לעזור לה למצוא את התחפושת ולהיכנס בגדול. {f:מוכנה|m:מוכן}?']),
+        ('q_terry', ['eden', 'mordechai', 'maayan', 'anat'],
+         ['יש לי הרפתקה מטורפת: בריכה במלון בתל אביב, בחור אוסטרלי, ולמחרת טיסה לדובאי.', 'המשימה: ללכת לבריכה ולהכיר את טרי (הוא מדבר רק אנגלית!). {f:תבואי|m:תבוא}?'],
+         ['עדן מספרת איך הכירה את טרי, ויש סיפור מטורף בדרך.', 'המשימה: ללכת לבריכה, לדבר עם טרי (באנגלית!) ולהחליט אם טסים איתו לדובאי. {f:מוכנה|m:מוכן}?']),
+        ('q_dinner', ['anat', 'yitzhak', 'tohar', 'rinat'],
+         ['ליל שישי! 12 סלטים, דג מרוקאי, והכול צריך להיות מוכן בזמן.', 'המשימה: לאסוף את כל הסלטים, להשגיח על הדג ולחכות לדבר התורה של אבא. {f:תעזרי|m:תעזור} לי?'],
+         ['ארוחת שישי של אמא מתקרבת: 12 סוגי סלטים ודג מרוקאי.', 'המשימה: לעזור לה להכין הכול בזמן. {f:מוכנה|m:מוכן}?']),
+        ('q_barcelona', ['anat', 'maayan', 'yitzhak', 'mordechai'],
+         ['פספסנו את הקונקשן בשוויץ, וההפלגה יוצאת מחר בבוקר!', 'המשימה: לשכור רכב, לקשור את המזוודות לגג ולנסוע שעות עד ברצלונה. {f:תבואי|m:תבוא} איתנו?'],
+         ['אמא והאחים והאחיות שלה פספסו קונקשן בשוויץ, וההפלגה למחרת בבוקר.', 'המשימה: לעזור להם להגיע לברצלונה בזמן: רכב שכור, מזוודות על הגג ושעות של נסיעה. {f:מוכנה|m:מוכן}?']),
+        ('q_cruise', ['anat', 'tohar', 'rinat', 'mordechai'],
+         ['הנציגה לא רוצה להעלות את יואב לספינה, כי היא חושבת שיש לו קורונה!', 'המשימה: לשכנע אותה לפני שהספינה תצא. אולי מרדכי יכול לעזור בטלפון. {f:תעזרי|m:תעזור} לנו?'],
+         ['אמא, טוהר, רינת ויואב תקועים בנמל: חושבים שליואב יש קורונה.', 'המשימה: לעזור להם לעלות על הספינה, ואולי להתקשר למרדכי. {f:מוכנה|m:מוכן}?']),
+        ('q_pikanto', ['tohar', 'rinat', 'mordechai', 'anat'],
+         ['קריאה דחופה! אני נוהגת בפיקנטו של מד״א וצריך להגיע מהר.', 'המשימה: להגיע לכתובת ולדווח למוקד. {f:תבואי|m:תבוא} איתי?'],
+         ['טוהר חובשת במד״א, והיא יוצאת לקריאה דחופה בפיקנטו.', 'המשימה: ללוות אותה: לנסוע, להגיע לדירה ולדווח למוקד. {f:מוכנה|m:מוכן}?']),
+        ('q_rinat', ['rinat', 'mordechai', 'tohar', 'anat'],
+         ['הכותל, ההצעה של אליאור, ואחרי זה חלום שהתגשם.', 'המשימה: להגיע לכותל ואחר כך להיכנס לחלום ולמצוא את התינוקת. {f:תבואי|m:תבוא}?'],
+         ['רינת מזכירה יום מיוחד בכותל וחלום של מרדכי לפני הלידה.', 'המשימה: ללוות אותה גם לכותל וגם לחלום. {f:מוכנה|m:מוכן}?']),
+        ('q_yoav', ['yoav', 'anat', 'rinat', 'tohar'],
+         ['יש פה לכלוך.', 'המשימה: לנקות את הגינה, לשטוף את הרכב, ואחר כך אראה לך משהו. {f:תעזרי|m:תעזור} לי?'],
+         ['יואב מחכה בגינה: יש לכלוך, והוא לא נרגע.', 'המשימה: לעזור לו לנקות את הכול, ואז הוא יראה לך משהו מיוחד. {f:מוכנה|m:מוכן}?']),
+    ]
+    for i, (qid, callers, mself, mother) in enumerate(LEVELS, 1):
+        q = quests[qid]; q['order'] = i; q['callers'] = callers; q['missionSelf'] = mself; q['missionOther'] = mother
+        q['summary'] = q['summary'].replace('זיכרון', 'הרפתקה')
     return maps, quests, items, npcs, dialogues

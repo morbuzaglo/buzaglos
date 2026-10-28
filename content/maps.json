@@ -146,7 +146,7 @@
     "y": 10,
     "id": "album_portal",
     "interact": {
-     "action": "stories"
+     "dialogue": "album_progress"
     }
    }
   ],
@@ -878,6 +878,21 @@
     "gives": "deer_photo",
     "givesText": "קליק! צילום מושלם של איל שמסתובב לו חופשי ברחוב.",
     "emptyText": "האיל כבר צולם. הוא קצת עייף מכל הפפראצי."
+   },
+   {
+    "type": "sign",
+    "x": 22,
+    "y": 12,
+    "id": "broken_jp_1",
+    "ability": "fix",
+    "flag": "fixed_jp_1",
+    "reward": {
+     "coins": 15,
+     "xp": 10
+    },
+    "interact": {
+     "dialogue": "broken_generic"
+    }
    }
   ],
   "npcs": [
@@ -1093,6 +1108,21 @@
     "type": "lamp",
     "x": 13,
     "y": 9
+   },
+   {
+    "type": "sign",
+    "x": 7,
+    "y": 10,
+    "id": "broken_mall_1",
+    "ability": "fix",
+    "flag": "fixed_mall_1",
+    "reward": {
+     "coins": 15,
+     "xp": 10
+    },
+    "interact": {
+     "dialogue": "broken_generic"
+    }
    }
   ],
   "npcs": [],
@@ -1199,6 +1229,21 @@
     "type": "suitcase",
     "x": 20,
     "y": 9
+   },
+   {
+    "type": "sign",
+    "x": 12,
+    "y": 5,
+    "id": "broken_airport_1",
+    "ability": "fix",
+    "flag": "fixed_airport_1",
+    "reward": {
+     "coins": 15,
+     "xp": 10
+    },
+    "interact": {
+     "dialogue": "broken_generic"
+    }
    }
   ],
   "npcs": [],
@@ -1414,6 +1459,21 @@
     "interact": {
      "dialogue": "checkin_look"
     }
+   },
+   {
+    "type": "sign",
+    "x": 10,
+    "y": 9,
+    "id": "broken_terminal_1",
+    "ability": "fix",
+    "flag": "fixed_terminal_1",
+    "reward": {
+     "coins": 15,
+     "xp": 10
+    },
+    "interact": {
+     "dialogue": "broken_generic"
+    }
    }
   ],
   "npcs": [
@@ -1543,6 +1603,21 @@
     "type": "table",
     "x": 18,
     "y": 8
+   },
+   {
+    "type": "sign",
+    "x": 20,
+    "y": 11,
+    "id": "broken_dining_1",
+    "ability": "fix",
+    "flag": "fixed_dining_1",
+    "reward": {
+     "coins": 15,
+     "xp": 10
+    },
+    "interact": {
+     "dialogue": "broken_generic"
+    }
    }
   ],
   "npcs": [],
@@ -1841,6 +1916,21 @@
     "type": "table",
     "x": 8,
     "y": 3
+   },
+   {
+    "type": "sign",
+    "x": 10,
+    "y": 4,
+    "id": "broken_room_1",
+    "ability": "fix",
+    "flag": "fixed_room_1",
+    "reward": {
+     "coins": 15,
+     "xp": 10
+    },
+    "interact": {
+     "dialogue": "broken_generic"
+    }
    }
   ],
   "npcs": [],
@@ -2147,6 +2237,21 @@
     "interact": {
      "dialogue": "mirror_look"
     }
+   },
+   {
+    "type": "sign",
+    "x": 6,
+    "y": 8,
+    "id": "broken_purim_1",
+    "ability": "fix",
+    "flag": "fixed_purim_1",
+    "reward": {
+     "coins": 15,
+     "xp": 10
+    },
+    "interact": {
+     "dialogue": "broken_generic"
+    }
    }
   ],
   "npcs": [
@@ -2428,6 +2533,21 @@
     "type": "lamp",
     "x": 11,
     "y": 7
+   },
+   {
+    "type": "sign",
+    "x": 10,
+    "y": 9,
+    "id": "broken_yard_1",
+    "ability": "fix",
+    "flag": "fixed_yard_1",
+    "reward": {
+     "coins": 15,
+     "xp": 10
+    },
+    "interact": {
+     "dialogue": "broken_generic"
+    }
    }
   ],
   "npcs": [],

@@ -1,13 +1,78 @@
 // Story scenes: each family story is its own playable scene (map + steps). Mixed into the World scene.
 import { content } from '../content.js';
 import { S, saveGame, addItem, removeItem, itemCount } from '../state.js';
+import { characterTexture } from '../art.js';
 import * as Q from '../systems/quests.js';
 import * as UI from '../ui/ui.js';
 import { playMinigame } from '../ui/minigames.js';
 import { STR, tpl } from '../i18n.js';
 import { sfx } from '../audio.js';
 
+const HUB_CALL = { x: 19, y: 5, dir: 2 };
+
 export const storyMethods = {
+  /** The next level, who calls the player, and where. Runs when a map loads. */
+  setupMission() {
+    this.mission = Q.currentMission();
+    this.callerId = null; this.callerRec = null;
+    const hub = content.config.hub || { map: 'house' };
+    if (!this.mission || this.map.id !== hub.map) return;
+    this.callerId = this.mission.callers.find((id) => content.npcs[id] && content.npcs[id].character !== S.state.activeChar) || null;
+    if (!this.callerId) return;
+    const pt = content.config.callPoint || HUB_CALL;
+    this.addNpc({ id: this.callerId, x: pt.x, y: pt.y, dir: pt.dir ?? 2, call: true });
+    this.callerRec = this.npcs[this.npcs.length - 1];
+    if (this.callerRec) { this.callerRec.spr.label?.el.classList.add('calling'); this.markCaller(this.callerRec); }
+  },
+  markCaller(rec) {
+    const host = document.getElementById('labels'); if (!host) return;
+    const m = document.createElement('span'); m.className = 'callmark'; m.textContent = '!'; host.appendChild(m);
+    (this.labels ||= []).push({ el: m, spr: rec.spr, scale: rec.spr.scaleY, extra: 22, mark: true });
+  },
+  announceMission() {
+    if (!this.mission || !this.callerId) { if (!this.mission && content.config.finalShards && S.state.shards.length >= content.config.finalShards) UI.queueToast(STR.mission.allDone, 3000); return; }
+    const ch = content.characters[this.callerId];
+    UI.queueToast(STR.mission.calls(content.npcs[this.callerId].name, ch?.gender), 3200); sfx('door');
+  },
+  /** The caller briefs the player like an adventure mission, then the level starts. */
+  async startMission() {
+    const q = this.mission; if (!q) return;
+    const protag = q.callers[0], me = this.callerId;
+    const texts = me === protag ? q.missionSelf : q.missionOther;
+    const lines = texts.map((text) => ({ who: me, text }));
+    if (S.state.quests[q.id]?.state === 'active') lines.unshift({ who: me, text: STR.mission.resume });
+    await UI.say(lines);
+    await UI.choose('narrator', STR.mission.level(q.order, tpl(q.title)), [STR.mission.go]);
+    this.enterStory(q.id);
+  },
+  /** Compass arrow pointing at the caller (or at the way home when we are elsewhere). */
+  updateGuide() {
+    const g = document.getElementById('guide'); if (!g) return;
+    let target = null;
+    const hub = content.config.hub || { map: 'house' };
+    if (this.mission && !this.busy && !this.transitioning && this.player && !UI.panelOpen() && !UI.dialogueOpen()) {
+      if (this.callerRec) target = { x: this.callerRec.spr.x, y: this.callerRec.spr.y - 14 };
+      else if (this.map.id !== hub.map && !Q.activeStory()) target = this.doorTowardHub();
+    }
+    if (!target) { g.classList.add('hidden'); return; }
+    const cam = this.cameras.main, wv = cam.worldView, z = cam.zoom;
+    const px = (this.player.x - wv.x) * z, py = (this.player.y - 14 - wv.y) * z;
+    const dx = (target.x - wv.x) * z - px, dy = (target.y - wv.y) * z - py, dist = Math.hypot(dx, dy);
+    if (dist < 70) { g.classList.add('hidden'); return; }
+    g.classList.remove('hidden');
+    const r = Math.min(64, dist - 40), ax = px + (dx / dist) * r, ay = py + (dy / dist) * r;
+    g.style.transform = `translate(${Math.round(ax)}px, ${Math.round(ay)}px) translate(-50%, -50%)`;
+    g.firstElementChild.style.transform = `rotate(${Math.atan2(dy, dx)}rad)`;
+  },
+  doorTowardHub() {
+    const hub = (content.config.hub || { map: 'house' }).map;
+    const prev = { [hub]: null }, queue = [hub];
+    while (queue.length) { const m = queue.shift(); for (const [id, mp] of Object.entries(content.maps)) { if (prev[id] === undefined && (mp.doors || []).some((d) => d.to === m)) { prev[id] = m; queue.push(id); } } }
+    const next = prev[this.map.id]; if (!next) return null;
+    const d = (this.map.doors || []).find((x) => x.to === next); if (!d) return null;
+    return { x: d.x * 16 + 8, y: d.y * 16 + 8 };
+  },
+
   /** Enter (or resume / replay) a story from the family album. */
   enterStory(qid) {
     const q = content.quests[qid]; if (!q?.scene) return;
@@ -17,10 +82,37 @@ export const storyMethods = {
       this.clearStoryCollected(q);
     } else if (!st) Q.startQuest(qid);
     st = S.state.quests[qid];
+    if (this.callerId) st.companion = this.callerId;
     const where = st.at || q.scene;
     this.transitioning = false;
     this.changeMap(where.map, where.x, where.y);
     saveGame();
+  },
+  /** The character who gave the mission walks with the player through every map of the level. */
+  setupCompanion() {
+    this.companion = null;
+    const q = Q.activeStory(); if (!q || !this.inStoryMap(q) || !this.player) return;
+    const id = S.state.quests[q.id].companion, def = content.npcs[id]; if (!def) return;
+    const key = characterTexture(this, 'n_' + id, def.look);
+    const spr = this.add.sprite(this.player.x - 14, this.player.y, key, 0).setOrigin(0.5, 32 / 34);
+    spr.play(`${key}_idle0`); this.layer.add(spr);
+    this.makeLabel(spr, def.name, false);
+    this.companion = { id, spr, key, hist: [], moving: false, dir: 0 };
+  },
+  updateCompanion() {
+    const c = this.companion, p = this.player; if (!c || !p) return;
+    const h = c.hist, last = h[h.length - 1];
+    if (!last || Math.hypot(p.x - last.x, p.y - last.y) > 3) h.push({ x: p.x, y: p.y });
+    if (h.length > 40) h.shift();
+    const tgt = h.length > 9 ? h[h.length - 9] : { x: p.x - 14, y: p.y };
+    const dx = tgt.x - c.spr.x, dy = tgt.y - c.spr.y, d = Math.hypot(dx, dy);
+    if (Math.hypot(p.x - c.spr.x, p.y - c.spr.y) > 150) { c.spr.x = tgt.x; c.spr.y = tgt.y; }
+    const toPlayer = Math.hypot(p.x - c.spr.x, p.y - c.spr.y);
+    const moving = d > 1.2 && toPlayer > 13;
+    if (moving) { c.spr.x += dx * 0.14; c.spr.y += dy * 0.14; c.dir = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 2 : 3) : (dy < 0 ? 1 : 0); }
+    const anim = `${c.key}_${moving ? 'walk' : 'idle'}${c.dir}`;
+    if (c.spr.anims.currentAnim?.key !== anim) c.spr.play(anim);
+    c.spr.setDepth(c.spr.y);
   },
   exitStory() {
     const hub = content.config.hub || { map: 'house', x: 9, y: 11 };

@@ -158,3 +158,24 @@ Object.assign(T, {
   },
 });
 1;
+Object.assign(T, {
+  callAndEnter: async () => {
+    const w = T.w(); const rec = w.callerRec; if (!rec) return 'no-caller';
+    w.player.x = rec.spr.x + 14; w.player.y = rec.spr.y; w.player.dir = 2; await T.sleep(400);
+    w.onA(); await T.sleep(600);
+    for (let k = 0; k < 30; k++) { if (document.querySelector('#dialogue .choice')) { await T.clickChoice(0); break; } document.getElementById('dialogue') && document.getElementById('dialogue').click(); await T.sleep(350); }
+    await T.sleep(1800); return 'entered';
+  },
+  playthrough4: async (log) => {
+    window.__bzTest = { autowin: { drive: true, sequence: true } };
+    const { S, Q } = __bz; const res = {};
+    for (const q of Q.missions()) {
+      await T.sleep(1500);
+      const r = await T.callAndEnter(); log.push(q.id + ' call=' + r + ' caller=' + (T.w().callerId || '-'));
+      res[q.id] = await T.solve(q.id, log);
+      await T.sleep(800);
+    }
+    return JSON.stringify({ res, shards: S.state.shards.length, map: S.state.map });
+  },
+});
+1;

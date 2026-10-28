@@ -1,6 +1,7 @@
 // High-resolution (24x34) pixel characters with an automatic outline, shading and per-person details.
 // look: { skin, hair, hairStyle: short|long|curly|bun|ponytail|bald, shirt, pants, shoes?, accessory: none|glasses|catglasses|beard|both,
 //         beardColor?, hat?, hatStyle?: cap|kippah|scarf, bottom?: pants|skirt|longskirt, sleeves?: long|short|none,
+//         eyes? (iris colour), extras?: [freckles, earrings, necklace, bowtie, headphones, mustache],
 //         bag?, book?, stripes?, print?, collar?, wide? }
 export const CHAR_W = 24, CHAR_H = 34;
 export const DEFAULT_LOOK = { skin: '#f1c9a0', hair: '#4a2c17', hairStyle: 'short', shirt: '#3a7bd5', pants: '#2c3e72', accessory: 'none', hat: null };
@@ -22,6 +23,8 @@ export function drawCharFrame(ctx, ox, oy, dir, f, look) {
   const P = o.pants, PD = shade(P, -34), PL = shade(P, 14);
   const SH = o.shoes || '#2b2433', SHD = shade(SH, -60), SHL = shade(SH, 30);
   const bottom = o.bottom || 'pants', sleeves = o.sleeves || 'long';
+  const EYE = o.eyes || '#2a1a14';
+  const ex = new Set(o.extras || []);
   const bob = f === 0 ? 0 : -1;                    // body bounces while walking
   const liftL = f === 1, liftR = f === 2;          // which leg is raised
   const armL = f === 1 ? 1 : f === 2 ? -1 : 0;
@@ -87,7 +90,7 @@ export function drawCharFrame(ctx, ox, oy, dir, f, look) {
     head(0); R(7, 13 + hy, 10, 1, skD);
     if (!o.hat || o.hatStyle !== 'scarf') { R(5, 8 + hy, 1, 3, sk); R(18, 8 + hy, 1, 3, sk); set(5, 9 + hy, skD); set(18, 9 + hy, skD); }
     if (!back) {
-      const eye = (x) => { R(x, 8 + hy, 2, 2, '#1a1020'); set(x, 8 + hy, '#ffffff'); };
+      const eye = (x) => { R(x, 8 + hy, 2, 1, '#1a1020'); R(x, 9 + hy, 2, 1, EYE); set(x, 9 + hy, '#ffffff'); set(x + 1, 9 + hy, EYE); };
       eye(9); eye(14);
       R(9, 7 + hy, 2, 1, HD); R(14, 7 + hy, 2, 1, HD);
       set(12, 10 + hy, skD); set(12, 11 + hy, skD);
@@ -98,7 +101,7 @@ export function drawCharFrame(ctx, ox, oy, dir, f, look) {
     const rows = [[9, 16], [7, 17], [7, 17], [7, 17], [7, 17], [7, 17], [7, 17], [7, 17], [7, 17], [7, 17], [7, 17], [9, 15]];
     rows.forEach(([a, b], i) => R(a, 2 + i + hy, b - a + 1, 1, sk));
     set(6, 9 + hy, sk); set(6, 10 + hy, skD);                              // nose
-    R(9, 8 + hy, 2, 2, '#1a1020'); set(9, 8 + hy, '#ffffff'); R(9, 7 + hy, 2, 1, HD);
+    R(9, 8 + hy, 2, 1, '#1a1020'); R(9, 9 + hy, 2, 1, EYE); set(9, 9 + hy, '#ffffff'); R(9, 7 + hy, 2, 1, HD);
     R(8, 12 + hy, 3, 1, '#b5524c'); set(9, 11 + hy, blush); set(10, 11 + hy, blush);
     R(13, 8 + hy, 2, 3, sk); set(14, 9 + hy, skD);                          // ear
   }
@@ -131,7 +134,7 @@ export function drawCharFrame(ctx, ox, oy, dir, f, look) {
   if (o.hat) {
     const C = o.hat, CD = shade(C, -34), CL = shade(C, 26);
     if (o.hatStyle === 'scarf') {
-      if (!side) { R(6, 1 + hy, 12, 4, C); R(5, 3 + hy, 14, 3, C); R(5, 6 + hy, 3, 8, C); R(16, 6 + hy, 3, 8, C); R(8, 5 + hy, 8, 1, CD); R(7, 12 + hy, 3, 3, CD); R(14, 12 + hy, 3, 3, CD); R(8, 2 + hy, 3, 1, CL); if (back) { R(5, 3 + hy, 14, 12, C); R(11, 11 + hy, 2, 4, CD); } }
+      if (!side) { R(6, 1 + hy, 12, 4, C); R(5, 3 + hy, 14, 3, C); R(5, 6 + hy, 3, 8, C); R(16, 6 + hy, 3, 8, C); if (!back) { R(8, 5 + hy, 8, 2, H); R(8, 5 + hy, 8, 1, HD); set(7, 6 + hy, H); set(16, 6 + hy, H); R(8, 4 + hy, 8, 1, CD); } else R(8, 5 + hy, 8, 1, CD); R(7, 12 + hy, 3, 3, CD); R(14, 12 + hy, 3, 3, CD); R(8, 2 + hy, 3, 1, CL); for (const [fx, fy] of [[7, 2], [10, 3], [13, 2], [16, 3], [6, 8], [17, 9], [6, 11], [17, 12]]) set(fx, fy + hy, CD); if (back) { R(5, 3 + hy, 14, 12, C); R(11, 11 + hy, 2, 4, CD); for (const fx of [8, 12, 15]) R(fx, 6 + hy, 1, 5, CD); } }
       else { R(8, 1 + hy, 10, 5, C); R(7, 3 + hy, 3, 8, C); R(12, 5 + hy, 6, 9, C); R(8, 5 + hy, 8, 1, CD); R(10, 2 + hy, 3, 1, CL); R(13, 13 + hy, 4, 2, CD); }
     } else if (o.hatStyle === 'kippah') {
       if (!side) { R(9, 1 + hy, 6, 1, C); R(8, 2 + hy, 8, 2, C); R(9, 4 + hy, 6, 1, CD); set(10, 1 + hy, CL); }
@@ -153,6 +156,26 @@ export function drawCharFrame(ctx, ox, oy, dir, f, look) {
       if (cat) { const fr = '#101014'; R(7, 7 + hy, 4, 2, fr); R(7, 9 + hy, 1, 2, fr); R(10, 9 + hy, 1, 2, fr); R(8, 10 + hy, 2, 1, fr); R(11, 8 + hy, 3, 1, fr); set(10, 6 + hy, fr); }
       if (beard) { const B = o.beardColor || H; R(7, 10 + hy, 6, 3, B); R(8, 13 + hy, 4, 1, shade(B, -30)); }
     }
+  }
+
+  // more accessories
+  if (!back) {
+    if (!side) {
+      if (o.accessory === 'sunglasses') { const fr = '#0c0c14'; R(7, 7 + hy, 5, 4, fr); R(13, 7 + hy, 5, 4, fr); R(12, 8 + hy, 1, 1, fr); set(8, 8 + hy, '#3a3a52'); set(14, 8 + hy, '#3a3a52'); }
+      if (o.accessory === 'round') { const fr = '#3a2a1a'; for (const x0 of [8, 14]) { R(x0, 7 + hy, 3, 1, fr); R(x0, 10 + hy, 3, 1, fr); R(x0 - 1, 8 + hy, 1, 2, fr); R(x0 + 3, 8 + hy, 1, 2, fr); } set(12, 8 + hy, fr); }
+      if (ex.has('freckles')) for (const [fx, fy] of [[8, 10], [10, 11], [14, 10], [16, 11], [9, 11], [15, 11]]) set(fx, fy + hy, skD);
+      if (ex.has('earrings')) { set(5, 11 + hy, '#ffd23f'); set(18, 11 + hy, '#ffd23f'); }
+      if (ex.has('mustache')) { R(9, 10 + hy, 6, 1, HD); set(8, 11 + hy, HD); set(15, 11 + hy, HD); }
+      if (ex.has('headphones')) { R(5, 2 + hy, 14, 1, '#2b2b36'); R(4, 4 + hy, 2, 6, '#e84b4b'); R(18, 4 + hy, 2, 6, '#e84b4b'); R(4, 4 + hy, 1, 6, '#9a2a2a'); }
+    } else {
+      if (o.accessory === 'sunglasses') R(7, 7 + hy, 5, 4, '#0c0c14');
+      if (ex.has('earrings')) set(13, 11 + hy, '#ffd23f');
+      if (ex.has('headphones')) { R(9, 2 + hy, 8, 1, '#2b2b36'); R(11, 5 + hy, 3, 5, '#e84b4b'); }
+    }
+  }
+  if (!side) {
+    if (ex.has('necklace')) { for (const [nx, ny] of [[9, 16], [10, 17], [11, 17], [12, 17], [13, 17], [14, 16]]) set(nx, ny + bob, '#ffd23f'); set(11, 18 + bob, '#7be0ff'); set(12, 18 + bob, '#7be0ff'); }
+    if (ex.has('bowtie')) { R(9, 15 + bob, 2, 2, '#e84b4b'); R(13, 15 + bob, 2, 2, '#e84b4b'); R(11, 15 + bob, 2, 2, '#9a2a2a'); }
   }
 
   // ---------------------------------------------------------------- outline + blit

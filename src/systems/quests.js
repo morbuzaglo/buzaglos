@@ -82,8 +82,6 @@ export function objective(qid) {
   const step = currentStep(qid); if (!step) return '';
   let t = step.text || '';
   if (step.type === 'collect') t += ` (${Math.min(itemCount(step.item), step.count || 1)}/${step.count || 1})`;
-  const who = content.npcs[step.npc || step.at];
-  if (who?.character && who.character === S.state.activeChar) t += ' (צריך להחליף לדמות אחרת בתפריט)';
   return t;
 }
 export function trackedQuest() { return activeQuests()[0] || null; }
@@ -99,3 +97,6 @@ export function questStatus(q) {
   if (st === 'active') return 'active';
   return check(q.requires) ? 'new' : 'locked';
 }
+
+export const missions = () => allQuests().filter((q) => q.scene).sort((a, b) => (a.order || 99) - (b.order || 99));
+export const currentMission = () => missions().find((q) => qs()[q.id]?.state !== 'done') || null;
