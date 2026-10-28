@@ -91,6 +91,7 @@ export default class World extends Phaser.Scene {
     // props
     (map.props || []).forEach((p) => this.addProp(p));
     // npcs
+    this.pickCaller();
     (map.npcs || []).forEach((n) => this.addNpc(n));
     // pickups
     this.refreshPickups();

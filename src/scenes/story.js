@@ -12,12 +12,16 @@ const HUB_CALL = { x: 19, y: 5, dir: 2 };
 
 export const storyMethods = {
   /** The next level, who calls the player, and where. Runs when a map loads. */
-  setupMission() {
+  /** Decides the current level and who calls (must run BEFORE the map's NPCs are created so nobody appears twice). */
+  pickCaller() {
     this.mission = Q.currentMission();
     this.callerId = null; this.callerRec = null;
     const hub = content.config.hub || { map: 'house' };
     if (!this.mission || this.map.id !== hub.map) return;
     this.callerId = this.mission.callers.find((id) => content.npcs[id] && content.npcs[id].character !== S.state.activeChar) || null;
+  },
+  /** Puts the caller at the call point with a "!" mark. */
+  setupMission() {
     if (!this.callerId) return;
     const pt = content.config.callPoint || HUB_CALL;
     this.addNpc({ id: this.callerId, x: pt.x, y: pt.y, dir: pt.dir ?? 2, call: true });
