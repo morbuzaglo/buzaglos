@@ -1,0 +1,314 @@
+// DOM user interface (Hebrew, right-to-left): HUD, dialogue, menus, shop, title and ending.
+import { content } from '../content.js';
+import {
+  S, onChange, saveGame, equippedLook, buy, check, addCoins, addXp, addItem, removeItem, setFlag, getFlag,
+  xpForLevel, exportCode, importCode, startNewGame, hasSave, loadGame, cloudEnabled, cloudSave, cloudLoad, validCode,
+} from '../state.js';
+import { paintPortrait, paintIcon, paintTitleBanner } from '../art.js';
+import * as Q from '../systems/quests.js';
+import { sfx, setMusic, setSfx, audioSettings } from '../audio.js';
+import { STR, tpl } from '../i18n.js';
+
+export const hooks = { teleport: null, ending: null, charChanged: null, resetCooldown: null, newGame: null, continueGame: null, toTitle: null };
+const $ = (id) => document.getElementById(id);
+const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const T = (s) => esc(tpl(s));
+
+// ------------------------------------------------------------------ toast
+let toastTimer = null;
+export function toast(msg, ms = 2000) {
+  const t = $('toast'); t.textContent = tpl(msg); t.classList.add('show');
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), ms);
+}
+const toastQueue = [];
+let toastBusy = false;
+export function queueToast(msg, ms = 1800) { toastQueue.push([msg, ms]); pump(); }
+function pump() { if (toastBusy || !toastQueue.length) return; toastBusy = true; const [m, ms] = toastQueue.shift(); toast(m, ms); setTimeout(() => { toastBusy = false; pump(); }, ms + 150); }
+
+// ------------------------------------------------------------------ HUD
+export function buildHud() {
+  const hud = $('hud'); hud.innerHTML = '';
+  const box = el('div', 'hudbox');
+  box.innerHTML = `<div class="row"><canvas id="hudFace" width="16" height="16"></canvas>
+    <div><div id="hudName"></div><div id="hudLvl"></div><div class="bar xp"><i id="hudXp"></i></div></div></div>
+    <div class="row" style="margin-top:5px"><canvas id="hudCoin" width="16" height="16" class="ico"></canvas><span id="hudCoins"></span><span class="grow"></span><span style="color:#7be0ff" id="hudShards"></span></div>`;
+  hud.appendChild(box);
+  const q = el('div', 'hudbox'); q.id = 'hudQuest';
+  hud.appendChild(q);
+  const mb = el('button', 'mbtn', STR.menu); mb.onclick = () => { sfx('tap'); openMenu(); };
+  hud.appendChild(mb);
+  paintIcon($('hudCoin'), 'coin');
+  refreshHud();
+}
+export function refreshHud() {
+  const st = S.state, ch = content.characters[st.activeChar]; if (!ch || !$('hudName')) return;
+  paintPortrait($('hudFace'), equippedLook(st.activeChar));
+  $('hudName').textContent = ch.name;
+  $('hudLvl').textContent = `${STR.lvl} ${st.level}`;
+  $('hudXp').style.width = Math.round((st.xp / xpForLevel(st.level)) * 100) + '%';
+  $('hudCoins').textContent = st.coins;
+  $('hudShards').textContent = `${st.shards.length}/${content.config.finalShards} ◆`;
+  const tq = Q.trackedQuest();
+  $('hudQuest').innerHTML = tq ? `<b>${T(tq.title)}</b><br>${T(Q.objective(tq.id))}` : `<span class="dim">${st.shards.length >= content.config.finalShards ? STR.goAttic : STR.explore}</span>`;
+  const b = $('btnB'); const ab = ch.ability; b.innerHTML = `B<small>${esc(ab?.name || '')}</small><span class="cd"></span>`;
+}
+
+// ------------------------------------------------------------------ dialogue
+export const lookFor = (who) => {
+  if (who === 'player') return equippedLook(S.state.activeChar);
+  return content.npcs[who]?.look || content.characters[who]?.look || null;
+};
+export const nameFor = (who) => (who === 'player' ? content.characters[S.state.activeChar].name : who === 'narrator' ? '' : content.npcs[who]?.name || content.characters[who]?.name || who);
+
+let dlgResolve = null, typing = null;
+function showDialogueBox(who, rawText, choices) {
+  const text = tpl(rawText);
+  const d = $('dialogue'); d.classList.remove('hidden'); d.innerHTML = '';
+  const name = nameFor(who), look = lookFor(who);
+  if (name) {
+    const w = el('div', 'who'); const c = el('canvas'); w.appendChild(c); w.appendChild(el('span', '', esc(name)));
+    if (look) paintPortrait(c, look); else c.style.display = 'none';
+    d.appendChild(w);
+  }
+  const t = el('div', 'txt'); d.appendChild(t);
+  let i = 0;
+  clearInterval(typing);
+  typing = setInterval(() => { i++; t.textContent = text.slice(0, i); if (i % 3 === 0) sfx('talk'); if (i >= text.length) finishTyping(choices, d); }, 24);
+  d.onclick = (e) => {
+    if (e.target.closest('.choice')) return;
+    if (typing) { clearInterval(typing); typing = null; t.textContent = text; finishTyping(choices, d, true); return; }
+    if (!choices?.length && dlgResolve) { const r = dlgResolve; dlgResolve = null; sfx('tap'); r(null); }
+  };
+}
+function finishTyping(choices, d) {
+  if (typing) { clearInterval(typing); typing = null; }
+  if (d.querySelector('.choices') || d.querySelector('.more')) return;
+  if (choices?.length) {
+    const box = el('div', 'choices');
+    choices.forEach((c, idx) => { const b = el('button', 'choice', T(c.text)); b.onclick = () => { sfx('tap'); if (dlgResolve) { const r = dlgResolve; dlgResolve = null; r(idx); } }; box.appendChild(b); });
+    d.appendChild(box);
+  } else d.appendChild(el('div', 'more', '▼'));
+}
+function waitBox(who, text, choices) { return new Promise((res) => { dlgResolve = res; showDialogueBox(who, text, choices); }); }
+export function hideDialogue() { clearInterval(typing); typing = null; $('dialogue').classList.add('hidden'); }
+export const dialogueOpen = () => !$('dialogue').classList.contains('hidden');
+
+/** Show a sequence of {who,text}. */
+export async function say(lines) {
+  for (const ln of lines) await waitBox(ln.who || 'narrator', ln.text);
+  hideDialogue();
+}
+
+export function applyEffects(effects) {
+  for (const e of effects || []) {
+    switch (e.type) {
+      case 'coins': addCoins(e.n); queueToast(STR.coinsGot(e.n)); sfx('coin'); break;
+      case 'xp': addXp(e.n); queueToast(STR.xpGot(e.n)); break;
+      case 'item': addItem(e.id, e.n || 1); queueToast(STR.gotItem(content.items[e.id]?.name || e.id)); sfx('pickup'); break;
+      case 'giveOnce': if (!getFlag(e.key)) { setFlag(e.key); addItem(e.item, 1); queueToast(e.toast || STR.gotItem(content.items[e.item]?.name)); sfx('pickup'); } break;
+      case 'flag': setFlag(e.key, e.value === undefined ? true : e.value); break;
+      case 'shop': openShop(e.id); break;
+      case 'teleport': hooks.teleport?.(e.map, e.x, e.y); break;
+      case 'ending': hooks.ending?.(); break;
+      case 'toast': queueToast(e.text); break;
+      default: break;
+    }
+  }
+  Q.evaluate(); refreshHud();
+}
+
+/** Run a dialogue graph by id. Returns when finished. */
+export async function runDialogue(id) {
+  const dlg = content.dialogues[id]; if (!dlg) return;
+  let nodeId = 'start';
+  while (nodeId) {
+    const node = dlg[nodeId]; if (!node) break;
+    if (node.branch) { const b = node.branch.find((x) => check(x.cond)); nodeId = b ? b.next : null; continue; }
+    applyEffects(node.effects?.filter((e) => e.type !== 'shop' && e.type !== 'ending' && e.type !== 'teleport'));
+    const choices = (node.choices || []).filter((c) => check(c.cond));
+    if (!node.text) { nodeId = node.next || null; continue; }
+    const pick = await waitBox(node.who || 'narrator', node.text, choices);
+    if (choices.length && pick != null) {
+      const c = choices[pick]; applyEffects(c.effects); hideDialogue();
+      if (c.effects?.some((e) => e.type === 'shop')) return;
+      nodeId = c.next || null;
+    } else nodeId = node.next || null;
+    const special = node.effects?.filter((e) => e.type === 'shop' || e.type === 'ending' || e.type === 'teleport');
+    if (special?.length) { hideDialogue(); applyEffects(special); return; }
+  }
+  hideDialogue();
+}
+
+// ------------------------------------------------------------------ panels
+let panelOnClose = null;
+export const panelOpen = () => !$('panel').classList.contains('hidden');
+export function closePanel() { $('panel').classList.add('hidden'); $('panel').innerHTML = ''; const f = panelOnClose; panelOnClose = null; if (f) f(); }
+function openShell(title, onClose) {
+  const p = $('panel'); p.innerHTML = ''; p.classList.remove('hidden'); panelOnClose = onClose || null;
+  const h = el('h2', '', `<span>${esc(title)}</span>`); const x = el('button', 'mbtn', '✕'); x.onclick = () => { sfx('tap'); closePanel(); }; h.appendChild(x); p.appendChild(h);
+  return p;
+}
+export function openPanelRaw(title, onClose) { const p = openShell(title, onClose); const body = el('div', 'body'); p.appendChild(body); return body; }
+
+function card(inner, cls = '') { return el('div', 'card ' + cls, inner); }
+function iconCanvas(item) { const c = el('canvas'); paintIcon(c, item.icon || 'default', item.color); return c; }
+
+let menuTab = 'family';
+export function openMenu(tab) {
+  if (tab) menuTab = tab;
+  const p = openShell(STR.menu, () => { hooks.charChanged?.(); refreshHud(); saveGame(); });
+  const tabs = el('div', 'tabs');
+  ['family', 'quests', 'bag', 'album', 'awards', 'settings'].forEach((k) => {
+    const label = STR.tabs[k === 'settings' ? 'more' : k];
+    const b = el('button', 'tab' + (menuTab === k ? ' on' : ''), label); b.onclick = () => { sfx('tap'); menuTab = k; openMenu(); }; tabs.appendChild(b);
+  });
+  p.appendChild(tabs);
+  const body = el('div', 'body'); p.appendChild(body);
+  ({ family: tabFamily, quests: tabQuests, bag: tabBag, album: tabAlbum, awards: tabAwards, settings: tabSettings })[menuTab](body);
+}
+
+function tabFamily(body) {
+  body.appendChild(card(`<b>${STR.family.choose}</b><br><span class="sub">${STR.family.chooseSub}</span>`));
+  S.state.unlockedChars.forEach((id) => {
+    const ch = content.characters[id]; if (!ch) return;
+    const c = card(''); const row = el('div', 'row'); const cv = el('canvas'); paintPortrait(cv, equippedLook(id));
+    const real = (v) => v && !String(v).includes('יתווסף בקרוב');
+    const extra = [real(ch.strength) ? `<span class="sub">${STR.family.strength}:</span> ${esc(ch.strength)}` : '', real(ch.weakness) ? `<span class="sub">${STR.family.weakness}:</span> ${esc(ch.weakness)}` : ''].filter(Boolean).join(' &nbsp; ');
+    const info = el('div', 'grow', `<b>${esc(ch.name)}</b> <span class="sub">${esc(ch.role)}</span>${ch.placeholder ? '' : `<br>${esc(ch.bio)}`}<br><span class="sub">${STR.family.ability}:</span> ${esc(ch.ability.name)}<br><span class="sub">${esc(ch.ability.desc)}</span>${extra ? `<br>${extra}` : ''}`);
+    const act = S.state.activeChar === id;
+    const btn = el('button', 'btn' + (act ? ' alt' : ''), act ? STR.family.active : STR.family.playAs); btn.disabled = act;
+    btn.onclick = () => { S.state.activeChar = id; sfx('pickup'); saveGame(); hooks.charChanged?.(); refreshHud(); openMenu(); toast(STR.family.nowPlaying(ch.name)); };
+    row.append(cv, info, btn); c.appendChild(row); body.appendChild(c);
+  });
+}
+function tabQuests(body) {
+  const act = Q.activeQuests();
+  if (!act.length) body.appendChild(card(`<b>${STR.quests.none}</b><br><span class="sub">${STR.quests.noneSub}</span>`));
+  act.forEach((q) => {
+    const step = Q.currentStep(q.id);
+    body.appendChild(card(`<b>${T(q.title)}</b><br>${T(q.summary || '')}<br><span class="goal">▶ ${T(Q.objective(q.id))}</span>${step?.hint ? `<br><span class="sub">${STR.quests.tip}: ${T(step.hint)}</span>` : ''}`));
+  });
+  const done = Q.allQuests().filter((q) => S.state.quests[q.id]?.state === 'done');
+  if (done.length) { body.appendChild(el('h3', '', STR.quests.done)); done.forEach((q) => body.appendChild(card(`<span class="done">✔</span> ${T(q.title)}`))); }
+}
+function tabBag(body) {
+  const ids = Object.keys(S.state.inv);
+  body.appendChild(card(`<b>${STR.bag.coins}:</b> ${S.state.coins} &nbsp; <b>${STR.bag.level}:</b> ${S.state.level}`));
+  if (!ids.length) body.appendChild(card(`<span class="sub">${STR.bag.empty}</span>`));
+  ids.forEach((id) => {
+    const it = content.items[id]; if (!it) return;
+    const c = card(''); const row = el('div', 'row'); row.append(iconCanvas(it));
+    const info = el('div', 'grow', `<b>${esc(it.name)}</b> x${S.state.inv[id]}<br><span class="sub">${esc(it.desc || '')}</span>`); row.appendChild(info);
+    if (it.type === 'consumable') { const b = el('button', 'btn', STR.bag.use); b.onclick = () => { removeItem(id, 1); if (it.use?.xp) addXp(it.use.xp); if (it.use?.resetCooldown) hooks.resetCooldown?.(); sfx('pickup'); toast(STR.bag.used(it.name)); refreshHud(); openMenu(); }; row.appendChild(b); }
+    c.appendChild(row); body.appendChild(c);
+  });
+  const owned = S.state.owned.outfits;
+  if (owned.length) {
+    body.appendChild(el('h3', '', STR.bag.outfits));
+    const ch = S.state.activeChar;
+    const none = card(`<div class="row"><span class="grow">${STR.bag.defaultLook}</span></div>`); const nb = el('button', 'btn alt', S.state.equipped[ch] ? STR.bag.wear : STR.bag.worn); nb.disabled = !S.state.equipped[ch];
+    nb.onclick = () => { delete S.state.equipped[ch]; hooks.charChanged?.(); sfx('tap'); openMenu(); }; none.querySelector('.row').appendChild(nb); body.appendChild(none);
+    owned.forEach((id) => {
+      const it = content.items[id]; const c = card(''); const row = el('div', 'row'); row.append(iconCanvas(it));
+      const info = el('div', 'grow', `<b>${esc(it.name)}</b><br><span class="sub">${esc(it.desc || '')}</span>`); row.appendChild(info);
+      const worn = S.state.equipped[ch] === id; const b = el('button', 'btn alt', worn ? STR.bag.worn : STR.bag.wear); b.disabled = worn;
+      b.onclick = () => { S.state.equipped[ch] = id; hooks.charChanged?.(); sfx('pickup'); openMenu(); }; row.appendChild(b); c.appendChild(row); body.appendChild(c);
+    });
+  }
+  const ups = S.state.owned.upgrades;
+  if (ups.length) { body.appendChild(el('h3', '', STR.bag.upgrades)); ups.forEach((id) => { const it = content.items[id]; const c = card(''); const row = el('div', 'row'); row.append(iconCanvas(it), el('div', 'grow', `<b>${esc(it.name)}</b><br><span class="sub">${esc(it.desc)}</span>`)); c.appendChild(row); body.appendChild(c); }); }
+}
+function tabAlbum(body) {
+  const total = content.config.finalShards;
+  body.appendChild(card(`<b>${STR.album.title}</b><br><span class="sub">${STR.album.restored(S.state.shards.length, total)}</span>`));
+  Q.allQuests().filter((q) => q.reward?.shard).forEach((q) => {
+    const got = S.state.shards.includes(q.reward.shard.id);
+    body.appendChild(card(got ? `<b style="color:#7be0ff">◆ ${T(q.reward.shard.title)}</b><br>${T(q.reward.shard.story)}` : `<b class="sub">◇ ???</b><br><span class="sub">${STR.album.hint(content.npcs[q.giver]?.name || q.giver)}</span>`, got ? '' : 'locked'));
+  });
+}
+function tabAwards(body) {
+  Object.values(content.achievements).forEach((a) => {
+    const got = S.state.achievements.includes(a.id);
+    body.appendChild(card(`${got ? '<span class="done">★</span>' : '☆'} <b>${esc(a.title)}</b><br><span class="sub">${esc(a.desc)}</span>${a.reward?.coins ? `<br><span class="sub">${STR.awards.reward(a.reward.coins)}</span>` : ''}`, got ? '' : 'locked'));
+  });
+}
+function tabSettings(body) {
+  const a = audioSettings();
+  const row = (label, on, fn) => { const c = card(''); const r = el('div', 'row'); r.appendChild(el('span', 'grow', label)); const b = el('button', 'btn' + (on ? '' : ' red'), on ? STR.settings.on : STR.settings.off); b.onclick = () => { fn(!on); sfx('tap'); openMenu(); }; r.appendChild(b); c.appendChild(r); body.appendChild(c); };
+  row(STR.settings.music, a.music, (v) => { setMusic(v); S.state.settings.music = v; });
+  row(STR.settings.sfx, a.sfx, (v) => { setSfx(v); S.state.settings.sfx = v; });
+  body.appendChild(card(`<b>${STR.settings.stats}</b><br><span class="sub">${STR.settings.statsLine(S.state.stats)}</span>`));
+  if (cloudEnabled()) {
+    const cc = card(`<b>${STR.settings.cloud.title}</b><br><span class="sub">${STR.settings.cloud.help}</span>`);
+    const inp = el('input'); inp.type = 'text'; inp.dir = 'ltr'; inp.placeholder = STR.settings.cloud.code; inp.value = S.state.settings.cloudCode || '';
+    inp.style.cssText = 'width:100%;margin:8px 0;padding:8px;font:14px monospace;user-select:text;-webkit-user-select:text';
+    const run = (fn, okMsg) => async () => { if (!validCode(inp.value)) return toast(STR.settings.cloud.badCode); S.state.settings.cloudCode = inp.value; try { const ok = await fn(inp.value); toast(ok ? okMsg : STR.settings.cloud.fail); if (ok && fn === cloudLoad) { hooks.continueGame?.(); closePanel(); } } catch (e) { toast(STR.settings.cloud.fail); } };
+    const b1 = el('button', 'btn', STR.settings.cloud.save); b1.onclick = run(cloudSave, STR.settings.cloud.saved);
+    const b2 = el('button', 'btn alt', STR.settings.cloud.load); b2.onclick = run(cloudLoad, STR.settings.cloud.loaded);
+    const rw = el('div', 'row'); rw.style.justifyContent = 'flex-start'; rw.append(b1, b2); cc.append(inp, rw); body.appendChild(cc);
+  }
+  const sv = card(`<b>${STR.settings.saveTitle}</b><br><span class="sub">${STR.settings.saveHelp}</span>`);
+  const ta = el('textarea'); ta.placeholder = STR.settings.paste; ta.dir = 'ltr';
+  const bx = el('button', 'btn alt', STR.settings.showCode); bx.onclick = () => { ta.value = exportCode(); ta.select(); };
+  const bi = el('button', 'btn', STR.settings.import); bi.onclick = () => { if (importCode(ta.value)) { toast(STR.settings.imported); hooks.continueGame?.(); closePanel(); } else toast(STR.settings.badCode); };
+  const btns = el('div', 'row'); btns.style.justifyContent = 'flex-start'; btns.append(bx, bi);
+  sv.append(ta, btns); body.appendChild(sv);
+  const nb = el('button', 'btn red', STR.settings.backTitle); nb.onclick = () => { closePanel(); saveGame(); hooks.toTitle?.(); }; body.appendChild(nb);
+}
+
+// ------------------------------------------------------------------ shop
+export function openShop(shopId) {
+  const body = openPanelRaw(STR.shop.title, () => refreshHud());
+  const render = () => {
+    body.innerHTML = '';
+    body.appendChild(card(`<b>${STR.shop.coins(S.state.coins)}</b>`));
+    (content.shop[shopId] || []).forEach((id) => {
+      const it = content.items[id]; if (!it) return;
+      const owned = (it.type === 'outfit' && S.state.owned.outfits.includes(id)) || (it.type === 'upgrade' && S.state.owned.upgrades.includes(id));
+      const c = card(''); const row = el('div', 'row'); row.append(iconCanvas(it));
+      const info = el('div', 'grow', `<b>${esc(it.name)}</b><br><span class="sub">${esc(it.desc || '')}</span>`); row.appendChild(info);
+      const b = el('button', 'btn' + (owned ? ' alt' : ''), owned ? STR.shop.owned : `${it.price} ◎`); b.disabled = owned || S.state.coins < it.price;
+      b.onclick = () => { const r = buy(id); sfx(r.ok ? 'buy' : 'bad'); toast(r.ok ? STR.buy.bought(it.name) : STR.buy[r.code]); refreshHud(); render(); };
+      row.appendChild(b); c.appendChild(row); body.appendChild(c);
+    });
+  };
+  render();
+}
+
+// ------------------------------------------------------------------ reward cards
+export function showReward(title, lines, onClose) {
+  const body = openPanelRaw(title, onClose);
+  body.appendChild(card(lines.map((l) => T(l)).join('<br>')));
+  const b = el('button', 'btn', STR.common.cont); b.id = 'btnContinue'; b.style.marginTop = '10px'; b.onclick = () => { sfx('tap'); closePanel(); }; body.appendChild(b);
+}
+
+// ------------------------------------------------------------------ title
+export function showTitle() {
+  const t = $('title'); t.classList.remove('hidden'); t.innerHTML = '';
+  const cfg = content.config;
+  const banner = el('canvas'); paintTitleBanner(banner, Object.values(content.characters).slice(0, 6).map((c) => c.look));
+  t.append(banner, el('h1', '', esc(cfg.title)), el('p', '', esc(cfg.tagline)));
+  const play = el('button', 'btn', hasSave() ? STR.title.cont : STR.title.newGame); play.id = 'btnPlay';
+  play.onclick = () => { sfx('tap'); t.classList.add('hidden'); if (hasSave()) { loadGame(); hooks.continueGame?.(); } else { startNewGame(); hooks.newGame?.(); } };
+  t.appendChild(play);
+  if (hasSave()) { const nb = el('button', 'btn alt', STR.title.newGame); nb.onclick = () => { if (confirm(STR.title.confirmNew)) { sfx('tap'); t.classList.add('hidden'); startNewGame(); hooks.newGame?.(); } }; t.appendChild(nb); }
+  t.appendChild(el('p', '', STR.title.tip));
+}
+export function hideTitle() { $('title').classList.add('hidden'); }
+
+export async function showIntro() { await say(content.config.intro.map((text) => ({ who: 'narrator', text }))); }
+export async function showEnding() {
+  await say(content.config.outro.map((text) => ({ who: 'narrator', text })));
+  setFlag('game_complete'); saveGame();
+  showReward(STR.ending.end, [STR.ending.l1, STR.ending.l2(S.state.level, S.state.coins), STR.ending.l3], () => {});
+}
+
+onChange((type, data) => {
+  if (type === 'coins' || type === 'xp' || type === 'item' || type === 'flag' || type === 'itemLost') refreshHud();
+  if (type === 'levelup') { sfx('levelup'); queueToast(STR.ev.levelUp(data), 2400); }
+  if (type === 'achievement') { sfx('achieve'); queueToast(STR.ev.achievement(data.title), 2600); }
+  if (type === 'questStarted') { queueToast(STR.ev.newQuest(tpl(data.title)), 2200); refreshHud(); }
+  if (type === 'stepDone') { refreshHud(); }
+  if (type === 'charUnlocked') queueToast(STR.ev.newHero(content.characters[data]?.name), 2600);
+});

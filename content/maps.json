@@ -1,0 +1,769 @@
+{
+ "house": {
+  "id": "house",
+  "name": "הבית של בוזגלו",
+  "music": "home",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof"
+  },
+  "tiles": [
+   "######################",
+   "#WWWWWWWWWWWWWWWWWWWW#",
+   "#tttttttt............#",
+   "#tttttttt............#",
+   "#tttttttt..rrrrrr....#",
+   "#tttttttt..rrrrrr....#",
+   "#tttttttt..rrrrrr....#",
+   "#....................#",
+   "#....................#",
+   "#....................#",
+   "#cccccccc............#",
+   "#cccccccc............#",
+   "#cccccccc............#",
+   "#....................#",
+   "##########.###########"
+  ],
+  "props": [
+   {
+    "type": "fridge",
+    "x": 1,
+    "y": 2,
+    "interact": {
+     "dialogue": "fridge"
+    }
+   },
+   {
+    "type": "stove",
+    "x": 2,
+    "y": 2,
+    "id": "stove",
+    "interact": {
+     "dialogue": "stove"
+    }
+   },
+   {
+    "type": "counter",
+    "x": 3,
+    "y": 2
+   },
+   {
+    "type": "table",
+    "x": 4,
+    "y": 5
+   },
+   {
+    "type": "plant",
+    "x": 7,
+    "y": 2
+   },
+   {
+    "type": "tv",
+    "x": 12,
+    "y": 2,
+    "interact": {
+     "dialogue": "tv"
+    }
+   },
+   {
+    "type": "sofa",
+    "x": 12,
+    "y": 7,
+    "interact": {
+     "dialogue": "sofa"
+    }
+   },
+   {
+    "type": "shelf",
+    "x": 17,
+    "y": 2,
+    "interact": {
+     "dialogue": "shelf"
+    }
+   },
+   {
+    "type": "plant",
+    "x": 19,
+    "y": 2
+   },
+   {
+    "type": "bed",
+    "x": 18,
+    "y": 12
+   },
+   {
+    "type": "lamp",
+    "x": 16,
+    "y": 11
+   },
+   {
+    "type": "chest",
+    "x": 1,
+    "y": 13,
+    "id": "chest_house",
+    "interact": {
+     "dialogue": "chest_house"
+    }
+   },
+   {
+    "type": "mat",
+    "x": 10,
+    "y": 13,
+    "solid": false
+   },
+   {
+    "type": "door",
+    "x": 20,
+    "y": 2,
+    "id": "attic_door",
+    "interact": {
+     "dialogue": "attic_door"
+    }
+   },
+   {
+    "type": "sign",
+    "x": 14,
+    "y": 9,
+    "interact": {
+     "dialogue": "house_sign"
+    }
+   }
+  ],
+  "npcs": [
+   {
+    "id": "grandma",
+    "x": 5,
+    "y": 8,
+    "dir": 0
+   },
+   {
+    "id": "uncle",
+    "x": 14,
+    "y": 8,
+    "dir": 2
+   }
+  ],
+  "pickups": [
+   {
+    "id": "remote_pickup",
+    "item": "remote",
+    "x": 17,
+    "y": 9,
+    "hidden": true,
+    "needsQuest": "q_remote"
+   }
+  ],
+  "doors": [
+   {
+    "x": 10,
+    "y": 14,
+    "to": "street",
+    "tx": 7,
+    "ty": 8,
+    "dir": 0,
+    "label": "החוצה"
+   }
+  ],
+  "spawn": {
+   "x": 8,
+   "y": 9
+  }
+ },
+ "street": {
+  "id": "street",
+  "name": "רחוב בוזגלו",
+  "music": "town",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof"
+  },
+  "tiles": [
+   "fggggggggggggggggfggggggggggggggggfggggg",
+   "gggfggggggggggggggggfggggggggggggggggfgg",
+   "ggggggfggggggggggggggggfgggggggggggggggg",
+   "ggg^^^^^^^^^ggggggggg^^^^^^^^^gggggggggg",
+   "ggg^^^^^^^^^fgggggggg^^^^^^^^^gggggggggg",
+   "ggg^^^^^^^^^gggfggggg^^^^^^^^^ggfggggggg",
+   "gfgWWWWWWWWWggggggfggWWWWWWWWWgggggfgggg",
+   "gggWWWWpWWWWgggggggggWWWWpWWWWggggggggfg",
+   "ggggggpppgggggggggggggggpppggggggggggggg",
+   "ggggggpppgfgggggggggggggpppfgggggggggggg",
+   "pppppppppppppppppppppppppppppppppppppppp",
+   "pppppppppppppppppppppppppppppppppppppppp",
+   "pppppppppppppppppppppppppppppppppppppppp",
+   "gggggfppggggggggggggggfgggggggpppggggggf",
+   "ggggggppfggggggggggggggggfggggpppggggggg",
+   "ggggggppgggfgg========ggggggfgpppggggggg",
+   "ggggggppgggg=gfgggggggggggggggpppggggggg",
+   "fgggggppgggg=g~~~~~~ggggggggggpppgfggggg",
+   "gggfgggggggg=g~~~~~~fgggggggggpppggggfgg",
+   "ggggggfggggg=g~~~~~~gggfgggggggggggggggg",
+   "gggggggggfgggg~~~~~~ggggggfggggggggggggg",
+   "ggggggggggggfggggggggggggggggfgggggggggg"
+  ],
+  "props": [
+   {
+    "type": "tree",
+    "x": 1,
+    "y": 4
+   },
+   {
+    "type": "tree",
+    "x": 13,
+    "y": 5
+   },
+   {
+    "type": "tree",
+    "x": 14,
+    "y": 8
+   },
+   {
+    "type": "tree",
+    "x": 19,
+    "y": 4
+   },
+   {
+    "type": "tree",
+    "x": 33,
+    "y": 6
+   },
+   {
+    "type": "tree",
+    "x": 36,
+    "y": 5
+   },
+   {
+    "type": "tree",
+    "x": 2,
+    "y": 15
+   },
+   {
+    "type": "tree",
+    "x": 2,
+    "y": 19
+   },
+   {
+    "type": "tree",
+    "x": 37,
+    "y": 18
+   },
+   {
+    "type": "bush",
+    "x": 4,
+    "y": 8
+   },
+   {
+    "type": "bush",
+    "x": 10,
+    "y": 8
+   },
+   {
+    "type": "bush",
+    "x": 22,
+    "y": 8
+   },
+   {
+    "type": "bush",
+    "x": 28,
+    "y": 8
+   },
+   {
+    "type": "rock",
+    "x": 16,
+    "y": 14
+   },
+   {
+    "type": "rock",
+    "x": 35,
+    "y": 15
+   },
+   {
+    "type": "sign",
+    "x": 8,
+    "y": 9,
+    "interact": {
+     "dialogue": "street_sign"
+    }
+   },
+   {
+    "type": "sign",
+    "x": 37,
+    "y": 11,
+    "interact": {
+     "dialogue": "beach_sign"
+    }
+   },
+   {
+    "type": "lamp",
+    "x": 18,
+    "y": 9
+   },
+   {
+    "type": "lamp",
+    "x": 32,
+    "y": 9
+   },
+   {
+    "type": "table",
+    "x": 9,
+    "y": 15,
+    "id": "picnic_table",
+    "interact": {
+     "dialogue": "picnic"
+    }
+   },
+   {
+    "type": "chest",
+    "x": 13,
+    "y": 19,
+    "id": "fence_chest",
+    "needsFlag": "fence_fixed",
+    "interact": {
+     "dialogue": "fence_chest"
+    }
+   },
+   {
+    "type": "sign",
+    "x": 11,
+    "y": 17,
+    "id": "broken_fence",
+    "ability": "fix",
+    "flag": "fence_fixed",
+    "interact": {
+     "dialogue": "broken_fence"
+    }
+   },
+   {
+    "type": "umbrella",
+    "x": 34,
+    "y": 14
+   }
+  ],
+  "npcs": [
+   {
+    "id": "aunt",
+    "x": 17,
+    "y": 11,
+    "dir": 2
+   },
+   {
+    "id": "cousin",
+    "x": 30,
+    "y": 14,
+    "dir": 1
+   },
+   {
+    "id": "neighbor",
+    "x": 12,
+    "y": 11,
+    "dir": 0
+   }
+  ],
+  "pickups": [],
+  "doors": [
+   {
+    "x": 7,
+    "y": 7,
+    "to": "house",
+    "tx": 10,
+    "ty": 13,
+    "dir": 1,
+    "label": "הביתה"
+   },
+   {
+    "x": 25,
+    "y": 7,
+    "to": "market",
+    "tx": 7,
+    "ty": 10,
+    "dir": 1,
+    "label": "מכולת"
+   },
+   {
+    "x": 39,
+    "y": 11,
+    "to": "beach",
+    "tx": 1,
+    "ty": 9,
+    "dir": 3,
+    "label": "חוף",
+    "needsFlag": "beach_open",
+    "blocked": "הדרך לחוף סגורה. אולי סבתא יודעת מי יכול לפתוח אותה?"
+   },
+   {
+    "x": 39,
+    "y": 12,
+    "to": "beach",
+    "tx": 1,
+    "ty": 10,
+    "dir": 3,
+    "label": "חוף",
+    "needsFlag": "beach_open",
+    "blocked": "הדרך לחוף סגורה. אולי סבתא יודעת מי יכול לפתוח אותה?"
+   }
+  ],
+  "spawn": {
+   "x": 7,
+   "y": 9
+  }
+ },
+ "market": {
+  "id": "market",
+  "name": "המכולת המשפחתית",
+  "music": "town",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof"
+  },
+  "tiles": [
+   "################",
+   "#WWWWWWWWWWWWWW#",
+   "#..............#",
+   "#..............#",
+   "#..............#",
+   "#....rrrrrr....#",
+   "#....rrrrrr....#",
+   "#....rrrrrr....#",
+   "#..............#",
+   "#..............#",
+   "#..............#",
+   "#######.########"
+  ],
+  "props": [
+   {
+    "type": "counter",
+    "x": 6,
+    "y": 3,
+    "id": "shop_counter"
+   },
+   {
+    "type": "shelf",
+    "x": 2,
+    "y": 2
+   },
+   {
+    "type": "shelf",
+    "x": 3,
+    "y": 2
+   },
+   {
+    "type": "shelf",
+    "x": 12,
+    "y": 2
+   },
+   {
+    "type": "plant",
+    "x": 13,
+    "y": 9
+   },
+   {
+    "type": "plant",
+    "x": 2,
+    "y": 9
+   },
+   {
+    "type": "sign",
+    "x": 11,
+    "y": 9,
+    "interact": {
+     "dialogue": "market_sign"
+    }
+   }
+  ],
+  "npcs": [
+   {
+    "id": "shopkeeper",
+    "x": 7,
+    "y": 2,
+    "dir": 0
+   }
+  ],
+  "pickups": [],
+  "doors": [
+   {
+    "x": 7,
+    "y": 11,
+    "to": "street",
+    "tx": 25,
+    "ty": 8,
+    "dir": 0,
+    "label": "רחוב"
+   }
+  ],
+  "spawn": {
+   "x": 7,
+   "y": 10
+  }
+ },
+ "beach": {
+  "id": "beach",
+  "name": "החוף",
+  "music": "beach",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof"
+  },
+  "tiles": [
+   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+   "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~",
+   "ssssssssssssssssssssssssssssss",
+   "ssssssssssssssssssssssssssssss",
+   "ssssssssssssssssssssssssssssss",
+   "ssssssssssssssssssssssssssssss",
+   "ssssssssssssssssssssssssssssss",
+   "psssssssssssssssssssssssssssss",
+   "psssssssssssssssssssssssssssss",
+   "ssssssssssssssssssssssssssssss",
+   "ssssssssssssssssssssssssssssss",
+   "ssssssssssssssssssssssssssssss",
+   "ssssssssssssssssssssssssssssss",
+   "gggggggggggggggggggggggggggggg",
+   "gggggggggggggggggggggggggggggg",
+   "gggggggggggggggggggggggggggggg"
+  ],
+  "props": [
+   {
+    "type": "umbrella",
+    "x": 6,
+    "y": 8
+   },
+   {
+    "type": "umbrella",
+    "x": 15,
+    "y": 12
+   },
+   {
+    "type": "boat",
+    "x": 20,
+    "y": 5
+   },
+   {
+    "type": "rock",
+    "x": 25,
+    "y": 6
+   },
+   {
+    "type": "rock",
+    "x": 27,
+    "y": 6
+   },
+   {
+    "type": "bush",
+    "x": 26,
+    "y": 7
+   },
+   {
+    "type": "tree",
+    "x": 3,
+    "y": 16
+   },
+   {
+    "type": "tree",
+    "x": 12,
+    "y": 16
+   },
+   {
+    "type": "tree",
+    "x": 24,
+    "y": 16
+   },
+   {
+    "type": "chest",
+    "x": 26,
+    "y": 5,
+    "id": "secret_chest",
+    "interact": {
+     "dialogue": "secret_chest"
+    }
+   },
+   {
+    "type": "sign",
+    "x": 2,
+    "y": 11,
+    "interact": {
+     "dialogue": "beach_info"
+    }
+   }
+  ],
+  "npcs": [
+   {
+    "id": "lifeguard",
+    "x": 10,
+    "y": 8,
+    "dir": 0
+   }
+  ],
+  "pickups": [
+   {
+    "id": "shell1",
+    "item": "shell",
+    "x": 5,
+    "y": 6
+   },
+   {
+    "id": "shell2",
+    "item": "shell",
+    "x": 18,
+    "y": 13,
+    "hidden": true
+   },
+   {
+    "id": "shell3",
+    "item": "shell",
+    "x": 27,
+    "y": 11,
+    "hidden": true
+   }
+  ],
+  "doors": [
+   {
+    "x": 0,
+    "y": 9,
+    "to": "street",
+    "tx": 38,
+    "ty": 11,
+    "dir": 2,
+    "label": "רחוב"
+   },
+   {
+    "x": 0,
+    "y": 10,
+    "to": "street",
+    "tx": 38,
+    "ty": 12,
+    "dir": 2,
+    "label": "רחוב"
+   }
+  ],
+  "spawn": {
+   "x": 2,
+   "y": 9
+  }
+ },
+ "attic": {
+  "id": "attic",
+  "name": "עליית הגג הסודית",
+  "music": "mystery",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof"
+  },
+  "tiles": [
+   "##############",
+   "#WWWWWWWWWWWW#",
+   "#dddddddddddd#",
+   "#dddddddddddd#",
+   "#dddccccccddd#",
+   "#dddccccccddd#",
+   "#dddccccccddd#",
+   "#dddddddddddd#",
+   "#dddddddddddd#",
+   "#######d######"
+  ],
+  "props": [
+   {
+    "type": "chest",
+    "x": 6,
+    "y": 3,
+    "id": "album_chest",
+    "interact": {
+     "dialogue": "album"
+    }
+   },
+   {
+    "type": "lamp",
+    "x": 3,
+    "y": 3
+   },
+   {
+    "type": "lamp",
+    "x": 10,
+    "y": 3
+   },
+   {
+    "type": "plant",
+    "x": 11,
+    "y": 7
+   }
+  ],
+  "npcs": [],
+  "pickups": [],
+  "doors": [
+   {
+    "x": 7,
+    "y": 9,
+    "to": "house",
+    "tx": 20,
+    "ty": 3,
+    "dir": 0,
+    "label": "למטה"
+   }
+  ],
+  "spawn": {
+   "x": 6,
+   "y": 7
+  }
+ }
+}

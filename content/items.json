@@ -1,0 +1,15 @@
+{
+  "remote": { "id": "remote", "name": "השלט של הטלוויזיה", "type": "quest", "icon": "remote", "color": "#e84b4b", "desc": "אבד בפעם המאה." },
+  "snack": { "id": "snack", "name": "נשנוש", "type": "consumable", "icon": "food", "color": "#ffd23f", "price": 8, "desc": "מעלה את מצב הרוח. +10 ניסיון כשאוכלים.", "use": { "xp": 10 } },
+  "juice": { "id": "juice", "name": "מיץ סחוט", "type": "consumable", "icon": "potion", "color": "#ff8a3d", "price": 15, "desc": "מאפס את זמן הטעינה של היכולת.", "use": { "resetCooldown": true } },
+  "shell": { "id": "shell", "name": "צדף", "type": "collectible", "icon": "gem", "color": "#ff9aa8", "desc": "נוצץ, חולי וצדפי." },
+  "toast": { "id": "toast", "name": "טוסט מושלם", "type": "quest", "icon": "food", "color": "#d9a05b", "desc": "זהוב ופריך. בניגוד לקודם." },
+  "album_key": { "id": "album_key", "name": "מפתח עליית הגג", "type": "key", "icon": "key", "color": "#ffd23f", "desc": "פותח את עליית הגג." },
+  "cap_red": { "id": "cap_red", "name": "כובע אדום", "type": "outfit", "icon": "hat", "color": "#e84b4b", "price": 25, "look": { "hat": "#e84b4b" }, "desc": "כובע ספורטיבי אדום." },
+  "shirt_gold": { "id": "shirt_gold", "name": "חולצה מוזהבת", "type": "outfit", "icon": "shirt", "color": "#ffd23f", "price": 40, "look": { "shirt": "#e8b33a" }, "desc": "נוצצת. נוצצת מאוד." },
+  "shirt_green": { "id": "shirt_green", "name": "חולצת מזל ירוקה", "type": "outfit", "icon": "shirt", "color": "#3fae6b", "price": 30, "look": { "shirt": "#3fae6b" }, "desc": "מרגישה מזל." },
+  "sneakers": { "id": "sneakers", "name": "נעלי ריצה", "type": "upgrade", "icon": "shoe", "color": "#5bc0ff", "price": 60, "bonus": { "speed": 15 }, "desc": "+15% מהירות הליכה." },
+  "lucky_coin": { "id": "lucky_coin", "name": "מטבע מזל", "type": "upgrade", "icon": "coin", "color": "#ffd23f", "price": 80, "bonus": { "coinPct": 25 }, "desc": "+25% מטבעות מפרסים." },
+  "stopwatch": { "id": "stopwatch", "name": "שעון עצר", "type": "upgrade", "icon": "star", "color": "#b9a8e6", "price": 70, "bonus": { "cooldownPct": 30 }, "desc": "-30% זמן טעינה ליכולת." },
+  "study_book": { "id": "study_book", "name": "אלמנך משפחתי", "type": "upgrade", "icon": "book", "color": "#8556c4", "price": 90, "bonus": { "xpPct": 25 }, "desc": "+25% ניסיון." }
+}

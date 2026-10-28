@@ -1,0 +1,49 @@
+{
+  "grandma_default": { "start": { "who": "grandma", "text": "שבו, שבו! אכלתם משהו? אתם נראים רזים. כולם נראים לי רזים.", "next": null } },
+  "grandma_after": { "start": { "who": "grandma", "text": "החוף פתוח עכשיו. קחו נשנוש. קחו שניים. רק בלי לספר לאמא.", "effects": [ { "type": "giveOnce", "key": "grandma_snack", "item": "snack" } ] } },
+  "uncle_default": { "start": { "who": "uncle", "text": "סתם עצמתי עיניים לרגע. השלט? אין לי מושג על איזה שלט מדברים.", "next": null } },
+  "uncle_after": { "start": { "who": "uncle", "text": "זו הייתה השנ״צ הכי טובה בחיי. תודה על השלט, אלוף.", "next": null } },
+  "aunt_default": { "start": { "who": "aunt", "text": "איזה מזג אוויר מקסים! בדיוק בשביל לדבר על כולם. כלומר, בשביל טיול.", "next": null } },
+  "aunt_after": { "start": { "who": "aunt", "text": "הכול מסודר בזכותכם. אני מספרת לכל המשפחה.", "next": null } },
+  "cousin_default": { "start": { "who": "cousin", "text": "עוד לא להסתכל עליי! אני מתאמן על הכניסה שלי.", "next": null } },
+  "cousin_after": { "start": { "who": "cousin", "text": "הכניסה שלי תהיה אגדית. תמחאו כפיים כשאני מגיע, טוב?", "next": null } },
+  "neighbor_default": {
+    "start": { "who": "neighbor", "text": "אה, שלום! ראיתם את הגדר שלי? היא ראתה ימים יפים יותר.", "choices": [
+      { "text": "ספר לנו עוד", "next": "more" }, { "text": "לא עכשיו", "next": null } ] },
+    "more": { "who": "neighbor", "text": "מישהו שמבין בתיקונים יכול לסדר אותה במגע אחד. מי יודע, אולי במשפחה שלכם יש כזה...", "next": null }
+  },
+  "shopkeeper_default": {
+    "start": { "who": "shopkeeper", "text": "ברוכים הבאים למכולת המשפחתית! הכול במבצע (לא נכון).", "choices": [
+      { "text": "לפתוח את החנות", "next": null, "effects": [ { "type": "shop", "id": "shopkeeper" } ] }, { "text": "רק מסתכלים", "next": null } ] }
+  },
+  "lifeguard_default": { "start": { "who": "lifeguard", "text": "השמש זורחת, החול לוהט, ואיבדתי את הצדפים שלי. לא הרגילים. היפים.", "next": null } },
+  "lifeguard_after": { "start": { "who": "lifeguard", "text": "אוסף צדפים מדהים! אתם מצילים של כבוד מעכשיו.", "next": null } },
+
+  "fridge": { "start": { "who": "narrator", "text": "במקרר יש שלוש צנצנות חמוצים וזית בודד ועצוב.", "effects": [ { "type": "giveOnce", "key": "fridge_snack", "item": "snack", "toast": "נמצא נשנוש!" } ] } },
+  "stove": { "start": { "who": "narrator", "text": "הכיריים. עולה מהן ריח קלוש של טוסט שלא שרד.", "next": null } },
+  "tv": { "start": { "who": "narrator", "text": "משדרים שוב תוכנית שאף אחד לא מודה שהוא רואה.", "next": null } },
+  "sofa": { "start": { "who": "narrator", "text": "ספה נוחה במיוחד. אפשר להישאר עליה עד יום חמישי.", "next": null } },
+  "shelf": { "start": { "who": "narrator", "text": "ספרים, מזכרות, וגביע שאף אחד לא זוכר שזכו בו.", "next": null } },
+  "chest_house": { "start": { "who": "narrator", "branch": [ { "cond": { "flag": "chest_house_opened" }, "next": "empty" }, { "next": "open" } ] },
+    "open": { "who": "narrator", "text": "פותחים את התיבה הישנה ומוצאים כמה מטבעות מתחת לערימת גרביים!", "effects": [ { "type": "coins", "n": 15 }, { "type": "flag", "key": "chest_house_opened" } ] },
+    "empty": { "who": "narrator", "text": "נשארו רק גרביים.", "next": null } },
+  "attic_door": { "start": { "who": "narrator", "branch": [ { "cond": { "shards": 5 }, "next": "open" }, { "next": "closed" } ] },
+    "open": { "who": "narrator", "text": "הזוהר של האלבום בוקע מהדלת. היא נפתחת מעצמה!", "effects": [ { "type": "teleport", "map": "attic", "x": 7, "y": 8 } ] },
+    "closed": { "who": "narrator", "text": "דלת זוהרת. היא לא זזה. צריך את כל 5 רסיסי הזיכרון.", "next": null } },
+  "house_sign": { "start": { "who": "narrator", "text": "שלט: ״הבית הוא הבית. נא להוריד נעליים. ברצינות.״", "next": null } },
+  "street_sign": { "start": { "who": "narrator", "text": "שלט: ״רחוב בוזגלו. המכולת ימינה. החוף בקצה המזרחי (כשהוא פתוח).״", "next": null } },
+  "beach_sign": { "start": { "who": "narrator", "text": "שלט: ״לחוף ככה״. מישהו הוסיף: ״סגור עד להודעה חדשה (סבתא יודעת).״", "next": null } },
+  "picnic": { "start": { "who": "narrator", "text": "שולחן פיקניק עם כתם מסתורי בצורת מדינה.", "next": null } },
+  "fence_chest": { "start": { "who": "narrator", "branch": [ { "cond": { "flag": "fence_chest_opened" }, "next": "empty" }, { "next": "open" } ] },
+    "open": { "who": "narrator", "text": "מאחורי הגדר המתוקנת מסתתרת תיבה נסתרת עם מטבעות ומיץ!", "effects": [ { "type": "coins", "n": 25 }, { "type": "item", "id": "juice" }, { "type": "flag", "key": "fence_chest_opened" } ] },
+    "empty": { "who": "narrator", "text": "התיבה ריקה עכשיו.", "next": null } },
+  "broken_fence": { "start": { "who": "narrator", "branch": [ { "cond": { "flag": "fence_fixed" }, "next": "fixed" }, { "next": "broken" } ] },
+    "broken": { "who": "narrator", "text": "שלט גדר שבור. מי שיש לו יכולת תיקון יכול לסדר אותו (עומדים קרוב ולוחצים B).", "next": null },
+    "fixed": { "who": "narrator", "text": "כמו חדש!", "next": null } },
+  "market_sign": { "start": { "who": "narrator", "text": "שלט: ״אין החזרות. אין גם התמקחות. לפנות למוכר.״", "next": null } },
+  "secret_chest": { "start": { "who": "narrator", "branch": [ { "cond": { "flag": "secret_found" }, "next": "empty" }, { "next": "open" } ] },
+    "open": { "who": "narrator", "text": "סוד התגלה! תיבה נוצצת מוסתרת מאחורי הסלעים!", "effects": [ { "type": "coins", "n": 50 }, { "type": "xp", "n": 40 }, { "type": "flag", "key": "secret_found" } ] },
+    "empty": { "who": "narrator", "text": "לא נשאר כלום חוץ מחול.", "next": null } },
+  "beach_info": { "start": { "who": "narrator", "text": "שלט: ״צדפים בחינם. כרישים לא (הם גובים על צילומים).״", "next": null } },
+  "album": { "start": { "who": "narrator", "text": "חמשת רסיסי הזיכרון עפים מהכיס ומתחברים לאלבום המשפחה. הוא זוהר!", "effects": [ { "type": "ending" } ] } }
+}

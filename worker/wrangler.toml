@@ -1,0 +1,21 @@
+name = "buzaglos-api"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[vars]
+GITHUB_REPO = "OWNER/REPO"                 # e.g. "morbuzaglo/buzaglos"
+GITHUB_BRANCH = "main"
+ALLOWED_ORIGIN = "https://OWNER.github.io" # origin of the GitHub Pages site (comma-separate several)
+ANTHROPIC_MODEL = "claude-sonnet-5-5"
+ALLOW_LOCALHOST = "0"                      # "1" only while testing locally
+
+# Create with:  npx wrangler kv namespace create SAVES   and paste the id here
+[[kv_namespaces]]
+binding = "SAVES"
+id = "REPLACE_WITH_KV_ID"
+
+# Secrets (never committed):
+#   npx wrangler secret put ADMIN_PASSWORD
+#   npx wrangler secret put SESSION_SECRET      (long random string)
+#   npx wrangler secret put ANTHROPIC_API_KEY
+#   npx wrangler secret put GITHUB_TOKEN        (fine-grained token: Contents read/write on this repo only)

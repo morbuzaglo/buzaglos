@@ -1,0 +1,66 @@
+{
+  "mordechai": {
+    "name": "מרדכי", "role": "אח", "gender": "m", "placeholder": true,
+    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
+    "look": { "skin": "#f1c9a0", "hair": "#3a2415", "hairStyle": "short", "shirt": "#3a7bd5", "pants": "#2c3e72", "accessory": "none" },
+    "ability": { "type": "fix", "name": "תיקון מהיר", "desc": "מתקן דברים שבורים בקרבת מקום.", "cooldown": 5 },
+    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
+    "theme": "#3a7bd5"
+  },
+  "eden": {
+    "name": "עדן", "role": "אחות", "gender": "f", "placeholder": true,
+    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
+    "look": { "skin": "#f1c9a0", "hair": "#3a2415", "hairStyle": "long", "shirt": "#3fae6b", "pants": "#2e2e48", "accessory": "none" },
+    "ability": { "type": "sniff", "name": "חוש גילוי", "desc": "חושף חפצים נסתרים בקרבת מקום.", "cooldown": 8 },
+    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
+    "theme": "#3fae6b"
+  },
+  "maayan": {
+    "name": "מעיין", "role": "אחות", "gender": "f", "placeholder": true,
+    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
+    "look": { "skin": "#e8b98a", "hair": "#7a2d1c", "hairStyle": "long", "shirt": "#e8a13a", "pants": "#3d3a66", "accessory": "none" },
+    "ability": { "type": "charm", "name": "קסם אישי", "desc": "אנשים בקרבת מקום נפתחים ונותנים טיפ.", "cooldown": 6 },
+    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
+    "theme": "#e8a13a"
+  },
+  "rinat": {
+    "name": "רינת", "role": "אחות", "gender": "f", "placeholder": true,
+    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
+    "look": { "skin": "#d9a679", "hair": "#1c1c28", "hairStyle": "bun", "shirt": "#8556c4", "pants": "#3a2d5c", "accessory": "none" },
+    "ability": { "type": "dash", "name": "ספרינט", "desc": "פרץ של מהירות.", "cooldown": 4 },
+    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
+    "theme": "#8556c4"
+  },
+  "tohar": {
+    "name": "טוהר", "role": "אחות", "gender": "f", "placeholder": true,
+    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
+    "look": { "skin": "#f6d3b0", "hair": "#c9892b", "hairStyle": "curly", "shirt": "#e84b4b", "pants": "#2c3e72", "accessory": "glasses" },
+    "ability": { "type": "sniff", "name": "אף של מזל", "desc": "חושף חפצים נסתרים (טעינה קצרה יותר).", "cooldown": 6 },
+    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
+    "theme": "#e84b4b"
+  },
+  "yoav": {
+    "name": "יואב", "role": "אח", "gender": "m", "placeholder": true,
+    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
+    "look": { "skin": "#f1c9a0", "hair": "#4a2c17", "hairStyle": "short", "shirt": "#2fa39a", "pants": "#333a55", "accessory": "none", "hat": "#222233" },
+    "ability": { "type": "dash", "name": "מהירות הבזק", "desc": "פרץ של מהירות.", "cooldown": 4 },
+    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
+    "theme": "#2fa39a"
+  },
+  "anat": {
+    "name": "אנט", "role": "אמא", "gender": "f", "placeholder": true,
+    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
+    "look": { "skin": "#f1c9a0", "hair": "#5a3418", "hairStyle": "long", "shirt": "#c2417c", "pants": "#3d3a66", "accessory": "none" },
+    "ability": { "type": "charm", "name": "מבט של אמא", "desc": "אנשים בקרבת מקום נפתחים ונותנים טיפ.", "cooldown": 6 },
+    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
+    "theme": "#c2417c"
+  },
+  "yitzhak": {
+    "name": "יצחק", "role": "אבא", "gender": "m", "placeholder": true,
+    "bio": "[מקום שמור: התיאור האמיתי יתווסף מהסיפורים של המשפחה]",
+    "look": { "skin": "#e8b98a", "hair": "#2b2b2b", "hairStyle": "short", "shirt": "#4a6fa5", "pants": "#4a3b2c", "accessory": "glasses" },
+    "ability": { "type": "fix", "name": "תיקון של אבא", "desc": "מתקן דברים שבורים בקרבת מקום.", "cooldown": 5 },
+    "strength": "יתווסף בקרוב", "weakness": "יתווסף בקרוב", "catchphrase": "יתווסף בקרוב",
+    "theme": "#4a6fa5"
+  }
+}

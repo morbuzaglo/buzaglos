@@ -1,0 +1,12 @@
+{
+  "first_shard": { "id": "first_shard", "title": "זיכרון ראשון", "desc": "משחזרים רסיס זיכרון ראשון.", "cond": { "type": "shards", "n": 1 }, "reward": { "coins": 10 } },
+  "three_shards": { "id": "three_shards", "title": "בונה האלבום", "desc": "משחזרים 3 רסיסי זיכרון.", "cond": { "type": "shards", "n": 3 }, "reward": { "coins": 20 } },
+  "all_shards": { "id": "all_shards", "title": "ההיסטוריון של המשפחה", "desc": "משחזרים את כל רסיסי הזיכרון.", "cond": { "type": "shards", "n": 5 }, "reward": { "coins": 50 } },
+  "rich": { "id": "rich", "title": "דמי כיס", "desc": "מרוויחים 100 מטבעות בסך הכול.", "cond": { "type": "coins", "n": 100 }, "reward": { "coins": 15 } },
+  "level3": { "id": "level3", "title": "כוכב עולה", "desc": "מגיעים לרמה 3.", "cond": { "type": "level", "n": 3 }, "reward": { "coins": 15 } },
+  "shopper": { "id": "shopper", "title": "קניות", "desc": "קונים 3 דברים.", "cond": { "type": "purchases", "n": 3 }, "reward": { "coins": 10 } },
+  "walker": { "id": "walker", "title": "מרתון משפחתי", "desc": "הולכים 1000 צעדים.", "cond": { "type": "steps", "n": 1000 }, "reward": { "coins": 10 } },
+  "gamer": { "id": "gamer", "title": "אלוף המשחקונים", "desc": "מנצחים ב-4 משחקונים.", "cond": { "type": "minigames", "n": 4 }, "reward": { "coins": 20 } },
+  "abilities": { "id": "abilities", "title": "מומחה יכולות", "desc": "משתמשים ביכולות 10 פעמים.", "cond": { "type": "abilities", "n": 10 }, "reward": { "coins": 10 } },
+  "secret_found": { "id": "secret_found", "title": "שומר סודות", "desc": "מוצאים את המקום הסודי.", "cond": { "type": "flag", "key": "secret_found" }, "reward": { "coins": 25 } }
+}

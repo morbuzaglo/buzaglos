@@ -1,0 +1,37 @@
+{
+  "grandma": {
+    "id": "grandma", "name": "סבתא", "role": "קרובת משפחה", "placeholder": true,
+    "look": { "skin": "#f1d3b5", "hair": "#d8d8e0", "hairStyle": "bun", "shirt": "#a8658c", "pants": "#4a3a5a", "accessory": "glasses" },
+    "dialogues": [ { "when": { "quest": "q_toast", "state": "done" }, "id": "grandma_after" }, { "id": "grandma_default" } ]
+  },
+  "uncle": {
+    "id": "uncle", "name": "דוד", "role": "קרוב משפחה", "placeholder": true,
+    "look": { "skin": "#d9a679", "hair": "#3a2a20", "hairStyle": "short", "shirt": "#b3503a", "pants": "#2e3a55", "accessory": "beard" },
+    "dialogues": [ { "when": { "quest": "q_remote", "state": "done" }, "id": "uncle_after" }, { "id": "uncle_default" } ]
+  },
+  "aunt": {
+    "id": "aunt", "name": "דודה", "role": "קרובת משפחה", "placeholder": true,
+    "look": { "skin": "#e8b98a", "hair": "#7a2d1c", "hairStyle": "long", "shirt": "#2fa39a", "pants": "#3a3a66", "accessory": "none" },
+    "dialogues": [ { "when": { "quest": "q_market", "state": "done" }, "id": "aunt_after" }, { "id": "aunt_default" } ]
+  },
+  "cousin": {
+    "id": "cousin", "name": "בן דוד", "role": "קרוב משפחה", "placeholder": true,
+    "look": { "skin": "#f1c9a0", "hair": "#e8c25a", "hairStyle": "curly", "shirt": "#e84b4b", "pants": "#2e2e48", "accessory": "none", "hat": "#3a7bd5" },
+    "dialogues": [ { "when": { "quest": "q_cousin", "state": "done" }, "id": "cousin_after" }, { "id": "cousin_default" } ]
+  },
+  "neighbor": {
+    "id": "neighbor", "name": "השכן", "role": "חבר", "placeholder": true,
+    "look": { "skin": "#c68a5c", "hair": "#222222", "hairStyle": "bald", "shirt": "#6a7a3a", "pants": "#444444", "accessory": "glasses" },
+    "dialogues": [ { "id": "neighbor_default" } ]
+  },
+  "shopkeeper": {
+    "id": "shopkeeper", "name": "המוכר", "role": "חנות", "placeholder": true, "shop": "shopkeeper",
+    "look": { "skin": "#e8b98a", "hair": "#6b3a1a", "hairStyle": "short", "shirt": "#ffffff", "pants": "#22304a", "accessory": "none", "hat": "#2fa39a" },
+    "dialogues": [ { "id": "shopkeeper_default" } ]
+  },
+  "lifeguard": {
+    "id": "lifeguard", "name": "המציל", "role": "חבר", "placeholder": true,
+    "look": { "skin": "#d9a679", "hair": "#f0d070", "hairStyle": "short", "shirt": "#ff5d3a", "pants": "#ffffff", "accessory": "none" },
+    "dialogues": [ { "when": { "quest": "q_beach", "state": "done" }, "id": "lifeguard_after" }, { "id": "lifeguard_default" } ]
+  }
+}
