@@ -1,22 +1,471 @@
 {
-  "anat": { "id": "anat", "character": "anat", "name": "אנט", "role": "אמא", "look": { "skin": "#f4dcc2", "hair": "#b88a4a", "hairStyle": "short", "shirt": "#f5d94a", "pants": "#16161a", "accessory": "glasses" },
-    "dialogues": [ { "id": "anat_talk" } ] },
-  "yitzhak": { "id": "yitzhak", "character": "yitzhak", "name": "יצחק", "role": "אבא", "look": { "skin": "#a8774e", "hair": "#8a8a90", "hairStyle": "short", "shirt": "#4a6fa5", "pants": "#3a3a46", "accessory": "both", "hat": "#101014" },
-    "dialogues": [ { "id": "yitzhak_talk" } ] },
-  "mordechai": { "id": "mordechai", "character": "mordechai", "name": "מרדכי", "role": "אח", "look": { "skin": "#f1d3b5", "hair": "#2b1a0e", "hairStyle": "short", "shirt": "#f4f4f4", "pants": "#4a6a9a", "accessory": "none" },
-    "dialogues": [ { "id": "mordechai_talk" } ] },
-  "eden": { "id": "eden", "character": "eden", "name": "עדן", "role": "אחות (תאומה של מרדכי)", "look": { "skin": "#f1d3b5", "hair": "#3a2415", "hairStyle": "long", "shirt": "#f6f6f6", "pants": "#4a6a9a", "accessory": "none" },
-    "dialogues": [ { "id": "eden_talk" } ] },
-  "maayan": { "id": "maayan", "character": "maayan", "name": "מעיין", "role": "אחות", "look": { "skin": "#a8774e", "hair": "#14141a", "hairStyle": "long", "shirt": "#1c1c22", "pants": "#4a6a9a", "accessory": "none" },
-    "dialogues": [ { "id": "maayan_talk" } ] },
-  "rinat": { "id": "rinat", "character": "rinat", "name": "רינת", "role": "אחות", "look": { "skin": "#f1d3b5", "hair": "#3a2415", "hairStyle": "bald", "shirt": "#7a5ca8", "pants": "#3a2d5c", "accessory": "none", "hat": "#d8c8f0" },
-    "dialogues": [ { "id": "rinat_talk" } ] },
-  "tohar": { "id": "tohar", "character": "tohar", "name": "טוהר", "role": "אחות", "look": { "skin": "#f1d3b5", "hair": "#4a2c17", "hairStyle": "bun", "shirt": "#f6f6f6", "pants": "#4a6a9a", "accessory": "none" },
-    "dialogues": [ { "id": "tohar_talk" } ] },
-  "yoav": { "id": "yoav", "character": "yoav", "name": "יואב", "role": "אח", "look": { "skin": "#f1d3b5", "hair": "#b0885a", "hairStyle": "short", "shirt": "#1d1d24", "pants": "#1d1d24", "accessory": "none" },
-    "dialogues": [ { "id": "yoav_talk" } ] },
-  "terry": { "id": "terry", "name": "Terry", "role": "בן זוג של עדן (אוסטרלי)", "placeholder": true, "look": { "skin": "#f1d3b5", "hair": "#6b4a2b", "hairStyle": "short", "shirt": "#2fa39a", "pants": "#3a3a46", "accessory": "none" },
-    "dialogues": [ { "id": "terry_talk" } ] },
-  "shopkeeper": { "id": "shopkeeper", "name": "המוכר", "role": "חנות", "shop": "shopkeeper", "placeholder": true, "look": { "skin": "#e8b98a", "hair": "#6b3a1a", "hairStyle": "short", "shirt": "#ffffff", "pants": "#22304a", "accessory": "none", "hat": "#2fa39a" },
-    "dialogues": [ { "id": "shopkeeper_default" } ] }
+ "anat": {
+  "id": "anat",
+  "character": "anat",
+  "name": "אנט",
+  "role": "אמא",
+  "look": {
+   "skin": "#f4dcc2",
+   "hair": "#b88a4a",
+   "hairStyle": "short",
+   "shirt": "#f5d94a",
+   "pants": "#16161a",
+   "accessory": "catglasses",
+   "bottom": "skirt",
+   "sleeves": "long",
+   "bag": true,
+   "shoes": "#16161a"
+  },
+  "phrases": [
+   "כמה זה עולה? בשוק הייתי מוצאת את זה בחצי.",
+   "אכלתם משהו? אני מכינה הכול כל הזמן.",
+   "הטלפון שלי? אה, הוא פה. נראה לי.",
+   "בארוחת שישי יש 12 סלטים. אפשר להתחיל לספור.",
+   "עוד מעט הפלגה. את המזוודה כבר ארזתי.",
+   "תכשיט יפה? רק אם הוא במבצע.",
+   "מרדכי שלי, תמיד מביא מתנות. טוב, וגם טוהר.",
+   "אני חייבת להזכיר: דג מרוקאי זה לא דג רגיל.",
+   "אם הייתי צריכה לשלם מחיר מלא, הייתי נשארת בבית.",
+   "לצלם? אני צלמת לשעבר, אני רואה אור מכאן.",
+   "יש כלה מחר. הבגד כבר מוכן, והצחוק גם.",
+   "אל תשכחו לסגור את הדלת, ובטח את הטלפון."
+  ]
+ },
+ "yitzhak": {
+  "id": "yitzhak",
+  "character": "yitzhak",
+  "name": "יצחק",
+  "role": "אבא",
+  "look": {
+   "skin": "#a8774e",
+   "hair": "#8a8a90",
+   "hairStyle": "short",
+   "shirt": "#4a6fa5",
+   "pants": "#3a3a46",
+   "accessory": "both",
+   "beardColor": "#9a9aa2",
+   "hat": "#101014",
+   "hatStyle": "kippah",
+   "collar": true,
+   "sleeves": "short",
+   "shoes": "#2b2433"
+  },
+  "phrases": [
+   "יש לי בדיחת קרש חדשה. אבל אספר אותה בארוחה.",
+   "לפני שאוכלים, דבר תורה קטן.",
+   "הדג באקווריום אכל היום יותר טוב ממני.",
+   "צריך לעזור לעדן ולמעיין לעבור דירה? אני כבר עם הארגז.",
+   "חנון מארץ החנונים, זה אני. ואני גאה בזה.",
+   "אם משהו מקולקל, אל תדאגו, אני חשמלאי.",
+   "שיעור התורה היום היה מצוין.",
+   "בשיפוצים לימדו אותי: תמיד למדוד פעמיים.",
+   "אשתי אומרת שצריך לטוס. אני אומר: נראה.",
+   "כביסה תלויה, הבית שקט, מה עוד אפשר לבקש?",
+   "ביפן לא מצאתי מניין. אבל מצאתי הרבה איילים.",
+   "רוצים בדיחה? מה אומר חשמלאי לשקע? אספר בארוחה."
+  ]
+ },
+ "mordechai": {
+  "id": "mordechai",
+  "character": "mordechai",
+  "name": "מרדכי",
+  "role": "אח",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#2b1a0e",
+   "hairStyle": "short",
+   "shirt": "#f4f4f4",
+   "pants": "#4a6a9a",
+   "accessory": "none",
+   "shoes": "#f4f4f8",
+   "wide": true,
+   "print": true,
+   "sleeves": "short"
+  },
+  "phrases": [
+   "כן, אני עובד במשרד. באמת. רק במשרד.",
+   "קניתי לעדן מחבט טניס ורוד. היא התלהבה.",
+   "הדפסתי היום משהו בתלת-מימד. זה יהיה מתנה.",
+   "ראיתי את יומני הערפד שש פעמים. עוד אחת לא תזיק.",
+   "אני יודע את כל השירים של דיסני. רוצים לשמוע?",
+   "אני מנגן בגיטרה, בפסנתר, ואם צריך גם שר.",
+   "הנדסת מכונות זה הדבר הכי יפה שיש. שאלו אותי למה.",
+   "אמא אומרת שאני האהוב עליה. טוהר חולקת.",
+   "אני מתקן, בונה ומייעץ, בסדר הזה.",
+   "המשפחה חושבת שאני במדינות אויב. אני סתם בעבודה.",
+   "אני אוהב לצייר. גם את הסלון של ההורים ציירתי.",
+   "יש לי רעיון למתנה. לא אגלה."
+  ]
+ },
+ "eden": {
+  "id": "eden",
+  "character": "eden",
+  "name": "עדן",
+  "role": "אחות (תאומה של מרדכי)",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#3a2415",
+   "hairStyle": "long",
+   "shirt": "#f6f6f6",
+   "pants": "#4a6a9a",
+   "accessory": "none",
+   "shoes": "#1c1c22",
+   "sleeves": "none"
+  },
+  "phrases": [
+   "הבית של ההורים? יש לי כמה הערות. נתחיל מהסלון.",
+   "מעיין, שוב לקחת לי את החולצה?",
+   "טרי כתב לי מאוסטרליה. אנחנו מתכננים טיול.",
+   "פילאטיס בבוקר, טניס אחר הצהריים. כמעט מתוקתק.",
+   "הכול צריך להיות מסודר, אחרת אני לא נושמת.",
+   "מרדכי הוא החבר הכי טוב שלי. ואנחנו תאומים, אז יש לי גם חסרון.",
+   "אמא ואני דומות? אולי קצת.",
+   "המשרד בישראל לא מנהל את עצמו. אני כן.",
+   "הזמנתי חדר ישיבות, סידרתי יומן, ועכשיו קפה.",
+   "מחבט הטניס הוורוד שלי הכי יפה במגרש.",
+   "דובאי היה הפתעה. אבל אני אוהבת הפתעות.",
+   "אפשר להזיז את הספה? אני רק שואלת."
+  ]
+ },
+ "maayan": {
+  "id": "maayan",
+  "character": "maayan",
+  "name": "מעיין",
+  "role": "אחות",
+  "look": {
+   "skin": "#a8774e",
+   "hair": "#14141a",
+   "hairStyle": "long",
+   "shirt": "#1c1c22",
+   "pants": "#4a6a9a",
+   "accessory": "none",
+   "shoes": "#e8e8f0",
+   "sleeves": "none"
+  },
+  "phrases": [
+   "יש לי חידה בשבילכם, אבל קודם אני רצה סיבוב.",
+   "אני בעבודה מהבית היום. אפשר לפתח כל דבר מהסלון.",
+   "עוד סטארטאפ? בטח, עוד שנה-שנתיים.",
+   "טניס בבוקר, קוקטייל בערב. איזה חיים.",
+   "עדן ואני מחליפות בגדים. זה מערכת לא רשמית.",
+   "בדקו את הקוד שלי, רק אל תמצאו באגים.",
+   "אני גרה לבד ברמת גן. אין מי שיעיר לי על הכלים.",
+   "חכם אחד אמר חידה. אני אזכור אותה בהמשך.",
+   "אני אוהבת לצחוק, ואני צוחקת מהר.",
+   "הריצה היום הייתה מעולה. הנעליים לא הסכימו.",
+   "אם יש משחק טניס, אני שם.",
+   "פעם הייתי מגיעה לכל מקום ברגל. היום אני רצה."
+  ]
+ },
+ "rinat": {
+  "id": "rinat",
+  "character": "rinat",
+  "name": "רינת",
+  "role": "אחות",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#3a2415",
+   "hairStyle": "bald",
+   "shirt": "#7a5ca8",
+   "pants": "#3a2d5c",
+   "accessory": "none",
+   "hat": "#d8c8f0",
+   "hatStyle": "scarf",
+   "bottom": "longskirt",
+   "sleeves": "long",
+   "book": true,
+   "shoes": "#2b2433"
+  },
+  "phrases": [
+   "הכול מסודר, הבנות אכלו, אליאור אכל. עכשיו אפשר לנשום.",
+   "אביגיל ואדל-שירה הן הכוכבות של הבית.",
+   "אבוז׳יבה! באת לבקר?",
+   "אליאור לומד תורה ומוכר רכבים. שני דברים שונים לגמרי.",
+   "יש לי סידור תהילים לבן. הוא תמיד איתי.",
+   "לאחרונה אני קוראת הרבה על פוליטיקה.",
+   "סיימתי לימודי עבודה סוציאלית והחזרתי לעבודה.",
+   "הבית נקי, הארוחה בדרך, הילדות רחוצות. רגע.",
+   "טוהר היא החברה הכי טובה שלי מאז שהיינו קטנות.",
+   "מרדכי חלם את אביגיל. הוא אמר שיהיו תלתלים שחורים.",
+   "בחצאית ארוכה קל לרוץ אחרי ילדות. פלא.",
+   "אליאור הציע לי בכותל. אני עדיין מתרגשת."
+  ]
+ },
+ "tohar": {
+  "id": "tohar",
+  "character": "tohar",
+  "name": "טוהר",
+  "role": "אחות",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#4a2c17",
+   "hairStyle": "ponytail",
+   "shirt": "#f6f6f6",
+   "pants": "#4a6a9a",
+   "accessory": "none",
+   "bottom": "longskirt",
+   "sleeves": "short",
+   "shoes": "#f4f4f8"
+  },
+  "phrases": [
+   "יום הולדת השבוע? אני כבר מארגנת. אל תגלו!",
+   "בבית צריך סדר. אם אני לא מוצאת משהו, זה סימן שסידרתי.",
+   "שבע דקות? אני כבר בדרך!",
+   "הנעליים הלבנות של נייק הן חלק ממני.",
+   "לימודי סיעוד, מוקד טלפוני, ובין לבין חיים.",
+   "רינת היא החברה הכי טובה שלי. אבוז׳יבו!",
+   "אחרי ארוחת שישי אני מארחת חברות עם חטיפים.",
+   "מרדכי, אתה האהוב על אמא? הרבה מחשבות על זה.",
+   "הפיקנטו עדיין חי. לפחות בסיפורים.",
+   "אני הולכת לשיעור תורה, אחר כך יוצאים.",
+   "אל תשאלו איפה שמתי את זה, זה במקום בטוח.",
+   "כל אחד בבית חוגג ביום הנכון. אני דואגת."
+  ]
+ },
+ "yoav": {
+  "id": "yoav",
+  "character": "yoav",
+  "name": "יואב",
+  "role": "אח",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#b0885a",
+   "hairStyle": "short",
+   "shirt": "#1d1d24",
+   "pants": "#1d1d24",
+   "accessory": "none",
+   "stripes": true,
+   "sleeves": "long",
+   "shoes": "#f4f4f8"
+  },
+  "phrases": [
+   "אל תיגעו בזה. הרגע ניקיתי.",
+   "...",
+   "יש פה לכלוך. אני רואה אותו.",
+   "הגינה צריכה לנקות. גם הגינה הציבורית.",
+   "הרכב נקי? עוד לא.",
+   "אל תדרכו שם.",
+   "אני מדבר עם טוהר או רינת. לפעמים.",
+   "מרדכי? שיהיה.",
+   "סדר זה חשוב.",
+   "בפנימייה הכול מסודר, בערך.",
+   "תנו לי מטאטא ואני אסדר את העולם.",
+   "אל תשימו את זה פה."
+  ]
+ },
+ "terry": {
+  "id": "terry",
+  "name": "Terry",
+  "role": "בן זוג של עדן (אוסטרלי)",
+  "placeholder": true,
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#6b4a2b",
+   "hairStyle": "short",
+   "shirt": "#2fa39a",
+   "pants": "#3a3a46",
+   "accessory": "none"
+  },
+  "phrases": [
+   "G'day! Eden says hi. I love this place.",
+   "I flew all the way from Australia. Totally worth it.",
+   "Eden and I met at a pool. Best day ever.",
+   "Everyone here is so welcoming.",
+   "I'm planning something with Eden. Can't say what.",
+   "Dubai was crazy. Good crazy.",
+   "Do you have any good places to eat nearby?",
+   "I only speak English, but I'm learning to say shalom.",
+   "Eden is the best. Don't tell her I said that.",
+   "Mate, this country is awesome."
+  ]
+ },
+ "shopkeeper": {
+  "id": "shopkeeper",
+  "name": "המוכר",
+  "role": "חנות",
+  "shop": "shopkeeper",
+  "placeholder": true,
+  "look": {
+   "skin": "#e8b98a",
+   "hair": "#6b3a1a",
+   "hairStyle": "short",
+   "shirt": "#ffffff",
+   "pants": "#22304a",
+   "accessory": "none",
+   "hat": "#2fa39a"
+  },
+  "phrases": [
+   "ברוכים הבאים! הכול במבצע (לא נכון).",
+   "מה אפשר להביא? יש הכול חוץ ממה שחיפשתם.",
+   "אין החזרות, אבל יש חיוכים.",
+   "מחיר טוב? רק לכם, מחיר קצת פחות רע.",
+   "אני פה מהבוקר. הדלת פתוחה, הכיס לא.",
+   "קנו שניים ותקבלו הרגשה טובה.",
+   "אמא שלכם התמקחה פה פעם. נשארתי עם הפסד.",
+   "לחזור שוב? בכיף.",
+   "יש לי נשנוש לכל מצב."
+  ]
+ },
+ "jp_man": {
+  "id": "jp_man",
+  "name": "אחד מהמתפללים",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#2b2b2b",
+   "hairStyle": "short",
+   "shirt": "#ffffff",
+   "pants": "#2b2b3a",
+   "accessory": "none",
+   "hat": "#101014",
+   "hatStyle": "kippah"
+  },
+  "phrases": [
+   "שלום עליכם!",
+   "מחפשים מניין? אני בעניין."
+  ],
+  "noLabel": true
+ },
+ "agent": {
+  "id": "agent",
+  "name": "נציגת ההפלגה",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#3a2415",
+   "hairStyle": "bun",
+   "shirt": "#2b5fa8",
+   "pants": "#2b2b3a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "ברוכים הבאים. יש רק צ׳ק-אין אחד לפני העלייה."
+  ]
+ },
+ "elior": {
+  "id": "elior",
+  "name": "אליאור",
+  "role": "בעלה של רינת",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#3a2415",
+   "hairStyle": "short",
+   "shirt": "#ffffff",
+   "pants": "#1c1c26",
+   "accessory": "none",
+   "beardColor": "#3a2415",
+   "hat": "#101014",
+   "hatStyle": "kippah"
+  },
+  "phrases": [
+   "רינת מחכה לי, אני בדרך."
+  ]
+ },
+ "dispatcher": {
+  "id": "dispatcher",
+  "name": "המוקדנית",
+  "role": "קול בטלפון",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#7a2d1c",
+   "hairStyle": "bun",
+   "shirt": "#2fa39a",
+   "pants": "#2b2b3a",
+   "accessory": "none"
+  }
+ },
+ "yoav_kid": {
+  "id": "yoav_kid",
+  "name": "יואב (בן 4)",
+  "role": "זיכרון",
+  "look": {
+   "skin": "#f6dcc0",
+   "hair": "#e8c25a",
+   "hairStyle": "long",
+   "shirt": "#4fc3f7",
+   "pants": "#3a3a56",
+   "accessory": "none"
+  },
+  "scale": 0.72,
+  "phrases": [
+   "..."
+  ]
+ },
+ "guest": {
+  "id": "guest",
+  "name": "אורח",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#5a3418",
+   "hairStyle": "short",
+   "shirt": "#8a8a99",
+   "pants": "#2b2b3a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "בלי תחפושות? בסדר, גם זה סגנון."
+  ],
+  "noLabel": true
+ },
+ "jp_man2": {
+  "id": "jp_man2",
+  "name": "אחד מהמתפללים",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#5a3418",
+   "hairStyle": "curly",
+   "shirt": "#4a6fa5",
+   "pants": "#2b2b3a",
+   "accessory": "glasses",
+   "hat": "#101014",
+   "hatStyle": "kippah"
+  },
+  "phrases": [
+   "שלום עליכם!",
+   "מחפשים מניין? אני בעניין."
+  ],
+  "noLabel": true
+ },
+ "jp_man3": {
+  "id": "jp_man3",
+  "name": "אחד מהמתפללים",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#8a8a90",
+   "hairStyle": "short",
+   "shirt": "#e8e2d2",
+   "pants": "#2b2b3a",
+   "accessory": "beard",
+   "hat": "#101014",
+   "hatStyle": "kippah"
+  },
+  "phrases": [
+   "שלום עליכם!",
+   "מחפשים מניין? אני בעניין."
+  ],
+  "noLabel": true
+ },
+ "jp_man4": {
+  "id": "jp_man4",
+  "name": "אחד מהמתפללים",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#14141a",
+   "hairStyle": "short",
+   "shirt": "#7a3a3a",
+   "pants": "#2b2b3a",
+   "accessory": "none",
+   "hat": "#101014",
+   "hatStyle": "kippah"
+  },
+  "phrases": [
+   "שלום עליכם!",
+   "מחפשים מניין? אני בעניין."
+  ],
+  "noLabel": true
+ }
 }

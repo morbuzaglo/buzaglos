@@ -2,14 +2,14 @@
 import { content } from '../content.js';
 import {
   S, onChange, saveGame, equippedLook, buy, check, addCoins, addXp, addItem, removeItem, setFlag, getFlag,
-  xpForLevel, exportCode, importCode, startNewGame, hasSave, loadGame, cloudEnabled, cloudSave, cloudLoad, validCode,
+  xpForLevel, exportCode, importCode, startNewGame, hasSave, loadGame, cloudEnabled, cloudSave, cloudLoad, validCode, peekSave, clearSave,
 } from '../state.js';
 import { paintPortrait, paintIcon, paintTitleBanner } from '../art.js';
 import * as Q from '../systems/quests.js';
 import { sfx, setMusic, setSfx, audioSettings } from '../audio.js';
 import { STR, tpl } from '../i18n.js';
 
-export const hooks = { teleport: null, ending: null, charChanged: null, resetCooldown: null, newGame: null, continueGame: null, toTitle: null };
+export const hooks = { enterStory: null, teleport: null, ending: null, charChanged: null, resetCooldown: null, newGame: null, continueGame: null, toTitle: null };
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -38,9 +38,11 @@ export function buildHud() {
   hud.appendChild(q);
   const mb = el('button', 'mbtn', STR.menu); mb.onclick = () => { sfx('tap'); openMenu(); };
   hud.appendChild(mb);
+  if (!$('timerBox')) { const tb = el('div', 'hidden'); tb.id = 'timerBox'; $('ui').appendChild(tb); }
   paintIcon($('hudCoin'), 'coin');
   refreshHud();
 }
+export function setTimer(text) { const t = $('timerBox'); if (!t) return; if (text) { t.textContent = text; t.classList.remove('hidden'); } else t.classList.add('hidden'); }
 export function refreshHud() {
   const st = S.state, ch = content.characters[st.activeChar]; if (!ch || !$('hudName')) return;
   paintPortrait($('hudFace'), equippedLook(st.activeChar));
@@ -91,6 +93,8 @@ function finishTyping(choices, d) {
   } else d.appendChild(el('div', 'more', '▼'));
 }
 function waitBox(who, text, choices) { return new Promise((res) => { dlgResolve = res; showDialogueBox(who, text, choices); }); }
+/** Ask a multiple-choice question inside the dialogue box. Resolves to the picked index. */
+export async function choose(who, text, texts) { const i = await waitBox(who, text, texts.map((t) => ({ text: t }))); hideDialogue(); return i; }
 export function hideDialogue() { clearInterval(typing); typing = null; $('dialogue').classList.add('hidden'); }
 export const dialogueOpen = () => !$('dialogue').classList.contains('hidden');
 
@@ -154,34 +158,20 @@ export function openPanelRaw(title, onClose) { const p = openShell(title, onClos
 function card(inner, cls = '') { return el('div', 'card ' + cls, inner); }
 function iconCanvas(item) { const c = el('canvas'); paintIcon(c, item.icon || 'default', item.color); return c; }
 
-let menuTab = 'family';
+let menuTab = 'quests';
 export function openMenu(tab) {
   if (tab) menuTab = tab;
   const p = openShell(STR.menu, () => { hooks.charChanged?.(); refreshHud(); saveGame(); });
   const tabs = el('div', 'tabs');
-  ['family', 'quests', 'bag', 'album', 'awards', 'settings'].forEach((k) => {
+  ['quests', 'bag', 'album', 'awards', 'settings'].forEach((k) => {
     const label = STR.tabs[k === 'settings' ? 'more' : k];
     const b = el('button', 'tab' + (menuTab === k ? ' on' : ''), label); b.onclick = () => { sfx('tap'); menuTab = k; openMenu(); }; tabs.appendChild(b);
   });
   p.appendChild(tabs);
   const body = el('div', 'body'); p.appendChild(body);
-  ({ family: tabFamily, quests: tabQuests, bag: tabBag, album: tabAlbum, awards: tabAwards, settings: tabSettings })[menuTab](body);
+  ({ quests: tabQuests, bag: tabBag, album: tabAlbum, awards: tabAwards, settings: tabSettings })[menuTab](body);
 }
 
-function tabFamily(body) {
-  body.appendChild(card(`<b>${STR.family.choose}</b><br><span class="sub">${STR.family.chooseSub}</span>`));
-  S.state.unlockedChars.forEach((id) => {
-    const ch = content.characters[id]; if (!ch) return;
-    const c = card(''); const row = el('div', 'row'); const cv = el('canvas'); paintPortrait(cv, equippedLook(id));
-    const real = (v) => v && !['—', '...', '-'].includes(String(v).trim()) && !String(v).includes('יתווסף בקרוב');
-    const extra = [real(ch.strength) ? `<span class="sub">${STR.family.strength}:</span> ${esc(ch.strength)}` : '', real(ch.weakness) ? `<span class="sub">${STR.family.weakness}:</span> ${esc(ch.weakness)}` : ''].filter(Boolean).join(' &nbsp; ');
-    const info = el('div', 'grow', `<b>${esc(ch.name)}</b> <span class="sub">${esc(ch.role)}</span><br>${esc(ch.bio || '')}<br><span class="sub">${STR.family.ability}:</span> ${esc(ch.ability.name)}<br><span class="sub">${esc(ch.ability.desc)}</span>${extra ? `<br>${extra}` : ''}`);
-    const act = S.state.activeChar === id;
-    const btn = el('button', 'btn' + (act ? ' alt' : ''), act ? STR.family.active : STR.family.playAs); btn.disabled = act;
-    btn.onclick = () => { S.state.activeChar = id; sfx('pickup'); saveGame(); hooks.charChanged?.(); refreshHud(); openMenu(); toast(STR.family.nowPlaying(ch.name)); };
-    row.append(cv, info, btn); c.appendChild(row); body.appendChild(c);
-  });
-}
 function tabQuests(body) {
   const act = Q.activeQuests();
   if (!act.length) body.appendChild(card(`<b>${STR.quests.none}</b><br><span class="sub">${STR.quests.noneSub}</span>`));
@@ -257,6 +247,22 @@ function tabSettings(body) {
   const nb = el('button', 'btn red', STR.settings.backTitle); nb.onclick = () => { closePanel(); saveGame(); hooks.toTitle?.(); }; body.appendChild(nb);
 }
 
+// ------------------------------------------------------------------ album: choose a memory (story) to play
+export function openStories() {
+  const body = openPanelRaw(STR.stories.title, () => refreshHud());
+  body.appendChild(card(`<b>${STR.album.title}</b><br><span class="sub">${STR.stories.help}</span><br>${STR.album.restored(S.state.shards.length, content.config.finalShards)}`));
+  const order = { active: 0, new: 1, done: 2, locked: 3 };
+  Q.allQuests().filter((q) => q.scene).sort((a, b) => order[Q.questStatus(a)] - order[Q.questStatus(b)]).forEach((q) => {
+    const st = Q.questStatus(q);
+    const c = card('', st === 'locked' ? 'locked' : '');
+    const mark = { active: '▶', new: '◇', done: '<span class="done">✔</span>', locked: '🔒' }[st];
+    const row = el('div', 'row'); const info = el('div', 'grow', `${mark} <b>${T(q.title)}</b><br><span class="sub">${T(q.summary || '')}</span>`);
+    const b = el('button', 'btn' + (st === 'done' ? ' alt' : ''), st === 'active' ? STR.stories.resume : st === 'done' ? STR.stories.replay : STR.stories.enter); b.disabled = st === 'locked';
+    b.onclick = () => { sfx('door'); closePanel(); hooks.enterStory?.(q.id); };
+    row.append(info, b); c.appendChild(row); body.appendChild(c);
+  });
+}
+
 // ------------------------------------------------------------------ shop
 export function openShop(shopId) {
   const body = openPanelRaw(STR.shop.title, () => refreshHud());
@@ -284,16 +290,40 @@ export function showReward(title, lines, onClose) {
 }
 
 // ------------------------------------------------------------------ title
+function titleHeader(t) {
+  const cfg = content.config;
+  const banner = el('canvas'); paintTitleBanner(banner, Object.values(content.characters).map((c) => c.look));
+  t.append(banner, el('h1', '', esc(cfg.title)), el('p', '', esc(cfg.tagline)));
+}
 export function showTitle() {
   const t = $('title'); t.classList.remove('hidden'); t.innerHTML = '';
-  const cfg = content.config;
-  const banner = el('canvas'); paintTitleBanner(banner, Object.values(content.characters).slice(0, 6).map((c) => c.look));
-  t.append(banner, el('h1', '', esc(cfg.title)), el('p', '', esc(cfg.tagline)));
-  const play = el('button', 'btn', hasSave() ? STR.title.cont : STR.title.newGame); play.id = 'btnPlay';
-  play.onclick = () => { sfx('tap'); t.classList.add('hidden'); if (hasSave()) { loadGame(); hooks.continueGame?.(); } else { startNewGame(); hooks.newGame?.(); } };
-  t.appendChild(play);
-  if (hasSave()) { const nb = el('button', 'btn alt', STR.title.newGame); nb.onclick = () => { if (confirm(STR.title.confirmNew)) { sfx('tap'); t.classList.add('hidden'); startNewGame(); hooks.newGame?.(); } }; t.appendChild(nb); }
+  titleHeader(t);
+  const saved = peekSave();
+  const ch = saved && content.characters[saved.activeChar];
+  if (ch && saved.chosen) {
+    const who = el('div', 'card'); who.style.cssText = 'display:flex;gap:10px;align-items:center;min-width:240px';
+    const cv = el('canvas'); cv.style.cssText = 'width:44px;height:44px'; paintPortrait(cv, equippedLook(saved.activeChar));
+    who.append(cv, el('div', '', `<b>${esc(ch.name)}</b><br><span class="sub">${STR.title.shards(saved.shards?.length || 0, content.config.finalShards)}</span>`));
+    const play = el('button', 'btn', STR.title.cont); play.id = 'btnPlay';
+    play.onclick = () => { sfx('tap'); t.classList.add('hidden'); loadGame(); hooks.continueGame?.(); };
+    const nb = el('button', 'btn alt', STR.title.newGame);
+    nb.onclick = () => { if (confirm(STR.title.confirmNew)) { clearSave(); showPicker(); } };
+    t.append(who, play, nb);
+  } else showPicker();
   t.appendChild(el('p', '', STR.title.tip));
+}
+function showPicker() {
+  const t = $('title'); t.classList.remove('hidden'); t.innerHTML = '';
+  titleHeader(t);
+  t.appendChild(el('h3', '', STR.title.who));
+  const grid = el('div', 'picker');
+  for (const [id, c] of Object.entries(content.characters)) {
+    const b = el('button', 'pick'); const cv = el('canvas'); paintPortrait(cv, c.look);
+    b.append(cv, el('span', '', esc(c.name))); b.dataset.id = id;
+    b.onclick = () => { sfx('tap'); if (confirm(STR.title.confirmPick(c.name))) { t.classList.add('hidden'); startNewGame(id); hooks.newGame?.(); } };
+    grid.appendChild(b);
+  }
+  t.append(grid, el('p', '', STR.title.pickHelp));
 }
 export function hideTitle() { $('title').classList.add('hidden'); }
 

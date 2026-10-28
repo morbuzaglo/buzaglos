@@ -11,7 +11,11 @@
    "hairStyle": "short",
    "shirt": "#f4f4f4",
    "pants": "#4a6a9a",
-   "accessory": "none"
+   "accessory": "none",
+   "shoes": "#f4f4f8",
+   "wide": true,
+   "print": true,
+   "sleeves": "short"
   },
   "ability": {
    "type": "fix",
@@ -36,7 +40,9 @@
    "hairStyle": "long",
    "shirt": "#f6f6f6",
    "pants": "#4a6a9a",
-   "accessory": "none"
+   "accessory": "none",
+   "shoes": "#1c1c22",
+   "sleeves": "none"
   },
   "ability": {
    "type": "sniff",
@@ -61,7 +67,9 @@
    "hairStyle": "long",
    "shirt": "#1c1c22",
    "pants": "#4a6a9a",
-   "accessory": "none"
+   "accessory": "none",
+   "shoes": "#e8e8f0",
+   "sleeves": "none"
   },
   "ability": {
    "type": "dash",
@@ -87,7 +95,12 @@
    "shirt": "#7a5ca8",
    "pants": "#3a2d5c",
    "accessory": "none",
-   "hat": "#d8c8f0"
+   "hat": "#d8c8f0",
+   "hatStyle": "scarf",
+   "bottom": "longskirt",
+   "sleeves": "long",
+   "book": true,
+   "shoes": "#2b2433"
   },
   "ability": {
    "type": "charm",
@@ -109,10 +122,13 @@
   "look": {
    "skin": "#f1d3b5",
    "hair": "#4a2c17",
-   "hairStyle": "bun",
+   "hairStyle": "ponytail",
    "shirt": "#f6f6f6",
    "pants": "#4a6a9a",
-   "accessory": "none"
+   "accessory": "none",
+   "bottom": "longskirt",
+   "sleeves": "short",
+   "shoes": "#f4f4f8"
   },
   "ability": {
    "type": "dash",
@@ -137,7 +153,10 @@
    "hairStyle": "short",
    "shirt": "#1d1d24",
    "pants": "#1d1d24",
-   "accessory": "none"
+   "accessory": "none",
+   "stripes": true,
+   "sleeves": "long",
+   "shoes": "#f4f4f8"
   },
   "ability": {
    "type": "sniff",
@@ -162,7 +181,11 @@
    "hairStyle": "short",
    "shirt": "#f5d94a",
    "pants": "#16161a",
-   "accessory": "glasses"
+   "accessory": "catglasses",
+   "bottom": "skirt",
+   "sleeves": "long",
+   "bag": true,
+   "shoes": "#16161a"
   },
   "ability": {
    "type": "charm",
@@ -188,7 +211,12 @@
    "shirt": "#4a6fa5",
    "pants": "#3a3a46",
    "accessory": "both",
-   "hat": "#101014"
+   "beardColor": "#9a9aa2",
+   "hat": "#101014",
+   "hatStyle": "kippah",
+   "collar": true,
+   "sleeves": "short",
+   "shoes": "#2b2433"
   },
   "ability": {
    "type": "fix",

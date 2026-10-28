@@ -10,6 +10,7 @@ import * as Q from '../systems/quests.js';
 import { playMinigame } from '../ui/minigames.js';
 import { sfx, playMusic, initAudio, resumeAudio } from '../audio.js';
 import { STR, tpl } from '../i18n.js';
+import { storyMethods } from './story.js';
 
 const FOOT_H = { bed: 2 };            // footprint rows (default 1)
 const NO_COLLIDE = new Set(['mat']);
@@ -40,7 +41,11 @@ export default class World extends Phaser.Scene {
     document.addEventListener('visibilitychange', () => { if (document.hidden) saveGame(); });
     // rewards are shown after the current dialogue closes
     this.pendingRewards = [];
-    onChange((type, data) => { if (type === 'questDone') this.pendingRewards.push(data); });
+    UI.hooks.enterStory = (qid) => this.enterStory(qid);
+    onChange((type, data) => {
+      if (type === 'questDone') this.pendingRewards.push(data);
+      if (type === 'stepDone' || type === 'questStarted') this.time.delayedCall(350, () => this.runAuto());
+    });
   }
 
   fitCamera() {
@@ -64,6 +69,7 @@ export default class World extends Phaser.Scene {
   }
 
   clearWorld() {
+    (this.labels || []).forEach((l) => l.el.remove()); this.labels = [];
     this.layer.clear(true, true);
     this.tmp.forEach((o) => o.destroy && o.destroy()); this.tmp = [];
     this.solid = new Set(); this.npcs = []; this.props = []; this.pickups = []; this.doors = [];
@@ -92,7 +98,7 @@ export default class World extends Phaser.Scene {
     // player
     const look = equippedLook(S.state.activeChar);
     this.playerKey = characterTexture(this, 'p_' + S.state.activeChar + '_' + JSON.stringify(look), look);
-    this.player = this.add.sprite(tx * TILE + 8, ty * TILE + 15, this.playerKey, 0).setOrigin(0.5, 1);
+    this.player = this.add.sprite(tx * TILE + 8, ty * TILE + 15, this.playerKey, 0).setOrigin(0.5, 32 / 34);
     this.player.dir = dir; this.player.moving = false;
     this.player.play(`${this.playerKey}_idle${dir}`);
     // camera
@@ -107,6 +113,9 @@ export default class World extends Phaser.Scene {
     UI.refreshHud();
     this.transitioning = false; this.lastDoor = tx + ',' + ty;
     UI.toast(map.name, 1600);
+    this.timer = null; UI.setTimer(null);
+    this.makeLabel(this.player, nameOf(S.state.activeChar), true);
+    this.time.delayedCall(700, () => this.runAuto());
   }
 
   footprint(p) {
@@ -135,12 +144,30 @@ export default class World extends Phaser.Scene {
     const def = content.npcs[n.id]; if (!def) return;
     if (def.character && def.character === S.state.activeChar) return;     // you are this person right now
     const key = characterTexture(this, 'n_' + n.id, def.look);
-    const spr = this.add.sprite(n.x * TILE + 8, n.y * TILE + 15, key, 0).setOrigin(0.5, 1);
+    const spr = this.add.sprite(n.x * TILE + 8, n.y * TILE + 15, key, 0).setOrigin(0.5, 32 / 34);
     spr.play(`${key}_idle${n.dir || 0}`);
+    if (def.scale) spr.setScale(def.scale);
     spr.setDepth(spr.y);
+    if (!def.noLabel) this.makeLabel(spr, def.name, false, def.scale || 1);
     this.solid.add(n.x + ',' + n.y);
-    this.npcs.push({ id: n.id, def, spr, key, tx: n.x, ty: n.y });
+    this.npcs.push({ id: n.id, def, spr, key, tx: n.x, ty: n.y, entry: n });
     this.layer.add(spr);
+  }
+  makeLabel(spr, text, isPlayer, scale = 1) {
+    if (!text) return null;
+    const host = document.getElementById('labels'); if (!host) return null;
+    const el = document.createElement('span'); el.textContent = text; if (isPlayer) el.className = 'me';
+    host.appendChild(el);
+    const rec = { el, spr, scale }; (this.labels ||= []).push(rec); spr.label = rec;
+    return rec;
+  }
+  updateLabels() {
+    const cam = this.cameras.main, wv = cam.worldView, z = cam.zoom;
+    for (const l of this.labels || []) {
+      const x = (l.spr.x - wv.x) * z, y = (l.spr.y - 31 * l.scale - wv.y) * z;
+      l.el.style.transform = `translate(calc(${Math.round(x)}px - 50%), calc(${Math.round(y)}px - 100%))`;
+      l.el.style.display = x < -60 || y < -40 || x > this.scale.width + 60 || y > this.scale.height + 60 ? 'none' : '';
+    }
   }
   refreshPickups() {
     (this.pickups || []).forEach((p) => p.spr.destroy());
@@ -203,6 +230,8 @@ export default class World extends Phaser.Scene {
     this.updatePickups();
     // interaction hint
     this.updateHint();
+    this.tickStory(dt);
+    this.updateLabels();
     // periodic
     this.gotoT += dt; if (this.gotoT > 0.5) { this.gotoT = 0; if (Q.checkGoto(this.map.id, tx, ty)) this.afterQuestChange(); }
     this.saveT += dt; if (this.saveT > 20) { this.saveT = 0; saveGame(); }
@@ -259,7 +288,7 @@ export default class World extends Phaser.Scene {
     let best = null, bd = 26;
     const consider = (kind, ref, x, y, r = 0) => { const d = Math.hypot(x - cx, y - cy) - r; if (d < bd) { bd = d; best = { kind, ref }; } };
     this.npcs.forEach((n) => consider('npc', n, n.spr.x, n.spr.y - 6));
-    this.props.forEach((r) => { if (r.p.interact && !r.hidden) { const f = r.p.fp; consider('prop', r, r.p.x * TILE + (f.fw * TILE) / 2, (r.p.y + 1) * TILE - 8, (f.fw * TILE) / 2); } });
+    this.props.forEach((r) => { if ((r.p.interact || r.p.gives) && !r.hidden) { const f = r.p.fp; consider('prop', r, r.p.x * TILE + (f.fw * TILE) / 2, (r.p.y + 1) * TILE - 8, (f.fw * TILE) / 2); } });
     return best;
   }
   updateHint() {
@@ -288,6 +317,7 @@ export default class World extends Phaser.Scene {
   async talkNpc(n) {
     this.faceTowards(n); S.state.stats.talks++; sfx('tap');
     const id = n.id;
+    if (n.entry?.gives) { await this.giveFromProp({ id: n.entry.uid || n.id, gives: n.entry.gives, givesText: n.entry.givesText, emptyText: n.entry.emptyText }); this.afterQuestChange(); return; }
     // 1. an active step that talks to this NPC / plays a mini-game with them
     let m = Q.matchStep('talk', id);
     if (m) { await UI.say(m.step.lines || [{ who: id, text: STR.world.thanks }]); Q.completeStep(m.quest.id); return this.afterQuestChange(); }
@@ -303,9 +333,16 @@ export default class World extends Phaser.Scene {
       if (ok) { Q.startQuest(q.id); sfx('pickup'); } else await UI.say([{ who: id, text: STR.world.noProblem }]);
       return this.afterQuestChange();
     }
-    // 3. small talk
+    // 3. small talk: a random phrase (never the same twice in a row)
     const entry = (n.def.dialogues || []).find((d) => check(d.when));
     if (entry) await UI.runDialogue(entry.id);
+    else if (n.def.phrases?.length) {
+      const pool = n.def.phrases.map((p) => (typeof p === 'string' ? { text: p } : p)).filter((p) => check(p.when));
+      let pick; for (let i = 0; i < 6; i++) { pick = pool[(Math.random() * pool.length) | 0]; if (pick.text !== this.lastPhrase?.[id]) break; }
+      (this.lastPhrase ||= {})[id] = pick.text;
+      await UI.say([{ who: id, text: pick.text }]);
+    }
+    if (n.def.shop && !entry) UI.openShop(n.def.shop);
     this.afterQuestChange();
   }
 
@@ -326,9 +363,12 @@ export default class World extends Phaser.Scene {
 
   async useProp(r) {
     const p = r.p;
-    // mini-game step bound to this prop (e.g. the stove)
-    const m = Q.matchStep('minigame', p.id);
+    if (await this.propAction(p)) return;
+    const m = Q.matchStep('minigame', p.id);                    // mini-game step bound to this prop (e.g. the stove)
     if (m) { await this.runMinigameStep(m); return; }
+    const im = Q.matchStep('interact', p.id);
+    if (im) { await this.runInteractStep(im); this.afterQuestChange(); return; }
+    if (p.gives) { await this.giveFromProp(p); this.afterQuestChange(); return; }
     if (p.interact?.dialogue) await UI.runDialogue(p.interact.dialogue);
     this.afterQuestChange();
   }
@@ -346,6 +386,7 @@ export default class World extends Phaser.Scene {
       if (gained.shard) lines.push('', STR.world.shardLine(gained.shard.title), gained.shard.story);
       sfx(gained.shard ? 'shard' : 'win');
       await new Promise((res) => UI.showReward(gained.shard ? STR.world.shardRestored : STR.world.questComplete, lines, res));
+      if (quest.scene && this.inStoryMap(quest)) this.exitStory();
       if (gained.shard && S.state.shards.length >= content.config.finalShards) await UI.say([{ who: 'narrator', text: STR.world.allShards }]);
     }
     this.busy = was;
@@ -419,3 +460,5 @@ export default class World extends Phaser.Scene {
   }
 }
 
+Object.assign(World.prototype, storyMethods);
+function nameOf(id) { return content.characters[id]?.name || ''; }

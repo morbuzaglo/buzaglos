@@ -11,7 +11,7 @@ export function activeQuests() { return allQuests().filter((q) => qs()[q.id]?.st
 
 /** Quests an NPC can currently offer. */
 export function offerableBy(npcId) {
-  return allQuests().filter((q) => q.giver === npcId && !qs()[q.id] && check(q.requires) && (!q.char || q.char === S.state.activeChar));
+  return allQuests().filter((q) => q.giver).filter((q) => q.giver === npcId && !qs()[q.id] && check(q.requires) && (!q.char || q.char === S.state.activeChar));
 }
 export function startQuest(id) {
   if (qs()[id]) return;
@@ -27,6 +27,7 @@ export function matchStep(kind, targetId, abilityType) {
     if (!step) continue;
     if (kind === 'talk' && step.type === 'talk' && step.npc === targetId) return { quest: q, step };
     if (kind === 'minigame' && step.type === 'minigame' && step.at === targetId) return { quest: q, step };
+    if (kind === 'interact' && step.type === 'interact' && step.target === targetId) return { quest: q, step };
     if (kind === 'use' && step.type === 'use' && step.target === targetId && (!step.ability || step.ability === abilityType)) return { quest: q, step };
   }
   return null;
@@ -47,6 +48,7 @@ export function completeStep(qid) {
 export function completeQuest(qid) {
   const q = content.quests[qid], st = qs()[qid];
   st.state = 'done';
+  if (st.replay) { delete st.replay; emit('questDone', { quest: q, gained: { coins: 0, xp: 0, items: [], shard: null } }); return; }
   const r = q.reward || {};
   const gained = { coins: r.coins ? addCoins(r.coins) : 0, xp: r.xp ? addXp(r.xp) : 0, items: [], shard: null };
   (r.items || []).forEach((id) => { addItem(id, 1); gained.items.push(id); });
@@ -87,4 +89,13 @@ export function objective(qid) {
 export function trackedQuest() { return activeQuests()[0] || null; }
 export function isQuestItemWanted(itemId) {
   return activeQuests().some((q) => { const s = currentStep(q.id); return s?.type === 'collect' && s.item === itemId; });
+}
+
+export const isAuto = (step) => !!step && (step.type === 'cutscene' || step.type === 'teleport' || step.type === 'choice' || (step.type === 'minigame' && step.auto));
+export function activeStory() { return activeQuests().find((q) => q.scene) || null; }
+export function questStatus(q) {
+  const st = qs()[q.id]?.state;
+  if (st === 'done') return 'done';
+  if (st === 'active') return 'active';
+  return check(q.requires) ? 'new' : 'locked';
 }

@@ -8,6 +8,7 @@ const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls)
 const shuffle = (a) => { for (let i = a.length - 1; i > 0; i--) { const j = (Math.random() * (i + 1)) | 0; [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
 export function playMinigame(game, config = {}, title = 'משחקון') {
+  if (typeof window !== 'undefined' && window.__bzTest?.autowin?.[game]) { S.state.stats.minigames++; return Promise.resolve(true); }   // test hook
   return new Promise((resolve) => {
     let finished = false, cleanup = () => {};
     const finish = (won) => {
@@ -18,7 +19,7 @@ export function playMinigame(game, config = {}, title = 'משחקון') {
     const body = openPanelRaw(title, () => { if (!finished) { finished = true; cleanup(); resolve(false); } });
     const box = el('div', 'mg'); body.appendChild(box);
     const quit = el('button', 'btn red', STR.mg.giveUp); quit.style.marginTop = '10px'; quit.onclick = () => finish(false);
-    const games = { timing, memory, reaction, quiz };
+    const games = { timing, memory, reaction, quiz, drive, sequence };
     cleanup = (games[game] || timing)(box, config, finish) || (() => {});
     body.appendChild(quit);
   });
@@ -46,7 +47,7 @@ function timing(box, cfg, finish) {
 }
 
 function memory(box, cfg, finish) {
-  const faces = ['🍎', '🥖', '🧀', '🥛', '🍌', '🥕', '🍇', '🍫', '🍋', '🥚'];
+  const faces = cfg.faces || ['🍎', '🥖', '🧀', '🥛', '🍌', '🥕', '🍇', '🍫', '🍋', '🥚'];
   const pairs = Math.min(cfg.pairs || 6, faces.length);
   const deck = shuffle([...faces.slice(0, pairs), ...faces.slice(0, pairs)]);
   let open = [], matched = 0, busy = false, moves = 0;
@@ -74,7 +75,7 @@ function reaction(box, cfg, finish) {
   const info = box.querySelector('#mgInfo'), arena = el('div', 'arena'); box.appendChild(arena);
   const upd = () => { info.textContent = `${STR.mg.hits} ${hits}/${need}   ${STR.mg.time} ${left}`; };
   const spawn = () => {
-    const t = el('div', 'target', '🎉'); t.style.cssText += `display:flex;align-items:center;justify-content:center;font-size:22px;left:${Math.random() * 80 + 2}%;top:${Math.random() * 80 + 2}%`;
+    const t = el('div', 'target', cfg.emoji || '🎉'); t.style.cssText += `display:flex;align-items:center;justify-content:center;font-size:22px;left:${Math.random() * 80 + 2}%;top:${Math.random() * 80 + 2}%`;
     t.onpointerdown = (e) => { e.preventDefault(); if (!t.isConnected) return; t.remove(); hits++; sfx('coin'); upd(); if (hits >= need) { cleanup(); info.textContent = STR.mg.awesome; finish(true); } };
     arena.appendChild(t); setTimeout(() => t.remove(), 1100);
   };
@@ -101,4 +102,52 @@ function quiz(box, cfg, finish) {
   };
   if (!qs.length) { finish(true); return; }
   show();
+}
+
+// Lane runner: tap the left/right half of the road to change lane and dodge obstacles until time runs out.
+function drive(box, cfg, finish) {
+  const time = cfg.time || 15, lanes = 3, icons = cfg.obstacles || ['🚧', '🐌', '🛢️', '🚗'];
+  let lane = 1, lives = 3, left = time, over = false, raf, last = performance.now(), spawnAcc = 0;
+  box.innerHTML = '<div id="mgInfo"></div>';
+  const info = box.querySelector('#mgInfo');
+  const road = el('div', 'arena road'); road.style.height = '340px'; box.appendChild(road);
+  const car = el('div', 'mover', cfg.car || '🚙'); road.appendChild(car);
+  const obs = [];
+  const place = (e, l, y) => { e.style.left = `calc(${(l + 0.5) * (100 / lanes)}% - 18px)`; e.style.top = y + 'px'; };
+  const upd = () => { info.textContent = `${STR.mg.lives} ${'♥'.repeat(lives)}   ${STR.mg.time} ${Math.ceil(left)}`; place(car, lane, 280); };
+  road.addEventListener('pointerdown', (e) => { const r = road.getBoundingClientRect(); lane = Math.max(0, Math.min(lanes - 1, lane + (e.clientX < r.left + r.width / 2 ? -1 : 1))); sfx('tap'); upd(); });
+  const tick = (t) => {
+    if (over) return; const dt = Math.min(0.05, (t - last) / 1000); last = t; left -= dt; spawnAcc += dt;
+    if (spawnAcc > 0.7) { spawnAcc = 0; const o = el('div', 'mover', icons[(Math.random() * icons.length) | 0]); const l = (Math.random() * lanes) | 0; o.dataset.lane = l; o.dataset.y = '-40'; road.appendChild(o); obs.push(o); }
+    for (const o of [...obs]) {
+      const y = parseFloat(o.dataset.y) + dt * 190; o.dataset.y = y; place(o, +o.dataset.lane, y);
+      if (y > 255 && y < 305 && +o.dataset.lane === lane && !o.dataset.hit) { o.dataset.hit = '1'; lives--; sfx('bad'); car.style.filter = 'brightness(2)'; setTimeout(() => (car.style.filter = ''), 200); if (lives <= 0) { over = true; info.textContent = STR.mg.timeUp; finish(false); return; } }
+      if (y > 340) { o.remove(); obs.splice(obs.indexOf(o), 1); }
+    }
+    upd();
+    if (left <= 0) { over = true; info.textContent = STR.mg.perfect; finish(true); return; }
+    raf = requestAnimationFrame(tick);
+  };
+  upd(); raf = requestAnimationFrame(tick);
+  return () => { over = true; cancelAnimationFrame(raf); };
+}
+
+// Simon-style memory: watch the flashing sequence, then repeat it.
+function sequence(box, cfg, finish) {
+  const icons = cfg.icons || ['🛒', '🏪', '👗', '☕'], len = cfg.length || 4;
+  const seq = Array.from({ length: len }, () => (Math.random() * icons.length) | 0);
+  let pos = 0, showing = true, alive = true;
+  box.innerHTML = '<div id="mgInfo"></div>';
+  const info = box.querySelector('#mgInfo'); info.textContent = cfg.watch || STR.mg.watch;
+  const grid = el('div', 'cards'); box.appendChild(grid);
+  const cells = icons.map((ic, i) => { const c = el('button', 'mcard', ic); c.onclick = () => press(i); grid.appendChild(c); return c; });
+  const flash = (i) => new Promise((res) => { cells[i].classList.add('up'); sfx('tap'); setTimeout(() => { cells[i].classList.remove('up'); setTimeout(res, 200); }, 420); });
+  const press = async (i) => {
+    if (showing || !alive) return; await flash(i);
+    if (i !== seq[pos]) { info.textContent = STR.mg.wrong; sfx('bad'); pos = 0; showing = true; await new Promise((r) => setTimeout(r, 700)); return play(); }
+    pos++; if (pos >= seq.length) { info.textContent = STR.mg.perfect; finish(true); }
+  };
+  const play = async () => { showing = true; info.textContent = cfg.watch || STR.mg.watch; await new Promise((r) => setTimeout(r, 600)); for (const i of seq) { if (!alive) return; await flash(i); } showing = false; info.textContent = cfg.repeat || STR.mg.repeat; };
+  play();
+  return () => { alive = false; };
 }

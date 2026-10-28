@@ -32,5 +32,10 @@
  ],
  "startFlags": {
   "beach_open": true
+ },
+ "hub": {
+  "map": "house",
+  "x": 9,
+  "y": 12
  }
 }

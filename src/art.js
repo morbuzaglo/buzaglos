@@ -18,8 +18,8 @@ export { shade };
 function rng(seed) { let s = seed >>> 0 || 1; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
 
 // ---------------------------------------------------------------- tiles
-export const TILE_NAMES = ['grass', 'grass2', 'flower', 'path', 'wood', 'tile', 'rug', 'wall', 'wallface', 'water', 'sand', 'fence', 'dark', 'carpet', 'roof', 'void'];
-export const TILE_SOLID = new Set(['wall', 'wallface', 'water', 'fence', 'roof', 'void']);
+export const TILE_NAMES = ['grass', 'grass2', 'flower', 'path', 'wood', 'tile', 'rug', 'wall', 'wallface', 'water', 'sand', 'fence', 'dark', 'carpet', 'roof', 'void', 'stone', 'tatami', 'asphalt', 'pool', 'deck', 'kotel', 'cloud', 'lane'];
+export const TILE_SOLID = new Set(['wall', 'wallface', 'water', 'fence', 'roof', 'void', 'pool', 'kotel']);
 
 function drawTile(ctx, name, ox, oy, seed) {
   const r = rng(seed);
@@ -57,6 +57,14 @@ function drawTile(ctx, name, ox, oy, seed) {
     case 'carpet': px(ctx, '#5a8f6a', ox, oy, 16, 16); for (let y = 0; y < 16; y += 4) px(ctx, '#4a7a58', ox, oy + y, 16, 1); for (let i = 0; i < 12; i++) px(ctx, '#6fa57e', ox + ((r() * 16) | 0), oy + ((r() * 16) | 0), 1, 1); break;
     case 'roof': px(ctx, '#b84a2e', ox, oy, 16, 16); for (let y = 0; y < 16; y += 4) px(ctx, '#8f3a22', ox, oy + y + 3, 16, 1);
       for (let y = 0; y < 16; y += 4) for (let x = (y / 4) % 2 ? 0 : 4; x < 16; x += 8) px(ctx, '#8f3a22', ox + x, oy + y, 1, 3); break;
+    case 'stone': px(ctx, '#b8b2a4', ox, oy, 16, 16); px(ctx, '#9d978a', ox, oy, 16, 1); px(ctx, '#9d978a', ox, oy + 8, 16, 1); px(ctx, '#9d978a', ox, oy, 1, 8); px(ctx, '#9d978a', ox + 8, oy + 8, 1, 8); for (let i = 0; i < 8; i++) px(ctx, '#c9c3b6', ox + ((r() * 16) | 0), oy + ((r() * 16) | 0), 1, 1); break;
+    case 'tatami': px(ctx, '#c9b46a', ox, oy, 16, 16); for (let y = 0; y < 16; y += 2) px(ctx, '#b8a257', ox, oy + y, 16, 1); px(ctx, '#3d5a3a', ox, oy, 16, 1); px(ctx, '#3d5a3a', ox, oy + 15, 16, 1); break;
+    case 'asphalt': px(ctx, '#4a4a56', ox, oy, 16, 16); for (let i = 0; i < 14; i++) px(ctx, ['#5a5a68', '#3c3c46'][(r() * 2) | 0], ox + ((r() * 16) | 0), oy + ((r() * 16) | 0), 1, 1); break;
+    case 'lane': px(ctx, '#4a4a56', ox, oy, 16, 16); px(ctx, '#e8d870', ox + 7, oy + 2, 2, 5); px(ctx, '#e8d870', ox + 7, oy + 10, 2, 5); break;
+    case 'pool': px(ctx, '#4fc3f7', ox, oy, 16, 16); for (let i = 0; i < 6; i++) px(ctx, '#9be8ff', ox + ((r() * 14) | 0), oy + ((r() * 16) | 0), 3, 1); px(ctx, '#2b8fc9', ox, oy + 15, 16, 1); break;
+    case 'deck': px(ctx, '#a9794a', ox, oy, 16, 16); for (let y = 0; y < 16; y += 4) px(ctx, '#7d5530', ox, oy + y, 16, 1); px(ctx, '#7d5530', ox + 5, oy + 1, 1, 3); px(ctx, '#7d5530', ox + 11, oy + 9, 1, 3); break;
+    case 'kotel': px(ctx, '#d8c9a4', ox, oy, 16, 16); for (let y = 0; y < 16; y += 5) { px(ctx, '#a89874', ox, oy + y, 16, 1); for (let x = (y / 5) % 2 ? 0 : 6; x < 16; x += 11) px(ctx, '#a89874', ox + x, oy + y, 1, 5); } for (let i = 0; i < 6; i++) px(ctx, '#c4b48c', ox + ((r() * 16) | 0), oy + ((r() * 16) | 0), 2, 1); break;
+    case 'cloud': px(ctx, '#d9e6ff', ox, oy, 16, 16); for (let i = 0; i < 8; i++) px(ctx, ['#ffffff', '#c3d4f5'][(r() * 2) | 0], ox + ((r() * 14) | 0), oy + ((r() * 14) | 0), 3, 2); break;
     default: px(ctx, '#000', ox, oy, 16, 16);
   }
 }
@@ -114,6 +122,18 @@ const PROPS = {
   door: [16, 20, (c) => { px(c, '#4d2f15', 0, 0, 16, 20); px(c, '#8a5a30', 2, 2, 12, 18); px(c, '#6b4423', 4, 4, 8, 7); px(c, '#ffd23f', 11, 11, 2, 2); }],
   mat: [16, 8, (c) => { px(c, '#7a1f1c', 1, 1, 14, 6); px(c, '#e8b33a', 3, 3, 10, 2); }],
   boat: [40, 24, (c) => { px(c, '#6b4423', 2, 10, 36, 9); px(c, '#8a5a30', 4, 12, 32, 7); px(c, '#d8d0b8', 19, 0, 2, 12); px(c, '#fff', 21, 1, 12, 9); px(c, '#e84b4b', 21, 5, 12, 2); }],
+  deer: [18, 18, (c) => { px(c, 'rgba(0,0,0,.2)', 2, 15, 14, 3); px(c, '#b07a3a', 4, 6, 10, 7); px(c, '#c58d4a', 5, 7, 8, 3); px(c, '#b07a3a', 11, 2, 5, 6); px(c, '#f2e6d0', 5, 11, 2, 1); px(c, '#6b4423', 5, 13, 2, 3); px(c, '#6b4423', 11, 13, 2, 3); px(c, '#6b4423', 12, 0, 1, 3); px(c, '#6b4423', 15, 0, 1, 3); px(c, '#6b4423', 14, 1, 1, 1); px(c, '#1a1020', 14, 4, 1, 1); px(c, '#f2e6d0', 4, 5, 2, 2); }],
+  car: [34, 22, (c) => { px(c, 'rgba(0,0,0,.25)', 2, 18, 30, 4); px(c, '#4a8fe0', 2, 8, 30, 9); px(c, '#6ba8f0', 8, 3, 18, 7); px(c, '#dff3ff', 10, 4, 6, 5); px(c, '#dff3ff', 18, 4, 6, 5); px(c, '#356fb5', 2, 14, 30, 3); px(c, '#222', 5, 15, 7, 6); px(c, '#222', 22, 15, 7, 6); px(c, '#999', 7, 17, 3, 2); px(c, '#999', 24, 17, 3, 2); px(c, '#ffe27a', 30, 10, 2, 3); px(c, '#e84b4b', 2, 10, 2, 3); }],
+  suitcase: [14, 14, (c) => { px(c, 'rgba(0,0,0,.2)', 1, 12, 12, 2); px(c, '#b3322e', 1, 3, 12, 9); px(c, '#8f2420', 1, 9, 12, 3); px(c, '#6b4423', 4, 1, 6, 3); px(c, '#ffd23f', 6, 6, 2, 2); }],
+  salad: [14, 12, (c) => { px(c, 'rgba(0,0,0,.2)', 1, 10, 12, 2); px(c, '#f4f4f8', 1, 5, 12, 5); px(c, '#d0d0dc', 2, 9, 10, 1); px(c, '#5be37d', 2, 3, 10, 3); px(c, '#e84b4b', 4, 2, 3, 2); px(c, '#ffd23f', 8, 3, 3, 2); px(c, '#ff8a3d', 6, 4, 2, 2); }],
+  crib: [26, 22, (c) => { px(c, 'rgba(0,0,0,.2)', 1, 19, 24, 3); px(c, '#f4f4f8', 2, 6, 22, 11); for (let x = 3; x < 24; x += 3) px(c, '#d8d8e8', x, 3, 1, 15); px(c, '#d8d8e8', 2, 3, 22, 2); px(c, '#ffd2e0', 5, 9, 16, 6); }],
+  album: [18, 16, (c) => { px(c, 'rgba(0,0,0,.25)', 1, 13, 16, 3); px(c, '#8a3a2a', 1, 2, 16, 12); px(c, '#b3503a', 2, 3, 14, 10); px(c, '#ffd23f', 3, 4, 12, 1); px(c, '#ffd23f', 3, 11, 12, 1); px(c, '#ffe27a', 7, 6, 4, 3); px(c, '#6b2418', 9, 2, 1, 12); px(c, '#6b2418', 5, 8, 4, 1); px(c, '#6b2418', 11, 5, 3, 1); px(c, '#7be0ff', 13, 1, 2, 2); }],
+  ship: [64, 40, (c) => { px(c, 'rgba(0,0,0,.2)', 2, 36, 60, 4); px(c, '#f4f4f8', 4, 10, 56, 20); px(c, '#d8d8e8', 4, 26, 56, 4); px(c, '#2b5fa8', 2, 30, 60, 8); px(c, '#e84b4b', 2, 28, 60, 2); for (let x = 8; x < 54; x += 8) px(c, '#4fc3f7', x, 14, 4, 4); px(c, '#4fc3f7', 10, 21, 40, 2); px(c, '#e84b4b', 36, 2, 8, 8); px(c, '#f4f4f8', 38, 4, 4, 2); px(c, '#555', 20, 4, 6, 8); }],
+  desk: [34, 22, (c) => { px(c, 'rgba(0,0,0,.2)', 2, 19, 30, 3); px(c, '#c8c8d8', 1, 5, 32, 14); px(c, '#e8e8f4', 1, 3, 32, 4); px(c, '#9a9ab0', 1, 17, 32, 2); px(c, '#4fc3f7', 6, 0, 8, 5); px(c, '#222', 8, 5, 4, 1); px(c, '#ffd23f', 22, 2, 6, 3); }],
+  lantern: [10, 22, (c) => { px(c, 'rgba(0,0,0,.2)', 1, 19, 8, 3); px(c, '#444', 4, 0, 2, 3); px(c, '#e84b4b', 1, 3, 8, 12); px(c, '#ff8a6a', 2, 4, 2, 8); px(c, '#ffd23f', 1, 8, 8, 1); px(c, '#444', 4, 15, 2, 3); }],
+  torii: [38, 36, (c) => { px(c, 'rgba(0,0,0,.2)', 2, 33, 34, 3); px(c, '#d9342b', 5, 8, 4, 26); px(c, '#d9342b', 29, 8, 4, 26); px(c, '#d9342b', 1, 3, 36, 4); px(c, '#8f1e18', 1, 6, 36, 1); px(c, '#d9342b', 6, 12, 26, 3); px(c, '#222', 0, 1, 38, 2); }],
+  kiddie: [16, 14, (c) => { px(c, '#7be0ff', 2, 2, 12, 10); px(c, '#4fc3f7', 3, 3, 10, 8); }],
+  podium: [26, 20, (c) => { px(c, 'rgba(0,0,0,.2)', 2, 17, 22, 3); px(c, '#8a5a30', 2, 4, 22, 13); px(c, '#b27a46', 2, 2, 22, 4); px(c, '#ffd23f', 11, 8, 4, 4); }],
   shard: [12, 12, (c) => { px(c, '#7be0ff', 5, 0, 2, 2); px(c, '#4fc3f7', 3, 2, 6, 3); px(c, '#4fc3f7', 1, 4, 10, 4); px(c, '#2b8fc9', 3, 8, 6, 2); px(c, '#2b8fc9', 5, 10, 2, 2); px(c, '#e6fbff', 4, 3, 2, 2); }],
   coin: [10, 10, (c) => { px(c, '#b8860b', 2, 0, 6, 10); px(c, '#b8860b', 0, 2, 10, 6); px(c, '#ffd23f', 2, 1, 6, 8); px(c, '#ffd23f', 1, 2, 8, 6); px(c, '#fff3a0', 3, 2, 2, 2); }],
   gem: [10, 10, (c) => { px(c, '#ff5d73', 2, 1, 6, 3); px(c, '#ff5d73', 1, 3, 8, 3); px(c, '#c93a50', 3, 6, 4, 2); px(c, '#ff9aa8', 3, 2, 2, 1); }],
@@ -136,80 +156,13 @@ export function propCanvas(name) {
 export const PROP_SIZE = Object.fromEntries(Object.entries(PROPS).map(([k, v]) => [k, [v[0], v[1]]]));
 
 // ---------------------------------------------------------------- characters
-export const CHAR_W = 16, CHAR_H = 20;
-
-export const DEFAULT_LOOK = { skin: '#f1c9a0', hair: '#4a2c17', hairStyle: 'short', shirt: '#3a7bd5', pants: '#2c3e72', accessory: 'none', hat: null };
-
-/** Draw one frame. dir 0=down 1=up 2=left 3=right, f 0=idle 1/2=walk. */
-export function drawCharFrame(ctx, ox, oy, dir, f, look) {
-  const o = { ...DEFAULT_LOOK, ...look };
-  const skinD = shade(o.skin, -28), hairD = shade(o.hair, -30), hairL = shade(o.hair, 28);
-  const shirtD = shade(o.shirt, -35), pantsD = shade(o.pants, -30);
-  const bob = f === 0 ? 0 : 1;
-  const P = (col, x, y, w = 1, h = 1) => px(ctx, col, ox + x, oy + y, w, h);
-  const side = dir >= 2;
-  const mirror = dir === 3;
-  const X = (x, w = 1) => (mirror ? 16 - x - w : x);
-  const PX = (col, x, y, w = 1, h = 1) => P(col, X(x, w), y, w, h);
-
-  P('rgba(0,0,0,.28)', 3, 17, 10, 2); P('rgba(0,0,0,.18)', 2, 18, 12, 1);
-  // legs
-  const legA = f === 1 ? -1 : 0, legB = f === 2 ? -1 : 0;
-  if (!side) {
-    PX(o.pants, 5, 13 + legA, 3, 3); PX(o.pants, 8, 13 + legB, 3, 3);
-    PX(pantsD, 5, 15 + legA, 3, 1); PX(pantsD, 8, 15 + legB, 3, 1);
-    PX('#241a33', 5, 16 + legA, 3, 1); PX('#241a33', 8, 16 + legB, 3, 1);
-  } else {
-    PX(o.pants, 6, 13 + legA, 3, 3); PX(o.pants, 8, 13 + legB, 3, 3);
-    PX('#241a33', 6, 16 + legA, 3, 1); PX('#241a33', 8, 16 + legB, 3, 1);
-  }
-  // torso + arms
-  const armSwing = f === 1 ? 1 : f === 2 ? -1 : 0;
-  if (!side) {
-    PX(o.shirt, 4, 8 + bob * 0, 8, 6); PX(shirtD, 4, 13, 8, 1); PX(shade(o.shirt, 20), 5, 9, 2, 1);
-    PX(o.shirt, 3, 9 + armSwing, 1, 4); PX(o.shirt, 12, 9 - armSwing, 1, 4);
-    PX(o.skin, 3, 13 + armSwing, 1, 1); PX(o.skin, 12, 13 - armSwing, 1, 1);
-  } else {
-    PX(o.shirt, 5, 8, 6, 6); PX(shirtD, 5, 13, 6, 1);
-    PX(o.shirt, 7, 9 + armSwing, 2, 4); PX(o.skin, 7, 13 + armSwing, 2, 1);
-  }
-  // head
-  const hy = bob ? 1 : 0;
-  PX(o.skin, 4, 1 + hy, 8, 7); PX(o.skin, 5, 0 + hy, 6, 1); PX(skinD, 5, 8 + hy - 1, 6, 1);
-  if (dir === 0) {            // facing front
-    PX('#1a1020', 6, 5 + hy, 1, 2); PX('#1a1020', 9, 5 + hy, 1, 2); PX('#fff', 6, 5 + hy, 1, 1); PX('#fff', 9, 5 + hy, 1, 1);
-    PX('#d9786a', 7, 7 + hy, 2, 1);
-    if (o.accessory === 'glasses' || o.accessory === 'both') { PX('#222', 5, 4 + hy, 3, 1); PX('#222', 8, 4 + hy, 3, 1); PX('#222', 5, 7 + hy - 1, 3, 1); PX('#222', 8, 7 + hy - 1, 3, 1); PX('#222', 5, 4 + hy, 1, 3); PX('#222', 10, 4 + hy, 1, 3); PX('#222', 7, 4 + hy, 2, 1); }
-    if (o.accessory === 'beard' || o.accessory === 'both') { PX('#3a2a20', 4, 6 + hy, 8, 3); PX('#d9786a', 7, 7 + hy, 2, 1); PX('#3a2a20', 5, 9 + hy - 1, 6, 1); }
-  } else if (dir === 1) {     // back
-    PX(o.hair, 4, 1 + hy, 8, 7); PX(o.hair, 5, 0 + hy, 6, 1); PX(hairD, 5, 7 + hy, 6, 1);
-  } else {                    // side
-    PX('#1a1020', 5, 5 + hy, 1, 2); PX('#fff', 5, 5 + hy, 1, 1); PX(skinD, 4, 7 + hy, 1, 1);
-    if (o.accessory === 'glasses' || o.accessory === 'both') { PX('#222', 4, 4 + hy, 3, 1); PX('#222', 4, 4 + hy, 1, 3); }
-    if (o.accessory === 'beard' || o.accessory === 'both') { PX('#3a2a20', 4, 6 + hy, 3, 3); }
-  }
-  // hair
-  const hs = o.hairStyle;
-  if (hs !== 'bald') {
-    if (dir !== 1) {
-      PX(o.hair, 4, 0 + hy, 8, 3); PX(o.hair, 5, -1 + hy < 0 ? 0 : -1 + hy, 6, 1); PX(hairL, 6, 0 + hy, 2, 1);
-      if (!side) { PX(o.hair, 3, 2 + hy, 1, 3); PX(o.hair, 12, 2 + hy, 1, 3); PX(o.hair, 4, 3 + hy, 1, 1); PX(o.hair, 11, 3 + hy, 1, 1); }
-      else { PX(o.hair, 8, 2 + hy, 4, 5); PX(o.hair, 4, 2 + hy, 1, 1); }
-      if (hs === 'long') { if (!side) { PX(o.hair, 3, 4 + hy, 1, 8); PX(o.hair, 12, 4 + hy, 1, 8); PX(hairD, 3, 11 + hy, 1, 1); PX(hairD, 12, 11 + hy, 1, 1); } else { PX(o.hair, 8, 6 + hy, 4, 6); } }
-      if (hs === 'curly') { PX(o.hair, 3, 0 + hy, 10, 2); PX(o.hair, 3, 3 + hy, 1, 3); PX(o.hair, 12, 3 + hy, 1, 3); PX(hairL, 5, 0 + hy, 1, 1); PX(hairL, 9, 1 + hy, 1, 1); }
-      if (hs === 'bun') { PX(o.hair, 6, -1 + hy < 0 ? 0 : -1, 4, 1); }
-    } else if (hs === 'long') { PX(o.hair, 3, 8 + hy, 10, 4); PX(hairD, 3, 11 + hy, 10, 1); }
-  } else if (dir !== 1) PX('#fff', 6, 1 + hy, 2, 1);
-  if (o.hat) {
-    PX(o.hat, 3, -1 + hy < 0 ? 0 : -1 + hy, 10, 3); PX(shade(o.hat, -35), 3, 2 + hy, 10, 1);
-    if (dir === 0) PX(shade(o.hat, -35), 4, 3 + hy, 8, 1); else if (side) PX(shade(o.hat, -35), 2, 2 + hy, 3, 1);
-  }
-}
+import { drawCharFrame, DEFAULT_LOOK, CHAR_W, CHAR_H } from './charart.js';
+export { drawCharFrame, DEFAULT_LOOK, CHAR_W, CHAR_H };
 
 export function characterTexture(scene, key, look) {
   if (scene.textures.exists(key)) return key;
   const [c, ctx] = makeCanvas(CHAR_W * 3, CHAR_H * 4);
-  for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) drawCharFrame(ctx, f * CHAR_W, dir * CHAR_H + 1, dir, f, look);
+  for (let dir = 0; dir < 4; dir++) for (let f = 0; f < 3; f++) drawCharFrame(ctx, f * CHAR_W, dir * CHAR_H, dir, f, look);
   const tex = scene.textures.addCanvas(key, c);
   for (let i = 0; i < 12; i++) tex.add(i, 0, (i % 3) * CHAR_W, ((i / 3) | 0) * CHAR_H, CHAR_W, CHAR_H);
   for (let dir = 0; dir < 4; dir++) {
@@ -220,15 +173,17 @@ export function characterTexture(scene, key, look) {
   return key;
 }
 
-/** Small portrait canvas (head + shoulders) for dialogue and cards. */
+/** Head-and-shoulders portrait (20x20) for dialogue, HUD and cards. */
 export function portraitCanvas(look) {
-  const [c, ctx] = makeCanvas(16, 16);
-  drawCharFrame(ctx, 0, 1, 0, 0, look);
+  const [full, fctx] = makeCanvas(CHAR_W, CHAR_H);
+  drawCharFrame(fctx, 0, 0, 0, 0, look);
+  const [c, ctx] = makeCanvas(20, 20);
+  ctx.drawImage(full, 2, 2, 20, 20, 0, 0, 20, 20);
   return c;
 }
 export function paintPortrait(target, look) {
   const src = portraitCanvas(look);
-  target.width = 16; target.height = 16;
+  target.width = 20; target.height = 20;
   const ctx = target.getContext('2d');
   ctx.imageSmoothingEnabled = false;
   ctx.drawImage(src, 0, 0);
@@ -268,11 +223,9 @@ export function paintIcon(target, kind, color) {
 
 // ---------------------------------------------------------------- title banner
 export function paintTitleBanner(target, looks) {
-  target.width = 128; target.height = 48;
+  const step = 26;
+  target.width = Math.max(1, looks.length) * step + 2; target.height = CHAR_H + 6;
   const ctx = target.getContext('2d');
   ctx.imageSmoothingEnabled = false;
-  const n = looks.length;
-  const total = n * 20;
-  let x = Math.max(0, (128 - total) / 2);
-  looks.forEach((look, i) => { drawCharFrame(ctx, x + i * 20, 24 + (i % 2) * 2, 0, 0, look); drawCharFrame(ctx, x + i * 20, 4, 0, 0, { ...look, hat: null }); });
+  looks.forEach((look, i) => drawCharFrame(ctx, 1 + i * step, 3, i % 2 ? 2 : 0, 0, look));
 }

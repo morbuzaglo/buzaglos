@@ -4,7 +4,7 @@
 // edit, validate, and download the JSON files to commit by hand.
 import { content as bundled } from '../content.js';
 import { validateContent, mergeBundle, HAIR_STYLES, ACCESSORIES, ABILITIES, ICONS, MINIGAMES } from '../shared/validate.js';
-import { drawCharFrame, DEFAULT_LOOK, makeCanvas, tileAtlasCanvas, renderMapCanvas, propCanvas, TILE } from '../art.js';
+import { drawCharFrame, DEFAULT_LOOK, CHAR_W, CHAR_H, makeCanvas, tileAtlasCanvas, renderMapCanvas, propCanvas, TILE } from '../art.js';
 
 const clone = (o) => JSON.parse(JSON.stringify(o));
 const DRAFT_KEY = 'bz-admin-draft-v1', SESSION_KEY = 'bz-admin-session-v1';
@@ -67,7 +67,7 @@ function loginCard() {
 
 // ---------------------------------------------------------------- family
 function lookCanvas(look, scale = 8) {
-  const [c, ctx] = makeCanvas(16 * 4, 20); drawCharFrame(ctx, 0, 0, 0, 0, look); drawCharFrame(ctx, 16, 0, 2, 0, look); drawCharFrame(ctx, 32, 0, 1, 0, look); drawCharFrame(ctx, 48, 0, 3, 0, look);
+  const [c, ctx] = makeCanvas(CHAR_W * 4, CHAR_H); for (let d = 0; d < 4; d++) drawCharFrame(ctx, d * CHAR_W, 0, [0, 2, 1, 3][d], 0, look);
   c.className = 'px'; c.style.width = c.width * scale / 2 + 'px'; c.style.height = c.height * scale / 2 + 'px'; return c;
 }
 function tabFamily() {
@@ -106,7 +106,11 @@ function personEditor(kind, id) {
   const color = (label, key) => { const i = h('input', { type: 'color', value: p.look[key] || '#000000' }); i.addEventListener('input', () => { p.look[key] = i.value; upd(); }); return h('div', {}, h('label', {}, label), i); };
   const hatOn = h('input', { type: 'checkbox', checked: !!p.look.hat }); hatOn.addEventListener('change', () => { p.look.hat = hatOn.checked ? (p.look.hat || '#e84b4b') : null; upd(); render(); });
   card.append(h('h3', {}, 'מראה (פיקסלים)'), prev, h('div', { class: 'grid4' }, color('עור', 'skin'), color('שיער', 'hair'), color('חולצה', 'shirt'), color('מכנסיים', 'pants')),
-    h('div', { class: 'grid4' }, sct('סגנון שיער', 'hairStyle', HAIR_STYLES.map((x) => [x, { short: 'קצר', long: 'ארוך', curly: 'מתולתל', bun: 'אסוף', bald: 'קירח' }[x]]), p.look, upd), sct('אביזר', 'accessory', ACCESSORIES.map((x) => [x, { none: 'ללא', glasses: 'משקפיים', beard: 'זקן', both: 'משקפיים וזקן' }[x]]), p.look, upd), h('div', {}, h('label', {}, 'כובע'), hatOn), p.look.hat ? color('צבע כובע', 'hat') : h('div')));
+    h('div', { class: 'grid4' }, sct('סגנון שיער', 'hairStyle', HAIR_STYLES.map((x) => [x, { short: 'קצר', long: 'ארוך', curly: 'מתולתל', bun: 'אסוף', ponytail: 'קוקו', bald: 'קירח' }[x]]), p.look, upd), sct('אביזר', 'accessory', ACCESSORIES.map((x) => [x, { none: 'ללא', glasses: 'משקפיים', catglasses: 'משקפי חתולה', beard: 'זקן', both: 'משקפיים וזקן' }[x]]), p.look, upd), h('div', {}, h('label', {}, 'כובע'), hatOn), p.look.hat ? color('צבע כובע', 'hat') : h('div')));
+  const flag = (label, key) => { const c = h('input', { type: 'checkbox', checked: !!p.look[key] }); c.addEventListener('change', () => { if (c.checked) p.look[key] = true; else delete p.look[key]; upd(); }); return h('label', { style: 'display:flex;gap:6px;align-items:center;margin:6px 0' }, c, label); };
+  const optColor = (label, key) => { const i = h('input', { type: 'color', value: p.look[key] || '#ffffff' }); i.addEventListener('input', () => { p.look[key] = i.value; upd(); }); return h('div', {}, h('label', {}, label), i); };
+  card.append(h('h3', {}, 'פרטים נוספים'), h('div', { class: 'grid4' }, sct('סוג כיסוי ראש', 'hatStyle', [['', 'כובע'], ['kippah', 'כיפה'], ['scarf', 'כיסוי ראש']], p.look, upd), sct('לבוש תחתון', 'bottom', [['', 'מכנסיים'], ['skirt', 'חצאית לברך'], ['longskirt', 'חצאית ארוכה']], p.look, upd), sct('שרוולים', 'sleeves', [['', 'ארוכים'], ['short', 'קצרים'], ['none', 'בלי (גופייה)']], p.look, upd), optColor('נעליים', 'shoes')),
+    h('div', { class: 'grid4' }, optColor('צבע זקן', 'beardColor'), flag('תיק צד', 'bag'), flag('ספר/סידור ביד', 'book'), flag('פסים (אדידס)', 'stripes')), h('div', { class: 'grid4' }, flag('הדפס על החולצה', 'print'), flag('צווארון פולו', 'collar'), flag('מכנסיים רחבים', 'wide')));
   // photo -> look
   const file = h('input', { type: 'file', accept: 'image/*' });
   const btn = h('button', { class: 'btn alt', onclick: async () => {
@@ -190,7 +194,7 @@ function tabMaps() {
   const atlas = tileAtlasCanvas(); const base = renderMapCanvas(m, atlas); const S = 2;
   const [cv, ctx] = makeCanvas(base.width * S, base.height * S); ctx.imageSmoothingEnabled = false; ctx.drawImage(base, 0, 0, cv.width, cv.height);
   for (const p of m.props || []) { const pc = propCanvas(p.type); if (pc) ctx.drawImage(pc, p.x * TILE * S, (p.y + 1) * TILE * S - pc.height * S, pc.width * S, pc.height * S); }
-  for (const n of m.npcs || []) { const d = draft.npcs[n.id]; if (!d) continue; const [t, tc] = makeCanvas(16, 20); drawCharFrame(tc, 0, 0, 0, 0, d.look); ctx.drawImage(t, n.x * TILE * S, (n.y + 1) * TILE * S - 20 * S + 1, 16 * S, 20 * S); }
+  for (const n of m.npcs || []) { const d = draft.npcs[n.id]; if (!d) continue; const [t, tc] = makeCanvas(CHAR_W, CHAR_H); drawCharFrame(tc, 0, 0, 0, 0, d.look); ctx.drawImage(t, n.x * TILE * S - 4 * S, (n.y + 1) * TILE * S - 32 * S, CHAR_W * S, CHAR_H * S); }
   ctx.strokeStyle = 'rgba(255,210,63,.9)'; ctx.lineWidth = 2; for (const d of m.doors || []) ctx.strokeRect(d.x * TILE * S + 1, d.y * TILE * S + 1, TILE * S - 2, TILE * S - 2);
   for (const p of m.pickups || []) { ctx.fillStyle = 'rgba(123,224,255,.9)'; ctx.fillRect(p.x * TILE * S + 10, p.y * TILE * S + 10, 12, 12); }
   const info = h('div', { class: 'sub' }, placing ? `לחצו על המפה כדי להציב את ${draft.npcs[placing].name}` : 'צהוב = דלתות, כחול = פריטים לאיסוף');

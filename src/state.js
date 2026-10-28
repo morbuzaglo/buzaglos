@@ -21,10 +21,13 @@ export function newState() {
   };
 }
 
-export const S = { state: newState() };
+export const S = { state: newState(), started: false };
 const listeners = new Set();
 export const onChange = (fn) => { listeners.add(fn); return () => listeners.delete(fn); };
-export const emit = (type, data) => listeners.forEach((fn) => fn(type, data));
+const SAVE_EVENTS = new Set(['coins', 'xp', 'item', 'itemLost', 'flag', 'questStarted', 'stepDone', 'questDone', 'achievement', 'levelup']);
+let saveTimer = null;
+export function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(() => { if (S.started) saveGame(); }, 500); }
+export const emit = (type, data) => { listeners.forEach((fn) => fn(type, data)); if (SAVE_EVENTS.has(type)) scheduleSave(); };
 
 export function saveGame() {
   S.state.savedAt = Date.now();
@@ -39,7 +42,9 @@ export function loadGame() {
     return true;
   } catch (e) { return false; }
 }
-export function startNewGame() { S.state = newState(); }
+export function startNewGame(charId) { S.state = newState(); if (charId) S.state.activeChar = charId; S.state.chosen = !!charId; }
+export function peekSave() { try { const raw = localStorage.getItem(SAVE_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
+export function clearSave() { try { localStorage.removeItem(SAVE_KEY); } catch (e) { /* ignore */ } }
 function migrate(saved) {
   const base = newState();
   const merged = { ...base, ...saved, stats: { ...base.stats, ...saved.stats }, settings: { ...base.settings, ...saved.settings }, owned: { ...base.owned, ...saved.owned } };

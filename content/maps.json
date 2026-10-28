@@ -139,6 +139,15 @@
     "interact": {
      "dialogue": "house_sign"
     }
+   },
+   {
+    "type": "album",
+    "x": 9,
+    "y": 10,
+    "id": "album_portal",
+    "interact": {
+     "action": "stories"
+    }
    }
   ],
   "npcs": [
@@ -162,7 +171,7 @@
    },
    {
     "id": "maayan",
-    "x": 10,
+    "x": 13,
     "y": 11,
     "dir": 0
    },
@@ -173,24 +182,7 @@
     "dir": 0
    }
   ],
-  "pickups": [
-   {
-    "id": "boots_pk",
-    "item": "boots",
-    "x": 3,
-    "y": 12,
-    "hidden": true,
-    "needsQuest": "q_cat"
-   },
-   {
-    "id": "cat_hat_pk",
-    "item": "cat_hat",
-    "x": 16,
-    "y": 9,
-    "hidden": true,
-    "needsQuest": "q_cat"
-   }
-  ],
+  "pickups": [],
   "doors": [
    {
     "x": 10,
@@ -415,31 +407,7 @@
     "dir": 1
    }
   ],
-  "pickups": [
-   {
-    "id": "cloth1",
-    "item": "cloth",
-    "x": 10,
-    "y": 11,
-    "needsQuest": "q_barcelona"
-   },
-   {
-    "id": "cloth2",
-    "item": "cloth",
-    "x": 22,
-    "y": 12,
-    "hidden": true,
-    "needsQuest": "q_barcelona"
-   },
-   {
-    "id": "cloth3",
-    "item": "cloth",
-    "x": 34,
-    "y": 11,
-    "hidden": true,
-    "needsQuest": "q_barcelona"
-   }
-  ],
+  "pickups": [],
   "doors": [
    {
     "x": 7,
@@ -570,16 +538,7 @@
     "dir": 0
    }
   ],
-  "pickups": [
-   {
-    "id": "phone_pk",
-    "item": "phone_anat",
-    "x": 12,
-    "y": 6,
-    "hidden": true,
-    "needsQuest": "q_phone"
-   }
-  ],
+  "pickups": [],
   "doors": [
    {
     "x": 7,
@@ -800,6 +759,1823 @@
   ],
   "spawn": {
    "x": 6,
+   "y": 7
+  }
+ },
+ "jp": {
+  "id": "jp",
+  "name": "יפן",
+  "music": "beach",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "############################",
+   "#SSSSSSSSSSSSSSSSSSSSSSSSSS#",
+   "#STTTTTTTTTSSSSSSSSSSSSSSSS#",
+   "#STTTTTTTTTSSSSSSSSSSSSSSSS#",
+   "#STTTTTTTTTSSSSSSSSSSSSSSSS#",
+   "#STTTTTTTTTSSSSSSSSSSSSSSSS#",
+   "#STTTTTTTTTSSSSSSSSSSSSSSSS#",
+   "#STTTTTTTTTSSSSSSrrrrrrrSSS#",
+   "#SSSSSSSSSSSSSSSSrrrrrrrSSS#",
+   "#SSSSSSSSSSSSSSSSrrrrrrrSSS#",
+   "#SSSSSSSSSSSSSSSSrrrrrrrSSS#",
+   "#SSSSSSSSSSSSSSSSrrrrrrrSSS#",
+   "#SSSSSSSSSSSSSSSSrrrrrrrSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSSSSSS#",
+   "############################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 13,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "torii",
+    "x": 12,
+    "y": 6
+   },
+   {
+    "type": "lantern",
+    "x": 9,
+    "y": 11
+   },
+   {
+    "type": "lantern",
+    "x": 14,
+    "y": 11
+   },
+   {
+    "type": "lantern",
+    "x": 4,
+    "y": 5
+   },
+   {
+    "type": "lantern",
+    "x": 25,
+    "y": 4
+   },
+   {
+    "type": "podium",
+    "x": 19,
+    "y": 9,
+    "id": "sumo",
+    "interact": {
+     "dialogue": "sumo_look"
+    }
+   },
+   {
+    "type": "deer",
+    "x": 5,
+    "y": 12,
+    "id": "deer1",
+    "gives": "deer_photo",
+    "givesText": "קליק! צילום מושלם של איל שמסתובב לו חופשי ברחוב.",
+    "emptyText": "האיל כבר צולם. הוא קצת עייף מכל הפפראצי."
+   },
+   {
+    "type": "deer",
+    "x": 13,
+    "y": 13,
+    "id": "deer2",
+    "gives": "deer_photo",
+    "givesText": "קליק! צילום מושלם של איל שמסתובב לו חופשי ברחוב.",
+    "emptyText": "האיל כבר צולם. הוא קצת עייף מכל הפפראצי."
+   },
+   {
+    "type": "deer",
+    "x": 24,
+    "y": 4,
+    "id": "deer3",
+    "gives": "deer_photo",
+    "givesText": "קליק! צילום מושלם של איל שמסתובב לו חופשי ברחוב.",
+    "emptyText": "האיל כבר צולם. הוא קצת עייף מכל הפפראצי."
+   }
+  ],
+  "npcs": [
+   {
+    "id": "jp_man",
+    "x": 3,
+    "y": 3,
+    "dir": 0,
+    "gives": "minyan_man",
+    "uid": "man1",
+    "givesText": "״בשמחה! אני מצטרף למניין.״",
+    "emptyText": "הוא כבר איתנו במניין."
+   },
+   {
+    "id": "jp_man2",
+    "x": 5,
+    "y": 3,
+    "dir": 0,
+    "gives": "minyan_man",
+    "uid": "man2",
+    "givesText": "״בשמחה! אני מצטרף למניין.״",
+    "emptyText": "הוא כבר איתנו במניין."
+   },
+   {
+    "id": "jp_man3",
+    "x": 7,
+    "y": 3,
+    "dir": 0,
+    "gives": "minyan_man",
+    "uid": "man3",
+    "givesText": "״בשמחה! אני מצטרף למניין.״",
+    "emptyText": "הוא כבר איתנו במניין."
+   },
+   {
+    "id": "jp_man4",
+    "x": 3,
+    "y": 6,
+    "dir": 0,
+    "gives": "minyan_man",
+    "uid": "man4",
+    "givesText": "״בשמחה! אני מצטרף למניין.״",
+    "emptyText": "הוא כבר איתנו במניין."
+   },
+   {
+    "id": "jp_man",
+    "x": 5,
+    "y": 6,
+    "dir": 0,
+    "gives": "minyan_man",
+    "uid": "man5",
+    "givesText": "״בשמחה! אני מצטרף למניין.״",
+    "emptyText": "הוא כבר איתנו במניין."
+   },
+   {
+    "id": "jp_man2",
+    "x": 8,
+    "y": 6,
+    "dir": 0,
+    "gives": "minyan_man",
+    "uid": "man6",
+    "givesText": "״בשמחה! אני מצטרף למניין.״",
+    "emptyText": "הוא כבר איתנו במניין."
+   },
+   {
+    "id": "jp_man3",
+    "x": 14,
+    "y": 3,
+    "dir": 0,
+    "gives": "minyan_man",
+    "uid": "man7",
+    "givesText": "״בשמחה! אני מצטרף למניין.״",
+    "emptyText": "הוא כבר איתנו במניין."
+   },
+   {
+    "id": "jp_man4",
+    "x": 21,
+    "y": 3,
+    "dir": 0,
+    "gives": "minyan_man",
+    "uid": "man8",
+    "givesText": "״בשמחה! אני מצטרף למניין.״",
+    "emptyText": "הוא כבר איתנו במניין."
+   },
+   {
+    "id": "jp_man",
+    "x": 24,
+    "y": 8,
+    "dir": 0,
+    "gives": "minyan_man",
+    "uid": "man9",
+    "givesText": "״בשמחה! אני מצטרף למניין.״",
+    "emptyText": "הוא כבר איתנו במניין."
+   },
+   {
+    "id": "jp_man2",
+    "x": 22,
+    "y": 14,
+    "dir": 0,
+    "gives": "minyan_man",
+    "uid": "man10",
+    "givesText": "״בשמחה! אני מצטרף למניין.״",
+    "emptyText": "הוא כבר איתנו במניין."
+   }
+  ],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 13
+  }
+ },
+ "mall": {
+  "id": "mall",
+  "name": "קניון השווקים",
+  "music": "town",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "##########################",
+   "#WWWWWWWWWWWWWWWWWWWWWWWW#",
+   "#........................#",
+   "#........................#",
+   "#........................#",
+   "#........................#",
+   "#........................#",
+   "#.rrrrrrrrrrrrrrrrrrrrrr.#",
+   "#........................#",
+   "#........................#",
+   "#........................#",
+   "#........................#",
+   "#........................#",
+   "##########################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 11,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "counter",
+    "x": 4,
+    "y": 3,
+    "id": "stall1",
+    "interact": {
+     "dialogue": "stall1"
+    }
+   },
+   {
+    "type": "counter",
+    "x": 10,
+    "y": 3,
+    "id": "stall2",
+    "interact": {
+     "dialogue": "stall2"
+    }
+   },
+   {
+    "type": "counter",
+    "x": 16,
+    "y": 3,
+    "id": "stall3",
+    "interact": {
+     "dialogue": "stall3"
+    }
+   },
+   {
+    "type": "counter",
+    "x": 21,
+    "y": 3,
+    "id": "stall4",
+    "interact": {
+     "dialogue": "stall4"
+    }
+   },
+   {
+    "type": "plant",
+    "x": 3,
+    "y": 9
+   },
+   {
+    "type": "plant",
+    "x": 24,
+    "y": 9
+   },
+   {
+    "type": "lamp",
+    "x": 13,
+    "y": 9
+   }
+  ],
+  "npcs": [],
+  "pickups": [
+   {
+    "id": "phone_pk",
+    "item": "phone_anat",
+    "x": 11,
+    "y": 5,
+    "hidden": true,
+    "needsQuest": "q_phone"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 11
+  }
+ },
+ "airport": {
+  "id": "airport",
+  "name": "שדה תעופה בשוויץ",
+  "music": "town",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "########################",
+   "#WWWWWWWWWWWWWWWWWWWWWW#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "########################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 9,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "desk",
+    "x": 10,
+    "y": 4,
+    "id": "rental",
+    "interact": {
+     "dialogue": "rental_look"
+    }
+   },
+   {
+    "type": "sign",
+    "x": 18,
+    "y": 4,
+    "interact": {
+     "dialogue": "gate_sign"
+    }
+   },
+   {
+    "type": "car",
+    "x": 17,
+    "y": 9,
+    "id": "rental_car",
+    "interact": {
+     "dialogue": "car_look"
+    }
+   },
+   {
+    "type": "suitcase",
+    "x": 15,
+    "y": 9
+   },
+   {
+    "type": "suitcase",
+    "x": 20,
+    "y": 9
+   }
+  ],
+  "npcs": [],
+  "pickups": [
+   {
+    "id": "cloth1",
+    "item": "cloth",
+    "x": 5,
+    "y": 5,
+    "hidden": false,
+    "needsQuest": "q_barcelona"
+   },
+   {
+    "id": "cloth2",
+    "item": "cloth",
+    "x": 13,
+    "y": 8,
+    "hidden": true,
+    "needsQuest": "q_barcelona"
+   },
+   {
+    "id": "cloth3",
+    "item": "cloth",
+    "x": 21,
+    "y": 6,
+    "hidden": true,
+    "needsQuest": "q_barcelona"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 9
+  }
+ },
+ "road": {
+  "id": "road",
+  "name": "הדרך לברצלונה",
+  "music": "town",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "############",
+   "#AAAAAAAAAA#",
+   "#AAAAAAAAAA#",
+   "LLLLLLLLLLLL",
+   "LLLLLLLLLLLL",
+   "#AAAAAAAAAA#",
+   "#AAAAAAAAAA#",
+   "############"
+  ],
+  "props": [],
+  "npcs": [],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 2,
+   "y": 4
+  }
+ },
+ "port": {
+  "id": "port",
+  "name": "נמל ברצלונה",
+  "music": "beach",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "~~~~~~~~~~~~~~~~~~~~~~",
+   "~~~~~~~~~~~~~~~~~~~~~~",
+   "~~~~~~~~~~~~~~~~~~~~~~",
+   "~~~~~~~~~~~~~~~~~~~~~~",
+   "#DDDDDDDDDDDDDDDDDDDD#",
+   "#DDDDDDDDDDDDDDDDDDDD#",
+   "#DDDDDDDDDDDDDDDDDDDD#",
+   "#DDDDDDDDDDDDDDDDDDDD#",
+   "#DDDDDDDDDDDDDDDDDDDD#",
+   "#DDDDDDDDDDDDDDDDDDDD#",
+   "#DDDDDDDDDDDDDDDDDDDD#",
+   "######################"
+  ],
+  "props": [
+   {
+    "type": "ship",
+    "x": 12,
+    "y": 6,
+    "id": "ship"
+   },
+   {
+    "type": "door",
+    "x": 1,
+    "y": 9,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   }
+  ],
+  "npcs": [],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 2,
+   "y": 9
+  }
+ },
+ "terminal": {
+  "id": "terminal",
+  "name": "מסוף ההפלגות",
+  "music": "beach",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "~~~~~~~~~~~~~~~~~~~~~~~~",
+   "~~~~~~~~~~~~~~~~~~~~~~~~",
+   "~~~~~~~~~~~~~~~~~~~~~~~~",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSSSS#",
+   "########################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 9,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "ship",
+    "x": 14,
+    "y": 4,
+    "id": "ship2"
+   },
+   {
+    "type": "desk",
+    "x": 6,
+    "y": 6,
+    "id": "checkin",
+    "interact": {
+     "dialogue": "checkin_look"
+    }
+   }
+  ],
+  "npcs": [
+   {
+    "id": "agent",
+    "x": 8,
+    "y": 6,
+    "dir": 0
+   }
+  ],
+  "pickups": [
+   {
+    "id": "form1",
+    "item": "form",
+    "x": 4,
+    "y": 4,
+    "hidden": false,
+    "needsQuest": "q_cruise"
+   },
+   {
+    "id": "form2",
+    "item": "form",
+    "x": 12,
+    "y": 9,
+    "hidden": false,
+    "needsQuest": "q_cruise"
+   },
+   {
+    "id": "form3",
+    "item": "form",
+    "x": 20,
+    "y": 8,
+    "hidden": true,
+    "needsQuest": "q_cruise"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 9
+  }
+ },
+ "dining": {
+  "id": "dining",
+  "name": "ארוחת שישי",
+  "music": "home",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "########################",
+   "#WWWWWWWWWWWWWWWWWWWWWW#",
+   "#tttttttt..............#",
+   "#tttttttt..............#",
+   "#tttttttt..............#",
+   "#tttttttt..............#",
+   "#.........rrrrrrrrrrrr.#",
+   "#.........rrrrrrrrrrrr.#",
+   "#.........rrrrrrrrrrrr.#",
+   "#.........rrrrrrrrrrrr.#",
+   "#.........rrrrrrrrrrrr.#",
+   "#......................#",
+   "#......................#",
+   "########################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 11,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "fridge",
+    "x": 1,
+    "y": 2
+   },
+   {
+    "type": "stove",
+    "x": 2,
+    "y": 2,
+    "id": "fish",
+    "interact": {
+     "dialogue": "fish_look"
+    }
+   },
+   {
+    "type": "counter",
+    "x": 4,
+    "y": 2
+   },
+   {
+    "type": "table",
+    "x": 12,
+    "y": 8
+   },
+   {
+    "type": "table",
+    "x": 15,
+    "y": 8
+   },
+   {
+    "type": "table",
+    "x": 18,
+    "y": 8
+   }
+  ],
+  "npcs": [],
+  "pickups": [
+   {
+    "id": "salad1",
+    "item": "salad",
+    "x": 4,
+    "y": 4,
+    "hidden": false,
+    "needsQuest": "q_dinner"
+   },
+   {
+    "id": "salad2",
+    "item": "salad",
+    "x": 6,
+    "y": 4,
+    "hidden": false,
+    "needsQuest": "q_dinner"
+   },
+   {
+    "id": "salad3",
+    "item": "salad",
+    "x": 8,
+    "y": 4,
+    "hidden": false,
+    "needsQuest": "q_dinner"
+   },
+   {
+    "id": "salad4",
+    "item": "salad",
+    "x": 5,
+    "y": 5,
+    "hidden": true,
+    "needsQuest": "q_dinner"
+   },
+   {
+    "id": "salad5",
+    "item": "salad",
+    "x": 7,
+    "y": 5,
+    "hidden": false,
+    "needsQuest": "q_dinner"
+   },
+   {
+    "id": "salad6",
+    "item": "salad",
+    "x": 9,
+    "y": 5,
+    "hidden": false,
+    "needsQuest": "q_dinner"
+   },
+   {
+    "id": "salad7",
+    "item": "salad",
+    "x": 11,
+    "y": 3,
+    "hidden": false,
+    "needsQuest": "q_dinner"
+   },
+   {
+    "id": "salad8",
+    "item": "salad",
+    "x": 14,
+    "y": 3,
+    "hidden": true,
+    "needsQuest": "q_dinner"
+   },
+   {
+    "id": "salad9",
+    "item": "salad",
+    "x": 17,
+    "y": 3,
+    "hidden": false,
+    "needsQuest": "q_dinner"
+   },
+   {
+    "id": "salad10",
+    "item": "salad",
+    "x": 20,
+    "y": 3,
+    "hidden": false,
+    "needsQuest": "q_dinner"
+   },
+   {
+    "id": "salad11",
+    "item": "salad",
+    "x": 21,
+    "y": 6,
+    "hidden": false,
+    "needsQuest": "q_dinner"
+   },
+   {
+    "id": "salad12",
+    "item": "salad",
+    "x": 11,
+    "y": 12,
+    "hidden": true,
+    "needsQuest": "q_dinner"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 11
+  }
+ },
+ "city": {
+  "id": "city",
+  "name": "כביש בעיר",
+  "music": "town",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "############",
+   "#AAAAAAAAAA#",
+   "#AAAAAAAAAA#",
+   "LLLLLLLLLLLL",
+   "LLLLLLLLLLLL",
+   "#AAAAAAAAAA#",
+   "#AAAAAAAAAA#",
+   "############"
+  ],
+  "props": [],
+  "npcs": [],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 2,
+   "y": 4
+  }
+ },
+ "flat": {
+  "id": "flat",
+  "name": "דירה בקומה שלישית",
+  "music": "mystery",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "################",
+   "#WWWWWWWWWWWWWW#",
+   "#tttttttttttttt#",
+   "#tttttttttttttt#",
+   "#tttttttttttttt#",
+   "#tttttttttttttt#",
+   "#tttttttttttttt#",
+   "#tttttttttttttt#",
+   "#tttttttttttttt#",
+   "################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 7,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "door",
+    "x": 8,
+    "y": 2,
+    "id": "flat_door",
+    "interact": {
+     "dialogue": "flat_door_look"
+    }
+   },
+   {
+    "type": "plant",
+    "x": 12,
+    "y": 4
+   }
+  ],
+  "npcs": [],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 7
+  }
+ },
+ "room": {
+  "id": "room",
+  "name": "החדר של טוהר",
+  "music": "home",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "##################",
+   "#WWWWWWWWWWWWWWWW#",
+   "#................#",
+   "#................#",
+   "#................#",
+   "#................#",
+   "#.cccccc.........#",
+   "#.cccccc.........#",
+   "#.cccccc.........#",
+   "#.cccccc.........#",
+   "#................#",
+   "##################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 9,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "bed",
+    "x": 14,
+    "y": 4
+   },
+   {
+    "type": "shelf",
+    "x": 3,
+    "y": 2
+   },
+   {
+    "type": "plant",
+    "x": 16,
+    "y": 2
+   },
+   {
+    "type": "table",
+    "x": 8,
+    "y": 3
+   }
+  ],
+  "npcs": [],
+  "pickups": [
+   {
+    "id": "ready1",
+    "item": "ready_item",
+    "x": 5,
+    "y": 3,
+    "hidden": false,
+    "needsQuest": "q_seven"
+   },
+   {
+    "id": "ready2",
+    "item": "ready_item",
+    "x": 9,
+    "y": 6,
+    "hidden": false,
+    "needsQuest": "q_seven"
+   },
+   {
+    "id": "ready3",
+    "item": "ready_item",
+    "x": 13,
+    "y": 8,
+    "hidden": true,
+    "needsQuest": "q_seven"
+   },
+   {
+    "id": "ready4",
+    "item": "ready_item",
+    "x": 3,
+    "y": 7,
+    "hidden": false,
+    "needsQuest": "q_seven"
+   },
+   {
+    "id": "ready5",
+    "item": "ready_item",
+    "x": 15,
+    "y": 6,
+    "hidden": false,
+    "needsQuest": "q_seven"
+   },
+   {
+    "id": "ready6",
+    "item": "ready_item",
+    "x": 10,
+    "y": 9,
+    "hidden": true,
+    "needsQuest": "q_seven"
+   },
+   {
+    "id": "ready7",
+    "item": "ready_item",
+    "x": 7,
+    "y": 3,
+    "hidden": false,
+    "needsQuest": "q_seven"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 9
+  }
+ },
+ "hotelpool": {
+  "id": "hotelpool",
+  "name": "בריכה במלון בתל אביב",
+  "music": "beach",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "######################",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSQQQQQQQQQQQSS#",
+   "#SSSSSSSQQQQQQQQQQQSS#",
+   "#SSSSSSSQQQQQQQQQQQSS#",
+   "#SSSSSSSQQQQQQQQQQQSS#",
+   "#SSSSSSSQQQQQQQQQQQSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "######################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 11,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "umbrella",
+    "x": 4,
+    "y": 4
+   },
+   {
+    "type": "umbrella",
+    "x": 20,
+    "y": 9
+   },
+   {
+    "type": "umbrella",
+    "x": 5,
+    "y": 9
+   },
+   {
+    "type": "plant",
+    "x": 20,
+    "y": 4
+   }
+  ],
+  "npcs": [
+   {
+    "id": "terry",
+    "x": 6,
+    "y": 6,
+    "dir": 3
+   }
+  ],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 11
+  }
+ },
+ "dubai": {
+  "id": "dubai",
+  "name": "דובאי",
+  "music": "beach",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "~~~~~~~~~~~~~~~~~~~~~~",
+   "~~~~~~~~~~~~~~~~~~~~~~",
+   "~~~~~~~~~~~~~~~~~~~~~~",
+   "#ssssssssssssssssssss#",
+   "#ssssssssssssssssssss#",
+   "#ssssssssssssssssssss#",
+   "#ssssssssssssssssssss#",
+   "#ssssssssssssssssssss#",
+   "#ssssssssssssssssssss#",
+   "#ssssssssssssssssssss#",
+   "#ssssssssssssssssssss#",
+   "######################"
+  ],
+  "props": [
+   {
+    "type": "ship",
+    "x": 12,
+    "y": 6,
+    "id": "yacht"
+   },
+   {
+    "type": "door",
+    "x": 1,
+    "y": 9,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   }
+  ],
+  "npcs": [],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 9
+  }
+ },
+ "purim": {
+  "id": "purim",
+  "name": "ארוחת פורים בסגנון שרק",
+  "music": "home",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "######################",
+   "#WWWWWWWWWWWWWWWWWWWW#",
+   "#....................#",
+   "#....................#",
+   "#....................#",
+   "#........cccccccccc..#",
+   "#........cccccccccc..#",
+   "#........cccccccccc..#",
+   "#........cccccccccc..#",
+   "#........cccccccccc..#",
+   "#....................#",
+   "#....................#",
+   "#....................#",
+   "######################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 11,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "table",
+    "x": 11,
+    "y": 8
+   },
+   {
+    "type": "table",
+    "x": 14,
+    "y": 8
+   },
+   {
+    "type": "plant",
+    "x": 3,
+    "y": 3
+   },
+   {
+    "type": "plant",
+    "x": 19,
+    "y": 3
+   },
+   {
+    "type": "door",
+    "x": 10,
+    "y": 2,
+    "id": "mirror",
+    "interact": {
+     "dialogue": "mirror_look"
+    }
+   }
+  ],
+  "npcs": [
+   {
+    "id": "guest",
+    "x": 12,
+    "y": 6,
+    "dir": 0
+   },
+   {
+    "id": "guest",
+    "x": 16,
+    "y": 6,
+    "dir": 0
+   }
+  ],
+  "pickups": [
+   {
+    "id": "boots_pk",
+    "item": "boots",
+    "x": 4,
+    "y": 6,
+    "hidden": true,
+    "needsQuest": "q_cat"
+   },
+   {
+    "id": "cat_hat_pk",
+    "item": "cat_hat",
+    "x": 18,
+    "y": 11,
+    "hidden": true,
+    "needsQuest": "q_cat"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 11
+  }
+ },
+ "kotelplaza": {
+  "id": "kotelplaza",
+  "name": "הכותל המערבי",
+  "music": "mystery",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "KKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKK",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "######################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 11,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "lamp",
+    "x": 3,
+    "y": 6
+   },
+   {
+    "type": "lamp",
+    "x": 19,
+    "y": 6
+   }
+  ],
+  "npcs": [
+   {
+    "id": "elior",
+    "x": 11,
+    "y": 8,
+    "dir": 0
+   }
+  ],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 11,
+   "y": 11
+  }
+ },
+ "dream": {
+  "id": "dream",
+  "name": "החלום של מרדכי",
+  "music": "mystery",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "CCCCCCCCCCCCCCCCCCCC",
+   "CCCCCCCCCCCCCCCCCCCC",
+   "CCCCCCCCCCCCCCCCCCCC",
+   "CCCCCCCCCCCCCCCCCCCC",
+   "CCCCCCCCCCCCCCCCCCCC",
+   "CCCCCCCCCCCCCCCCCCCC",
+   "CCCCCCCCCCCCCCCCCCCC",
+   "CCCCCCCCCCCCCCCCCCCC",
+   "CCCCCCCCCCCCCCCCCCCC",
+   "CCCCCCCCCCCCCCCCCCCC",
+   "CCCCCCCCCCCCCCCCCCCC",
+   "CCCCCCCCCCCCCCCCCCCC"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 9,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "crib",
+    "x": 6,
+    "y": 5,
+    "id": "crib1"
+   },
+   {
+    "type": "crib",
+    "x": 10,
+    "y": 5,
+    "id": "crib2"
+   },
+   {
+    "type": "crib",
+    "x": 14,
+    "y": 5,
+    "id": "crib3"
+   }
+  ],
+  "npcs": [],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 9
+  }
+ },
+ "yard": {
+  "id": "yard",
+  "name": "הגינה של יואב",
+  "music": "town",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "######################",
+   "#gggggggggggggggggggg#",
+   "#gggggggggggggggggggg#",
+   "#gggggggggggggggggggg#",
+   "#gggggggggggggggggggg#",
+   "#gggggggggggggggggggg#",
+   "#pppppppppppppppppppp#",
+   "#gggggggggggggggggggg#",
+   "#gggggggggggggggggggg#",
+   "#gggggggggggggggggggg#",
+   "#gggggggggggggggggggg#",
+   "#gggggggggggggggggggg#",
+   "#gggggggggggggggggggg#",
+   "######################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 11,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "car",
+    "x": 14,
+    "y": 9,
+    "id": "car_y",
+    "interact": {
+     "dialogue": "car_dirty"
+    }
+   },
+   {
+    "type": "tree",
+    "x": 4,
+    "y": 4
+   },
+   {
+    "type": "tree",
+    "x": 18,
+    "y": 4
+   },
+   {
+    "type": "bush",
+    "x": 8,
+    "y": 3
+   },
+   {
+    "type": "lamp",
+    "x": 11,
+    "y": 7
+   }
+  ],
+  "npcs": [],
+  "pickups": [
+   {
+    "id": "litter1",
+    "item": "litter",
+    "x": 5,
+    "y": 8,
+    "hidden": false,
+    "needsQuest": "q_yoav"
+   },
+   {
+    "id": "litter2",
+    "item": "litter",
+    "x": 8,
+    "y": 10,
+    "hidden": false,
+    "needsQuest": "q_yoav"
+   },
+   {
+    "id": "litter3",
+    "item": "litter",
+    "x": 11,
+    "y": 3,
+    "hidden": true,
+    "needsQuest": "q_yoav"
+   },
+   {
+    "id": "litter4",
+    "item": "litter",
+    "x": 16,
+    "y": 6,
+    "hidden": false,
+    "needsQuest": "q_yoav"
+   },
+   {
+    "id": "litter5",
+    "item": "litter",
+    "x": 19,
+    "y": 11,
+    "hidden": false,
+    "needsQuest": "q_yoav"
+   },
+   {
+    "id": "litter6",
+    "item": "litter",
+    "x": 7,
+    "y": 5,
+    "hidden": true,
+    "needsQuest": "q_yoav"
+   },
+   {
+    "id": "litter7",
+    "item": "litter",
+    "x": 13,
+    "y": 12,
+    "hidden": false,
+    "needsQuest": "q_yoav"
+   },
+   {
+    "id": "litter8",
+    "item": "litter",
+    "x": 3,
+    "y": 6,
+    "hidden": false,
+    "needsQuest": "q_yoav"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 11
+  }
+ },
+ "flash": {
+  "id": "flash",
+  "name": "זיכרון: הבית החדש",
+  "music": "home",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "################",
+   "#WWWWWWWWWWWWWW#",
+   "#..............#",
+   "#..............#",
+   "#...rrrrrrrr...#",
+   "#...rrrrrrrr...#",
+   "#...rrrrrrrr...#",
+   "#...rrrrrrrr...#",
+   "#..............#",
+   "################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 7,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "sofa",
+    "x": 5,
+    "y": 3
+   },
+   {
+    "type": "plant",
+    "x": 13,
+    "y": 3
+   }
+  ],
+  "npcs": [
+   {
+    "id": "yoav_kid",
+    "x": 8,
+    "y": 5,
+    "dir": 0
+   }
+  ],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 3,
    "y": 7
   }
  }

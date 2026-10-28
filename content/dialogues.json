@@ -288,66 +288,94 @@
    ]
   }
  },
- "anat_talk": {
+ "sumo_look": {
   "start": {
-   "who": "anat",
-   "text": "כמה זה עולה? בשוק הייתי מוצאת את זה בחצי.",
+   "who": "narrator",
+   "text": "זירת סומו. מרדכי כבר מתלהב.",
    "next": null
   }
  },
- "yitzhak_talk": {
+ "stall1": {
   "start": {
-   "who": "yitzhak",
-   "text": "יש לי בדיחת קרש חדשה, אבל אספר אותה בארוחה. אחרי דבר התורה, כמובן.",
+   "who": "narrator",
+   "text": "חנות הבגדים. אמא התמקחה כאן על חולצה.",
    "next": null
   }
  },
- "mordechai_talk": {
+ "stall2": {
   "start": {
-   "who": "mordechai",
-   "text": "כן, אני עובד במשרד. באמת. רק במשרד.",
+   "who": "narrator",
+   "text": "חנות התכשיטים. נוצצת במיוחד.",
    "next": null
   }
  },
- "eden_talk": {
+ "stall3": {
   "start": {
-   "who": "eden",
-   "text": "הבית של ההורים? יש לי כמה הערות. נתחיל מהסלון.",
+   "who": "narrator",
+   "text": "חנות הנעליים. הרבה מדי זוגות.",
    "next": null
   }
  },
- "maayan_talk": {
+ "stall4": {
   "start": {
-   "who": "maayan",
-   "text": "יש לי חידה בשבילכם, אבל קודם אני רצה סיבוב.",
+   "who": "narrator",
+   "text": "בית הקפה. ריח של קפה טרי.",
    "next": null
   }
  },
- "rinat_talk": {
+ "rental_look": {
   "start": {
-   "who": "rinat",
-   "text": "הכול מסודר, הבנות אכלו, אליאור אכל. עכשיו אפשר לנשום.",
+   "who": "narrator",
+   "text": "דלפק השכרת הרכב.",
    "next": null
   }
  },
- "tohar_talk": {
+ "gate_sign": {
   "start": {
-   "who": "tohar",
-   "text": "יום הולדת השבוע? אני כבר מארגנת. אל תגלו!",
+   "who": "narrator",
+   "text": "שלט: ״הטיסה לברצלונה: ננעלה.״",
    "next": null
   }
  },
- "yoav_talk": {
+ "car_look": {
   "start": {
-   "who": "yoav",
-   "text": "אל תיגעו בזה. הרגע ניקיתי.",
+   "who": "narrator",
+   "text": "רכב קטן. הרבה מזוודות, מעט מקום.",
    "next": null
   }
  },
- "terry_talk": {
+ "checkin_look": {
   "start": {
-   "who": "terry",
-   "text": "G'day! Eden says hi. I love this place.",
+   "who": "narrator",
+   "text": "דלפק הצ׳ק-אין של ההפלגה.",
+   "next": null
+  }
+ },
+ "fish_look": {
+  "start": {
+   "who": "narrator",
+   "text": "הדג המרוקאי מבעבע בסיר.",
+   "next": null
+  }
+ },
+ "flat_door_look": {
+  "start": {
+   "who": "narrator",
+   "text": "דלת של דירה בקומה השלישית.",
+   "next": null
+  }
+ },
+ "mirror_look": {
+  "start": {
+   "who": "narrator",
+   "text": "מראה גדולה. אפשר להתחפש מולה.",
+   "next": null
+  }
+ },
+ "car_dirty": {
+  "start": {
+   "who": "narrator",
+   "text": "הרכב מלוכלך. יואב לא יסלח.",
    "next": null
   }
  }

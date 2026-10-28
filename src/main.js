@@ -3,6 +3,8 @@ import World from './scenes/World.js';
 import { initControls, setControlsVisible, input } from './ui/controls.js';
 import * as UI from './ui/ui.js';
 import { S, saveGame } from './state.js';
+import * as Q from './systems/quests.js';
+import { content } from './content.js';
 import { initAudio, resumeAudio, setMusic, setSfx, stopMusic } from './audio.js';
 
 let world = null;
@@ -31,7 +33,7 @@ function boot() {
     fps: { target: 60 },
   });
   window.__game = game;
-  window.__bz = { S, input, UI };
+  window.__bz = { S, input, UI, Q, content };
 
   game.events.once('ready', () => {
     world = game.scene.getScene('World');
@@ -41,21 +43,26 @@ function boot() {
   UI.hooks.newGame = async () => {
     initAudio(); resumeAudio(); applySettings();
     showGameChrome(true); UI.buildHud();
-    world.startWorld(); world.busy = true;
+    S.started = true; saveGame();
+    world.startWorld(); world.busy = true; saveGame();
     await UI.showIntro();
     world.busy = false; saveGame();
   };
   UI.hooks.continueGame = () => {
+    S.started = true;
     initAudio(); resumeAudio(); applySettings();
     showGameChrome(true); UI.buildHud();
     world.startWorld();
   };
-  UI.hooks.toTitle = () => { stopMusic(); showGameChrome(false); if (world) world.busy = true; UI.showTitle(); };
+  UI.hooks.toTitle = () => { S.started = false; stopMusic(); showGameChrome(false); if (world) world.busy = true; UI.showTitle(); };
 
   // register the service worker (offline play + installable PWA)
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
     window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
   }
+  try { navigator.storage?.persist?.(); } catch (e) { /* ignore */ }
+  setInterval(() => { if (S.started) saveGame(); }, 5000);
+  window.addEventListener('beforeunload', () => { if (S.started) saveGame(); });
   // first touch unlocks audio on iOS
   window.addEventListener('pointerdown', () => { initAudio(); resumeAudio(); }, { once: true });
 }
