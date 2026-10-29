@@ -203,13 +203,14 @@ export async function cloudLoad(code) {
 const FAMILY_CODE = 'buzaglosfam';
 export const getCloudCode = () => FAMILY_CODE;
 export const cloudAutoOn = () => cloudEnabled();
+const cloudSkips = (id) => id === 'visitor';   // guests are saved only on their own phone (many different people play as guests)
 const nameHash = (n) => { let h = 5381; for (const ch of String(n || '').trim().toLowerCase()) h = ((h << 5) + h + ch.charCodeAt(0)) >>> 0; return h.toString(36); };
 const slotCloudKey = (id, name) => `${FAMILY_CODE}-${id === 'visitor' ? 'v' + nameHash(name ?? S.state.guestName) : id}`;
 const progressScore = (st) => ((st?.shards?.length || 0) * 1000 + Object.values(st?.quests || {}).filter((q) => q.state === 'done').length * 100 + Object.values(st?.quests || {}).filter((q) => q.state === 'active').length * 10 + (st?.level || 0));
 let pushTimer = null;
-function cloudPushSoon() { if (!cloudAutoOn() || !S.started) return; clearTimeout(pushTimer); pushTimer = setTimeout(() => cloudPushNow(), 15000); }
+function cloudPushSoon() { if (!cloudAutoOn() || !S.started || cloudSkips(S.state.activeChar)) return; clearTimeout(pushTimer); pushTimer = setTimeout(() => cloudPushNow(), 15000); }
 export async function cloudPushNow(keepalive = false) {
-  if (!cloudAutoOn() || !S.started || PREVIEW) return false;
+  if (!cloudAutoOn() || !S.started || PREVIEW || cloudSkips(S.state.activeChar)) return false;
   try { const r = await fetch(cloudUrl(slotCloudKey(S.state.activeChar)), { method: 'PUT', keepalive, headers: { 'content-type': 'application/json' }, body: JSON.stringify(S.state) }); return r.ok; } catch (e) { return false; }
 }
 async function cloudPullSlot(id, name) {
@@ -217,7 +218,7 @@ async function cloudPullSlot(id, name) {
 }
 /** Copies the cloud save into this phone when the cloud has more progress (or the same progress, saved later). Returns true if the phone changed. */
 export async function syncSlotFromCloud(id, name) {
-  if (!cloudAutoOn()) return false;
+  if (!cloudAutoOn() || cloudSkips(id)) return false;
   const cloud = await cloudPullSlot(id, id === 'visitor' ? (name ?? peekSave(id)?.guestName) : undefined); if (!cloud) return false;
   const local = peekSave(id), a = progressScore(cloud), b = progressScore(local);
   if (local && (b > a || (b === a && (local.savedAt || 0) >= (cloud.savedAt || 0)))) return false;
@@ -226,6 +227,6 @@ export async function syncSlotFromCloud(id, name) {
 }
 export async function syncAllFromCloud() {
   if (!cloudAutoOn()) return 0;
-  const res = await Promise.all(Object.keys(content.characters).filter((id) => id !== 'visitor' || peekSave('visitor')).map((id) => syncSlotFromCloud(id)));
+  const res = await Promise.all(Object.keys(content.characters).filter((id) => !cloudSkips(id)).map((id) => syncSlotFromCloud(id)));
   return res.filter(Boolean).length;
 }

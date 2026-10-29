@@ -329,7 +329,6 @@ export function showTitle() {
         hideLoading();
         if (id === 'visitor') {
           const guest = await askGuest(); if (!guest) return;
-          if (cloudAutoOn()) { showLoading('טוען שחקן...'); try { if (await syncSlotFromCloud(id, guest.name) && peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); hideLoading(); return; } } catch (e) { /* offline */ } hideLoading(); }
           t.classList.add('hidden'); startNewGame(id, guest); hooks.newGame?.(); return;
         }
         if ((await modal(STR.title.confirmPick(c.name), ['כן, מתחילים', 'ביטול'])).i === 0) { t.classList.add('hidden'); startNewGame(id); hooks.newGame?.(); }
