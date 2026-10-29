@@ -144,6 +144,8 @@ export function compileBundle(bundle, content) {
     q.cast = [...new Set([prot, ...(q.cast || []).filter((c) => chars.includes(c) || bundle.npcs?.[c])])];
     q.callers = [...new Set([prot, ...(q.callers || []).filter((c) => chars.includes(c)), ...chars])];
     q.rev = q.rev || 0;
+    // moving between the story's new scenes: always arrive at that scene's entrance (the AI cannot know the layout)
+    for (const st of q.steps || []) { const dest = st.type === 'teleport' && (bundle.maps || {})[st.map]; if (dest) { st.x = dest.spawn.x; st.y = dest.spawn.y; } }
   }
   return bundle;
 }
