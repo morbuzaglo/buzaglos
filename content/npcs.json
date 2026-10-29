@@ -1090,5 +1090,29 @@
    "אפשר גם המבורגר? בלי בצל, בבקשה.",
    "שמעתי שמישהו פה לא מת על בצל..."
   ]
+ },
+ "yossiharrari": {
+  "name": "דוד יוסי",
+  "role": "קרוב משפחה",
+  "look": {
+   "skin": "#f1c9a0",
+   "hair": "#4a2c17",
+   "hairStyle": "short",
+   "shirt": "#ffffff",
+   "pants": "#000000",
+   "accessory": "round",
+   "hat": "#000000",
+   "hatStyle": "kippah",
+   "shoes": "#000000"
+  },
+  "placeholder": true,
+  "group": "extended",
+  "id": "yossiharrari",
+  "dialogues": [
+   {
+    "id": "yossiharrari_default"
+   }
+  ],
+  "relations": "דוד"
  }
 }
