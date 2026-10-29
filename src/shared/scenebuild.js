@@ -48,7 +48,7 @@ export function buildScene(spec) {
   const solid = new Set();         // exact footprint tiles
   const mark = (x, topY, w, h, pad) => { for (let xx = x - pad; xx < x + w + pad; xx++) for (let yy = topY - pad; yy < topY + h + pad; yy++) occ.add(xx + ',' + yy); };
   const props = [], npcs = [], pickups = [];
-  const addProp = (p) => { const [w, h] = fp(p.type); if (p.id && !p.interact && !p.ability && !p.gives) p.interact = {}; props.push(p); for (let dx = 0; dx < w; dx++) for (let dy = 0; dy < h; dy++) solid.add((p.x + dx) + ',' + (p.y - dy)); mark(p.x, p.y - h + 1, w, h, 1); };
+  const addProp = (p) => { const [w, h] = fp(p.type); if (p.text) { p.interact = { ...(p.interact || {}), text: p.text }; delete p.text; } if (p.id && !p.interact && !p.ability && !p.gives) p.interact = {}; props.push(p); for (let dx = 0; dx < w; dx++) for (let dy = 0; dy < h; dy++) solid.add((p.x + dx) + ',' + (p.y - dy)); mark(p.x, p.y - h + 1, w, h, 1); };
   props.push({ type: 'door', x: 1, y: H - 3, id: 'exit', interact: { action: 'exit' } });
   for (let dx = 0; dx <= 4; dx++) for (let dy = -1; dy <= 1; dy++) occ.add((1 + dx) + ',' + (H - 3 + dy));
   const inside = (x, y, w, h) => x >= 1 && x + w <= W - 1 && y - h + 1 >= top && y <= H - 2;
@@ -88,13 +88,14 @@ export function buildScene(spec) {
   };
 
   for (const p of spec.props || []) { if (!p?.type) continue; const { x, y, ...rest } = p; placeProp(rest); }
-  for (const n of spec.npcs || []) { const t = freeTile(n.near); if (!t) continue; npcs.push({ id: n.id, x: t.x, y: t.y, dir: Math.floor(rnd() * 4), ...(n.gives ? { gives: n.gives, uid: n.id, givesText: n.givesText, emptyText: n.emptyText } : {}) }); }
+  for (const n of spec.npcs || []) { const t = freeTile(n.near); if (!t) continue; npcs.push({ id: n.id, x: t.x, y: t.y, dir: Math.floor(rnd() * 4), ...(n.phrases ? { phrases: n.phrases } : {}), ...(n.gives ? { gives: n.gives, uid: n.id, givesText: n.givesText, emptyText: n.emptyText } : {}) }); }
   for (const pk of spec.pickups || []) for (let i = 0; i < (pk.count || 1); i++) { const t = freeTile(pk.near); if (!t) break; pickups.push({ id: `${id}_${pk.item}_${i}`, item: pk.item, x: t.x, y: t.y, hidden: !!pk.hidden, needsQuest: pk.quest }); }
   // decoration last, so it never blocks the story
   const nDeco = Math.max(3, Math.round((W * H) / 45));
-  for (let i = 0; i < nDeco; i++) placeProp({ type: th.decor[Math.floor(rnd() * th.decor.length)] });
+  const nOwn = props.length - 1;      // scenes written by the AI bring their own (interactive) props; plain decoration only fills up a sparse scene
+  for (let i = 0; i < nDeco && nOwn + i < 8; i++) placeProp({ type: th.decor[Math.floor(rnd() * th.decor.length)], deco: true });
 
-  return { id, name: spec.name || id, music: spec.music || (th.indoor ? 'town' : 'beach'), legend: LEGEND, tiles: g.map((r) => r.join('')), props, npcs, pickups, doors: [], spawn };
+  return { id, gen: true, name: spec.name || id, music: spec.music || (th.indoor ? 'town' : 'beach'), legend: LEGEND, tiles: g.map((r) => r.join('')), props, npcs, pickups, doors: [], spawn };
 }
 
 /**

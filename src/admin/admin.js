@@ -12,16 +12,28 @@ const clone = (o) => JSON.parse(JSON.stringify(o));
 const DRAFT_KEY = 'bz-admin-draft-v1', SESSION_KEY = 'bz-admin-session-v1';
 const FILES = ['config', 'characters', 'npcs', 'items', 'quests', 'dialogues', 'maps', 'shop', 'achievements'];
 const HE = { mordechai: '', };
-let original = clone(bundled);
+const BASE_KEY = 'bz-admin-base-v1';
+const SYNC_KINDS = ['characters', 'npcs', 'items', 'quests', 'dialogues', 'maps', 'achievements', 'shop', 'config'];
 let draft = (() => { try { return JSON.parse(localStorage.getItem(DRAFT_KEY)) || clone(bundled); } catch { return clone(bundled); } })();
-// The draft lives in this browser. Anything that was added to the published game since (by Claude or from another device) is merged in without touching the draft's own edits.
-let newFromGame = 0;
-for (const kind of ['characters', 'npcs', 'items', 'quests', 'dialogues', 'maps', 'achievements']) {
-  draft[kind] ||= {};
-  for (const [id, v] of Object.entries(bundled[kind] || {})) if (!draft[kind][id]) { draft[kind][id] = clone(v); newFromGame++; }
+// `original` = the published content this draft was last in sync with. Publishing and syncing are done per item against it, so a stale draft can never overwrite newer published content.
+let original = (() => { try { const b = JSON.parse(localStorage.getItem(BASE_KEY)); if (b) return b; } catch (e) { /* none */ } return localStorage.getItem(DRAFT_KEY) ? clone(draft) : clone(bundled); })();
+const saveBase = () => { try { localStorage.setItem(BASE_KEY, JSON.stringify(original)); } catch (e) { /* quota */ } };
+/** Takes everything that changed in the published game since the last sync, except the items this draft edited itself. Returns how many items it updated. */
+function syncDraft(pub) {
+  let n = 0;
+  for (const k of SYNC_KINDS) {
+    draft[k] ||= {}; const b = original[k] || {}, p = pub[k] || {};
+    for (const id of new Set([...Object.keys(draft[k]), ...Object.keys(b), ...Object.keys(p)])) {
+      if (JSON.stringify(draft[k][id]) !== JSON.stringify(b[id])) continue;      // edited in this draft: keep it
+      if (JSON.stringify(draft[k][id]) === JSON.stringify(p[id])) continue;
+      if (p[id] === undefined) delete draft[k][id]; else draft[k][id] = clone(p[id]);
+      n++;
+    }
+  }
+  original = clone(pub); saveBase(); try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch (e) { /* quota */ }
+  return n;
 }
-if ((bundled.config?.finalShards || 0) > (draft.config?.finalShards || 0)) draft.config.finalShards = bundled.config.finalShards;
-if (newFromGame) { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch (e) { /* quota */ } setTimeout(() => toast(`נוספו לטיוטה ${newFromGame} פריטים חדשים מהמשחק המפורסם (למשל נעם ומתן)`), 600); }
+{ const n = syncDraft(clone(bundled)); if (n) setTimeout(() => toast(`עודכנו בטיוטה ${n} פריטים מהמשחק המפורסם`), 600); }
 let session = (() => { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)) || {}; } catch { return {}; } })();
 let tab = 'family', sel = { kind: 'characters', id: null }, mapSel = 'house', gen = null, placing = null, busy = '';
 const app = document.getElementById('app');
@@ -68,7 +80,7 @@ function loginCard() {
       const r = await fetch(url.value.replace(/\/$/, '') + '/api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ password: pw.value }) });
       const d = await r.json(); if (!r.ok) throw new Error(d.error || 'שגיאת התחברות');
       session = { apiUrl: url.value, token: d.token }; sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-      try { const c = await api('/api/admin/content'); const live = {}; for (const [n, t] of Object.entries(c.files)) live[n.replace('.json', '')] = JSON.parse(t); original = { ...clone(bundled), ...live }; if (JSON.stringify(draft) === JSON.stringify(bundled)) { draft = clone(original); saveDraft(); } } catch (e) { toast('התחברנו, אך קריאת התוכן מהמאגר נכשלה: ' + e.message, 'warn'); }
+      try { const c = await api('/api/admin/content'); const live = {}; for (const [n, t] of Object.entries(c.files)) live[n.replace('.json', '')] = JSON.parse(t); const n = syncDraft({ ...clone(bundled), ...live }); if (n) toast(`עודכנו בטיוטה ${n} פריטים מהמשחק המפורסם`); } catch (e) { toast('התחברנו, אך קריאת התוכן מהמאגר נכשלה: ' + e.message, 'warn'); }
       render();
     } catch (e) { toast(e.message, 'bad'); }
   };
@@ -291,10 +303,18 @@ function tabPublish() {
     v.warnings.length ? h('div', { class: 'warn-list' }, h('ul', {}, v.warnings.map((e) => h('li', {}, e)))) : null));
   app.append(h('div', { class: 'card' }, h('h3', {}, 'קבצים ששונו'), changed.length ? h('ul', {}, changed.map((f) => h('li', {}, f + '.json'))) : h('div', { class: 'sub' }, 'אין שינויים לעומת הגרסה המפורסמת.')));
   const pub = h('button', { class: 'btn', disabled: !session.token || !!v.errors.length || !changed.length, onclick: async () => {
-    if (!confirm(`לפרסם ${changed.length} קבצים למשחק? המשחק יתעדכן תוך דקה-שתיים.`)) return;
-    try { pub.disabled = true; pub.textContent = 'מפרסם...'; const files = {}; for (const f of changed) files[f + '.json'] = JSON.stringify(draft[f]); const r = await api('/api/admin/publish', { files, message: 'Admin Studio: ' + changed.join(', ') });
-      original = { ...original, ...clone(Object.fromEntries(changed.map((f) => [f, draft[f]]))) }; toast('פורסם! עודכנו: ' + (r.published.join(', ') || 'ללא שינוי')); render(); }
-    catch (e) { toast(e.message + (e.details ? ' - ' + e.details.slice(0, 3).join('; ') : ''), 'bad'); pub.disabled = false; pub.textContent = 'פרסום למשחק'; } } }, 'פרסום למשחק');
+    try {
+      pub.disabled = true; pub.textContent = 'בודק מול הגרסה המפורסמת...';
+      // bring in whatever was published since this draft was last synced, so nothing newer is overwritten
+      const c = await api('/api/admin/content'); const live = {}; for (const [n, t] of Object.entries(c.files)) live[n.replace('.json', '')] = JSON.parse(t);
+      const upd = syncDraft({ ...clone(bundled), ...live });
+      const v2 = validateContent(draft); if (v2.errors.length) { toast('אחרי המיזוג עם הגרסה המפורסמת יש שגיאות. בדקו את לשונית הפרסום.', 'bad'); render(); return; }
+      const ch = changedFiles(); if (!ch.length) { toast('אין שינויים לפרסם'); render(); return; }
+      if (!confirm(`לפרסם ${ch.length} קבצים למשחק? המשחק יתעדכן תוך דקה-שתיים.`)) { render(); return; }
+      pub.textContent = 'מפרסם...'; const files = {}; for (const f of ch) files[f + '.json'] = JSON.stringify(draft[f]);
+      const r = await api('/api/admin/publish', { files, message: 'Admin Studio: ' + ch.join(', ') });
+      original = clone(draft); saveBase(); toast('פורסם! עודכנו: ' + (r.published.join(', ') || 'ללא שינוי')); render();
+    } catch (e) { toast(e.message + (e.details ? ' - ' + e.details.slice(0, 3).join('; ') : ''), 'bad'); pub.disabled = false; pub.textContent = 'פרסום למשחק'; } } }, 'פרסום למשחק');
   app.append(h('div', { class: 'card' }, h('h3', {}, 'פרסום'), h('div', { class: 'row' }, pub, h('button', { class: 'btn alt', onclick: () => changed.forEach((f) => download(f + '.json', JSON.stringify(draft[f], null, 1) + '\n')) }, 'הורדת הקבצים ששונו'),
     h('button', { class: 'btn red', onclick: () => { if (confirm('לאפס את הטיוטה לגרסה המפורסמת? שינויים שלא פורסמו יאבדו.')) { draft = clone(original); saveDraft(); render(); } } }, 'איפוס טיוטה')),
     session.token ? null : h('div', { class: 'sub', style: 'margin-top:8px' }, 'במצב מקומי: מורידים את הקבצים ומעתיקים אותם לתיקיית content במאגר, ואז דוחפים ל-GitHub.')));

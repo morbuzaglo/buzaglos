@@ -143,6 +143,10 @@ export function validateContent(c) {
     if (!rows.length || rows.some((r) => r.length !== rows[0].length)) E.push(`${w}: מפה לא מלבנית`);
     for (const r of rows) for (const ch of r) if (!m.legend?.[ch]) { E.push(`${w}: תו לא מוגדר במקרא (${ch})`); break; }
     for (const n of m.npcs || []) if (!npcs[n.id]) E.push(`${w}: דמות משנית לא קיימת (${n.id})`);
+    if (m.gen) {   // scenes built for a generated story: everything in them must be written for THIS scene
+      for (const n of m.npcs || []) if (!n.gives && !(Array.isArray(n.phrases) && n.phrases.length && n.phrases.every(textOk))) E.push(`${w}: לדמות ${n.id} חסרים משפטים ייחודיים לסצנה (phrases), גם אם זו דמות ממוחזרת`);
+      for (const p of m.props || []) if (p.id !== 'exit' && !p.deco && !p.gives && !p.ability && !textOk([].concat(p.interact?.text || '')[0])) E.push(`${w}: לאובייקט ${p.id || p.type} חסר טקסט אינטראקציה לסצנה (text)`);
+    }
     for (const p of m.props || []) { if (!PROP_TYPES.includes(p.type)) E.push(`${w}: סוג אובייקט לא מוכר (${p.type})`); if (p.gives && !items[p.gives]) E.push(`${w}: פריט לא קיים (${p.gives})`); }
     for (const d of m.doors || []) if (!maps[d.to]) E.push(`${w}: דלת למפה לא קיימת (${d.to})`);
     for (const p of m.pickups || []) if (!items[p.item]) E.push(`${w}: פריט לאיסוף לא קיים (${p.item})`);

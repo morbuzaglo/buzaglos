@@ -341,15 +341,17 @@ export default class World extends Phaser.Scene {
       return this.afterQuestChange();
     }
     // 3. small talk: a random phrase (never the same twice in a row)
-    const entry = (n.def.dialogues || []).find((d) => check(d.when));
+    // a scene can give a character its own lines (entry.phrases), which replace the character's general ones, so reused characters never say things from other levels
+    const own = n.entry?.phrases?.length ? n.entry.phrases : null;
+    const entry = own ? null : (n.def.dialogues || []).find((d) => check(d.when));
     if (entry) await UI.runDialogue(entry.id);
-    else if (n.def.phrases?.length) {
-      const pool = n.def.phrases.map((p) => (typeof p === 'string' ? { text: p } : p)).filter((p) => check(p.when));
+    else if ((own || n.def.phrases)?.length) {
+      const pool = (own || n.def.phrases).map((p) => (typeof p === 'string' ? { text: p } : p)).filter((p) => check(p.when));
       let pick; for (let i = 0; i < 6; i++) { pick = pool[(Math.random() * pool.length) | 0]; if (pick.text !== this.lastPhrase?.[id]) break; }
       (this.lastPhrase ||= {})[id] = pick.text;
       await UI.say([{ who: id, text: pick.text }]);
     }
-    if (n.def.shop && !entry) UI.openShop(n.def.shop);
+    if (n.def.shop && !entry && !own) UI.openShop(n.def.shop);
     this.afterQuestChange();
   }
 
@@ -378,6 +380,7 @@ export default class World extends Phaser.Scene {
     if (p.gives) { await this.giveFromProp(p); this.afterQuestChange(); return; }
     if (p.ability && p.flag && getFlag(p.flag) && p.id !== 'broken_fence') { await UI.say([{ who: 'narrator', text: STR.world.alreadyFixed }]); return; }
     if (p.interact?.dialogue) await UI.runDialogue(p.interact.dialogue);
+    else if (p.interact?.text) { const t = [].concat(p.interact.text); await UI.say([{ who: 'narrator', text: t[(Math.random() * t.length) | 0] }]); }   // a line written for this scene
     this.afterQuestChange();
   }
 
