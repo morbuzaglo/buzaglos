@@ -118,12 +118,15 @@ function extractJson(text) {
 const missingItems = (errors) => [...new Set(errors.map((e) => /פריט[^()]*לא קיים \(([A-Za-z0-9_]+)\)/.exec(e)?.[1]).filter(Boolean))];
 const prettyName = (id) => id.replace(/^item_/, '').replace(/_/g, ' ');
 
-async function generateStory(env, { story, context }) {
+async function generateStory(env, { story, context, bundle: prev, instruction }) {
   if (!story || story.length > 6000) throw new Error('story missing or too long');
   const files = await readContent(env); const full = {};
   for (const [name, t] of Object.entries(files)) full[name.replace('.json', '')] = JSON.parse(t);
   const user = `הקשר קיים במשחק (אל תמציא דברים מחוץ לו):\n${JSON.stringify(context || {}, null, 1)}\n\nהסיפור שהמשפחה סיפרה (כתבו ממנו משימה/ות):\n${story}`;
   const messages = [{ role: 'user', content: user }];
+  if (prev && instruction) { if (String(instruction).length > 2000) throw new Error('instruction too long'); messages.push({ role: 'assistant', content: JSON.stringify(prev) }, { role: 'user', content: `בקשת שינוי מהמשפחה: ${instruction}
+
+החזירו את ה-JSON המלא והמעודכן בלבד (אותו מבנה), ושמרו על כל מה שלא ביקשו לשנות.` }); }
   const text = await claude(env, { system: STORY_SYSTEM_PROMPT, messages });
   let bundle = extractJson(text), merged, v, fixes = 0;
   // Self-repair: validate, and send any errors back to Claude (missing items get created) until the bundle is ready to approve.

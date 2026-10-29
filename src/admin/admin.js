@@ -172,6 +172,14 @@ function tabStories() {
     return { bundle, m, v };
   };
   const pvBox = h('div');
+  const reviseTxt = h('textarea', { placeholder: 'מה לשנות? למשל: "שהדוד יהיה חמוד יותר", "להוסיף שלב עם חידון", "לשנות את הפרס ל-50 מטבעות"', style: 'min-height:70px' });
+  const reviseBtn = h('button', { class: 'btn alt', onclick: async () => {
+    if (!reviseTxt.value.trim()) return toast('כתבו מה לשנות', 'warn');
+    let bundle; try { bundle = JSON.parse(area.value); } catch (e) { return toast('ה-JSON לא תקין: ' + e.message, 'bad'); }
+    try { reviseBtn.disabled = true; reviseBtn.textContent = 'ה-AI מעדכן... (עד דקה)';
+      const r = await api('/api/admin/generate', { story: gen?.storyText || 'סיפור משפחתי', context: storyContext(), bundle, instruction: reviseTxt.value });
+      gen = { ...(gen || {}), storyText: gen?.storyText, bundleText: JSON.stringify(r.bundle, null, 1), errors: r.errors, warnings: r.warnings, conflicts: r.conflicts }; render();
+    } catch (e) { toast(e.message, 'bad'); reviseBtn.disabled = false; reviseBtn.textContent = 'עדכון עם AI'; } } }, 'עדכון עם AI');
   const preview = () => {
     const r = check(); if (!r) return;
     const qs = Object.values(r.bundle.quests || {});
@@ -195,7 +203,7 @@ function tabStories() {
   };
   const doAdd = () => { const r = check(); if (!r || r.v.errors.length) return toast('אי אפשר להוסיף לפני תיקון השגיאות', 'bad'); placeBundle(r.m.content, r.bundle); draft = r.m.content; saveDraft(); gen = null; toast('התוכן נוסף לטיוטה. אפשר לפרסם בלשונית פרסום.'); render(); };
   const add = h('button', { class: 'btn', onclick: doAdd }, 'אישור והוספה לטיוטה');
-  app.append(h('div', { class: 'card' }, h('h3', {}, 'תצוגה מקדימה ועריכה'), h('div', { class: 'sub' }, 'אפשר לערוך את ה-JSON ישירות לפני האישור.'), area, h('div', { class: 'row', style: 'margin:8px 0' }, h('button', { class: 'btn alt', onclick: check }, 'בדיקה'), h('button', { class: 'btn', onclick: preview }, '▶ צפייה במשחק'), add), pvBox, result));
+  app.append(h('div', { class: 'card' }, h('h3', {}, 'תצוגה מקדימה ועריכה'), h('div', { class: 'sub' }, 'אפשר לערוך את ה-JSON ישירות לפני האישור.'), area, session.token ? h('div', {}, h('label', {}, 'רוצים לשנות משהו? כתבו בעברית פשוטה ולחצו עדכון'), reviseTxt, reviseBtn) : null, h('div', { class: 'row', style: 'margin:8px 0' }, h('button', { class: 'btn alt', onclick: check }, 'בדיקה'), h('button', { class: 'btn', onclick: preview }, '▶ צפייה במשחק'), add), pvBox, result));
   if (area.value) check();
 }
 
