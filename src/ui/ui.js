@@ -322,11 +322,17 @@ export function showTitle() {
     b.append(cv, el('span', '', esc(c.name)), el('small', saved ? 'has' : '', saved ? STR.title.progress(saved.shards?.length || 0, Q.totalShards()) : STR.title.newTag));
     b.dataset.id = id;
     b.onclick = async () => {
-      sfx('tap');
-      if (id !== 'visitor' && cloudAutoOn()) { toast('טוענים את ההתקדמות...', 1500); try { await syncSlotFromCloud(id); } catch (e) { /* offline: play from this phone's save */ } }
-      if (peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; }
-      if (id === 'visitor') { const guest = askGuest(); if (!guest) return; if (cloudAutoOn() && await syncSlotFromCloud(id, guest.name) && peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; } t.classList.add('hidden'); startNewGame(id, guest); hooks.newGame?.(); return; }
-      if (confirm(STR.title.confirmPick(c.name))) { t.classList.add('hidden'); startNewGame(id); hooks.newGame?.(); }
+      try {
+        sfx('tap');
+        if (id !== 'visitor' && cloudAutoOn()) { toast('טוענים את ההתקדמות...', 1500); try { await syncSlotFromCloud(id); } catch (e) { /* offline: play from this phone's save */ } }
+        if (peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; }
+        if (id === 'visitor') {
+          const guest = await askGuest(); if (!guest) return;
+          if (cloudAutoOn()) { try { if (await syncSlotFromCloud(id, guest.name) && peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; } } catch (e) { /* offline */ } }
+          t.classList.add('hidden'); startNewGame(id, guest); hooks.newGame?.(); return;
+        }
+        if ((await modal(STR.title.confirmPick(c.name), ['כן, מתחילים', 'ביטול'])).i === 0) { t.classList.add('hidden'); startNewGame(id); hooks.newGame?.(); }
+      } catch (e) { toast('שגיאה: ' + (e.message || e), 4000); }
     };
     grid.appendChild(b);
   }
@@ -337,11 +343,21 @@ export function showTitle() {
   }
   t.appendChild(el('p', '', STR.title.tip));
 }
+/** In-page dialog (native confirm/prompt can be blocked by the browser, which made taps do nothing). */
+function modal(text, buttons, withInput) {
+  return new Promise((res) => {
+    const o = el('div', 'modal'); o.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px';
+    const box = el('div', 'card'); box.style.cssText = 'max-width:340px;width:100%;text-align:center'; box.appendChild(el('p', '', esc(text)));
+    let inp = null; if (withInput) { inp = el('input'); inp.style.cssText = 'width:100%;padding:10px;margin:8px 0;font-size:16px'; box.appendChild(inp); }
+    buttons.forEach((txt, i) => { const b = el('button', 'btn' + (i ? ' alt' : ''), esc(txt)); b.style.margin = '4px'; b.onclick = () => { o.remove(); res({ i, value: inp ? inp.value : '' }); }; box.appendChild(b); });
+    o.appendChild(box); document.body.appendChild(o); if (inp) inp.focus();
+  });
+}
 /** The guest character asks for a name and a form of address (Hebrew is gendered). */
-function askGuest() {
-  const name = prompt('איך קוראים לך? (אפשר להשאיר ריק)'); if (name === null) return null;
-  const girl = confirm('לאיזו לשון לפנות אליך? אישור = נקבה (בת), ביטול = זכר (בן)');
-  return { name: name.trim().slice(0, 14) || 'אורח', gender: girl ? 'f' : 'm' };
+async function askGuest() {
+  const n = await modal('איך קוראים לך? (אפשר להשאיר ריק)', ['המשך', 'ביטול'], true); if (n.i === 1) return null;
+  const g = await modal('לאיזו לשון לפנות אליך?', ['בת (לשון נקבה)', 'בן (לשון זכר)']);
+  return { name: (n.value || '').trim().slice(0, 14) || 'אורח', gender: g.i === 0 ? 'f' : 'm' };
 }
 export function hideTitle() { $('title').classList.add('hidden'); }
 

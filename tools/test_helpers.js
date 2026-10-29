@@ -6,7 +6,7 @@ window.T = {
   near: (id) => { const w = T.w(); const n = w.npcs.find((x) => x.id === id); w.player.x = n.spr.x + 12; w.player.y = n.spr.y; w.player.dir = 2; return 1; },
   nearProp: (id) => { const w = T.w(); const r = w.props.find((x) => x.p.id === id); w.player.x = r.p.x * 16 + 8; w.player.y = (r.p.y + 2) * 16 - 2; w.player.dir = 1; return 1; },
   tp: (map, x, y) => { T.w().changeMap(map, x, y); return 1; },
-  skipIntro: async () => { window.confirm = () => true; (document.querySelector('.pick[data-id="' + (window.__who || 'mordechai') + '"]') || document.getElementById('btnPlay')).click(); await T.sleep(600); await T.click(30); },
+  skipIntro: async () => { window.confirm = () => true; (document.querySelector('.pick[data-id="' + (window.__who || 'mordechai') + '"]') || document.getElementById('btnPlay')).click(); await T.sleep(900); document.querySelector('.modal .btn')?.click(); await T.sleep(600); await T.click(30); },
   accept: async () => { await T.sleep(400); await T.click(8); await T.sleep(400); document.querySelector('#dialogue .choice')?.click(); await T.sleep(500); },
   closeReward: async () => { for (let i = 0; i < 6; i++) { const b = document.getElementById('btnContinue'); if (b) { b.click(); await T.sleep(400); } else await T.sleep(300); } },
   playTiming: async () => {
