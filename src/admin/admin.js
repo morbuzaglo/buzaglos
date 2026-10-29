@@ -237,7 +237,7 @@ function tabStories() {
       h('div', { class: 'row' }, h('button', { class: 'btn alt', onclick: () => { pvBox.querySelector('iframe').src = '../index.html?preview=1&t=' + Date.now(); } }, 'התחלה מחדש'), h('a', { class: 'btn alt', href: src, target: '_blank' }, 'פתיחה במסך מלא'), h('button', { class: 'btn', onclick: doAdd }, '✓ אישור והוספה למשחק')));
   };
   const preview = () => runPreview(null, false);
-  const doAdd = () => { const r = check(); if (!r || r.v.errors.length) return toast('אי אפשר להוסיף לפני תיקון השגיאות', 'bad'); placeBundle(r.m.content, r.bundle); draft = r.m.content; saveDraft(); gen = null; toast('התוכן נוסף לטיוטה. אפשר לפרסם בלשונית פרסום.'); render(); };
+  const doAdd = () => { const r = check(); if (!r || r.v.errors.length) return toast('אי אפשר להוסיף לפני תיקון השגיאות', 'bad'); placeBundle(r.m.content, r.bundle); draft = r.m.content; draft.config.finalShards = Object.values(draft.quests).filter((q) => q.reward?.shard).length; saveDraft(); gen = null; toast('התוכן נוסף לטיוטה. אפשר לפרסם בלשונית פרסום.'); render(); };
   const add = h('button', { class: 'btn', onclick: doAdd }, 'אישור והוספה לטיוטה');
   app.append(h('div', { class: 'card' }, h('h3', {}, 'תצוגה מקדימה ועריכה'), h('div', { class: 'sub' }, 'אפשר לערוך את ה-JSON ישירות לפני האישור.'), area, session.token ? h('div', {}, h('label', {}, 'רוצים לשנות משהו? כתבו בעברית פשוטה ולחצו עדכון'), reviseTxt, reviseBtn) : null, h('div', { class: 'row', style: 'margin:8px 0' }, h('button', { class: 'btn alt', onclick: check }, 'בדיקה'), h('button', { class: 'btn', onclick: preview }, '▶ צפייה במשחק'), add), pvBox, result));
   if (area.value) check();

@@ -42,6 +42,7 @@ export default class World extends Phaser.Scene {
     // rewards are shown after the current dialogue closes
     this.pendingRewards = [];
     UI.hooks.enterStory = (qid) => this.enterStory(qid);
+    UI.hooks.missionPicked = () => { const hub = content.config.hub || { map: 'house' }; if (this.map?.id === hub.map && !this.busy && !this.transitioning && this.player) { UI.closePanel?.(); this.changeMap(hub.map, Math.floor(this.player.x / TILE), Math.floor(this.player.y / TILE)); } };
     onChange((type, data) => {
       if (type === 'questDone') this.pendingRewards.push(data);
       if (type === 'stepDone' || type === 'questStarted') this.time.delayedCall(350, () => this.runAuto());
@@ -394,7 +395,7 @@ export default class World extends Phaser.Scene {
       sfx(gained.shard ? 'shard' : 'win');
       await new Promise((res) => UI.showReward(gained.shard ? STR.world.shardRestored : STR.world.questComplete, lines, res));
       if (quest.scene && this.inStoryMap(quest)) this.exitStory();
-      if (gained.shard && S.state.shards.length >= content.config.finalShards) await UI.say([{ who: 'narrator', text: STR.world.allShards }]);
+      if (gained.shard && S.state.shards.length >= Q.totalShards()) await UI.say([{ who: 'narrator', text: STR.world.allShards }]);
     }
     this.busy = was;
     this.afterQuestChange();

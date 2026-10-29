@@ -54,9 +54,9 @@ export function refreshHud() {
   $('hudLvl').textContent = `${STR.lvl} ${st.level}`;
   $('hudXp').style.width = Math.round((st.xp / xpForLevel(st.level)) * 100) + '%';
   $('hudCoins').textContent = st.coins;
-  $('hudShards').textContent = `${st.shards.length}/${content.config.finalShards} ◆`;
+  $('hudShards').textContent = `${st.shards.length}/${Q.totalShards()} ◆`;
   const tq = Q.trackedQuest();
-  $('hudQuest').innerHTML = tq ? `<b>${T(tq.title)}</b><br>${T(Q.objective(tq.id))}` : `<span class="dim">${st.shards.length >= content.config.finalShards ? STR.goAttic : (Q.currentMission() ? STR.mission.hint : STR.explore)}</span>`;
+  $('hudQuest').innerHTML = tq ? `<b>${T(tq.title)}</b><br>${T(Q.objective(tq.id))}` : `<span class="dim">${st.shards.length >= Q.totalShards() ? STR.goAttic : (Q.currentMission() ? STR.mission.hint : STR.explore)}</span>`;
   const b = $('btnB'); const ab = ch.ability; b.innerHTML = `B<small>${esc(ab?.name || '')}</small><span class="cd"></span>`;
 }
 
@@ -183,6 +183,17 @@ function tabQuests(body) {
     const step = Q.currentStep(q.id);
     body.appendChild(card(`<b>${T(q.title)}</b><br>${T(q.summary || '')}<br><span class="goal">▶ ${T(Q.objective(q.id))}</span>${step?.hint ? `<br><span class="sub">${STR.quests.tip}: ${T(step.hint)}</span>` : ''}`));
   });
+  const todo = Q.missions().filter((q) => S.state.quests[q.id]?.state !== 'done'), cur = Q.currentMission();
+  if (todo.length > 1) {
+    body.appendChild(el('h3', '', STR.quests.pickTitle)); body.appendChild(card(`<span class="sub">${STR.quests.pickHelp}</span>`));
+    todo.forEach((q) => {
+      const c = card(''), row = el('div', 'row'), on = cur?.id === q.id, started = S.state.quests[q.id]?.state === 'active';
+      row.append(el('div', 'grow', `${started ? '▶ ' : ''}<b>${T(q.title)}</b><br><span class="sub">${T(q.summary || '')}</span>`));
+      const b = el('button', 'btn' + (on ? ' alt' : ''), on ? STR.quests.picked : STR.quests.pick); b.disabled = on;
+      b.onclick = () => { S.state.nextMission = q.id; saveGame(); sfx('tap'); closePanel(); hooks.missionPicked?.(); toast(`השלב הבא: ${tpl(q.title)}`); };
+      row.appendChild(b); c.appendChild(row); body.appendChild(c);
+    });
+  }
   const done = Q.allQuests().filter((q) => S.state.quests[q.id]?.state === 'done');
   if (done.length) { body.appendChild(el('h3', '', STR.quests.done)); done.forEach((q) => body.appendChild(card(`<span class="done">✔</span> ${T(q.title)}`))); }
 }
@@ -214,7 +225,7 @@ function tabBag(body) {
   if (ups.length) { body.appendChild(el('h3', '', STR.bag.upgrades)); ups.forEach((id) => { const it = content.items[id]; const c = card(''); const row = el('div', 'row'); row.append(iconCanvas(it), el('div', 'grow', `<b>${esc(it.name)}</b><br><span class="sub">${esc(it.desc)}</span>`)); c.appendChild(row); body.appendChild(c); }); }
 }
 function tabAlbum(body) {
-  const total = content.config.finalShards;
+  const total = Q.totalShards();
   body.appendChild(card(`<b>${STR.album.title}</b><br><span class="sub">${STR.album.restored(S.state.shards.length, total)}</span>`));
   Q.allQuests().filter((q) => q.reward?.shard).forEach((q) => {
     const got = S.state.shards.includes(q.reward.shard.id);
@@ -257,7 +268,7 @@ function tabSettings(body) {
 // ------------------------------------------------------------------ album: choose a memory (story) to play
 export function openStories() {
   const body = openPanelRaw(STR.stories.title, () => refreshHud());
-  body.appendChild(card(`<b>${STR.album.title}</b><br><span class="sub">${STR.stories.help}</span><br>${STR.album.restored(S.state.shards.length, content.config.finalShards)}`));
+  body.appendChild(card(`<b>${STR.album.title}</b><br><span class="sub">${STR.stories.help}</span><br>${STR.album.restored(S.state.shards.length, Q.totalShards())}`));
   const order = { active: 0, new: 1, done: 2, locked: 3 };
   Q.allQuests().filter((q) => q.scene).sort((a, b) => order[Q.questStatus(a)] - order[Q.questStatus(b)]).forEach((q) => {
     const st = Q.questStatus(q);
@@ -311,7 +322,7 @@ export function showTitle() {
   for (const [id, c] of Object.entries(content.characters)) {
     const saved = peekSave(id);
     const b = el('button', 'pick' + (id === last ? ' last' : '')); const cv = el('canvas'); paintPortrait(cv, c.look);
-    b.append(cv, el('span', '', esc(c.name)), el('small', saved ? 'has' : '', saved ? STR.title.progress(saved.shards?.length || 0, content.config.finalShards) : STR.title.newTag));
+    b.append(cv, el('span', '', esc(c.name)), el('small', saved ? 'has' : '', saved ? STR.title.progress(saved.shards?.length || 0, Q.totalShards()) : STR.title.newTag));
     b.dataset.id = id;
     b.onclick = () => {
       sfx('tap');

@@ -100,4 +100,10 @@ export function questStatus(q) {
 }
 
 export const missions = () => allQuests().filter((q) => q.scene).sort((a, b) => (a.order || 99) - (b.order || 99));
-export const currentMission = () => missions().find((q) => qs()[q.id]?.state !== 'done') || null;
+/** The level that calls the player next: the one the player picked in the menu (any order), else the first unfinished one. */
+export const currentMission = () => {
+  const list = missions(), pick = S.state.nextMission;
+  return (pick && list.find((q) => q.id === pick && qs()[q.id]?.state !== 'done')) || list.find((q) => qs()[q.id]?.state !== 'done') || null;
+};
+/** Every memory shard in the game (grows automatically when levels are added). */
+export const totalShards = () => allQuests().filter((q) => q.reward?.shard).length;

@@ -95,7 +95,7 @@ export const storyMethods = {
     (this.labels ||= []).push({ el: m, spr: rec.spr, scale: rec.spr.scaleY, extra: 22, mark: true });
   },
   announceMission() {
-    if (!this.mission || !this.callerId) { if (!this.mission && content.config.finalShards && S.state.shards.length >= content.config.finalShards) UI.queueToast(STR.mission.allDone, 3000); return; }
+    if (!this.mission || !this.callerId) { if (!this.mission && Q.totalShards() && S.state.shards.length >= Q.totalShards()) UI.queueToast(STR.mission.allDone, 3000); return; }
     const ch = content.characters[this.callerId];
     UI.queueToast(STR.mission.calls(content.npcs[this.callerId].name, ch?.gender), 3200); sfx('door');
   },
