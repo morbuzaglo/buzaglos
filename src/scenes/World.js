@@ -234,7 +234,7 @@ export default class World extends Phaser.Scene {
     this.updatePickups();
     // interaction hint
     this.updateHint();
-    this.tickStory(dt);
+    this.tickStory(dt); this.updateWander(dt);
     this.updateCompanion(); this.updateLabels(); this.updateGuide(); this.abilityHintT = (this.abilityHintT || 0) - dt; if (this.abilityHintT <= 0) { this.abilityHintT = 0.35; this.updateAbilityHint(); }
     // periodic
     this.gotoT += dt; if (this.gotoT > 0.5) { this.gotoT = 0; if (Q.checkGoto(this.map.id, tx, ty)) this.afterQuestChange(); }

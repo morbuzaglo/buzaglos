@@ -1,7 +1,7 @@
 // Story scenes: each family story is its own playable scene (map + steps). Mixed into the World scene.
 import { content } from '../content.js';
 import { S, saveGame, addItem, removeItem, itemCount } from '../state.js';
-import { characterTexture } from '../art.js';
+import { characterTexture, TILE } from '../art.js';
 import * as Q from '../systems/quests.js';
 import * as UI from '../ui/ui.js';
 import { playMinigame } from '../ui/minigames.js';
@@ -24,10 +24,70 @@ export const storyMethods = {
   setupMission() {
     const hub = content.config.hub || { map: 'house' };
     if (!this.callerId || this.map.id !== hub.map) return;
-    const pt = content.config.callPoint || HUB_CALL;
+    const pt = this.pickCallSpot() || content.config.callPoint || HUB_CALL;
     this.addNpc({ id: this.callerId, x: pt.x, y: pt.y, dir: pt.dir ?? 2, call: true });
     this.callerRec = this.npcs[this.npcs.length - 1];
     if (this.callerRec) { this.callerRec.spr.label?.el.classList.add('calling'); this.markCaller(this.callerRec); }
+  },
+  /** A fresh random open spot in the house for the caller each time (never the same as last time). */
+  pickCallSpot() {
+    const W = this.mapW, H = this.mapH, free = (x, y) => !this.solid.has(x + ',' + y) && x > 0 && y > 0 && x < W - 1 && y < H - 1;
+    const pl = { x: S.state.x, y: S.state.y };
+    const spots = [];
+    for (let y = 2; y < H - 1; y++) for (let x = 1; x < W - 1; x++) {
+      if (!free(x, y) || !free(x + 1, y) || !free(x - 1, y) || !free(x, y + 1) || !free(x, y - 1)) continue;
+      if (Math.hypot(x - pl.x, y - pl.y) < 3) continue;
+      if ((this.doors || []).some((d) => Math.hypot(x - d.x, y - d.y) < 3)) continue;
+      if (this.npcs.some((n) => Math.hypot(x - n.tx, y - n.ty) < 2.5)) continue;
+      if (S.lastCallSpot && Math.hypot(x - S.lastCallSpot.x, y - S.lastCallSpot.y) < 4) continue;
+      spots.push({ x, y });
+    }
+    if (!spots.length) return null;
+    const pt = spots[Math.floor(Math.random() * spots.length)];
+    S.lastCallSpot = pt;
+    return { x: pt.x, y: pt.y, dir: pl.x < pt.x ? 2 : 3 };
+  },
+  /** Family members in the house stroll a few steps now and then, then stand still again. */
+  updateWander(dt) {
+    const hub = content.config.hub || { map: 'house' };
+    if (this.map.id !== hub.map || this.busy || this.transitioning) return;
+    for (const n of this.npcs) {
+      if (n.moving || n.def.wander === false || n === this.callerRec || n.def.scale) continue;
+      n.wanderT = (n.wanderT ?? (3 + Math.random() * 6)) - dt;
+      if (n.wanderT > 0) continue;
+      n.wanderT = 4 + Math.random() * 8;
+      if (n.homeX === undefined) { n.homeX = n.tx; n.homeY = n.ty; }
+      const dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]].sort(() => Math.random() - 0.5);
+      const steps = 1 + Math.floor(Math.random() * 3);
+      for (const [dx, dy] of dirs) {
+        let x = n.tx, y = n.ty, ok = 0;
+        for (let i = 0; i < steps; i++) {
+          const nx = x + dx, ny = y + dy;
+          if (this.solid.has(nx + ',' + ny) || nx < 1 || ny < 2 || nx >= this.mapW - 1 || ny >= this.mapH - 1) break;
+          if (Math.hypot(nx - n.homeX, ny - n.homeY) > 4) break;
+          if (this.doors.some((d) => Math.hypot(nx - d.x, ny - d.y) < 2)) break;
+          if (Math.hypot(nx * TILE + 8 - this.player.x, ny * TILE + 15 - this.player.y) < 20) break;
+          x = nx; y = ny; ok++;
+        }
+        if (ok) { this.wanderTo(n, dx, dy, ok); break; }
+      }
+    }
+  },
+  wanderTo(n, dx, dy, count) {
+    const dir = dx < 0 ? 2 : dx > 0 ? 3 : dy < 0 ? 1 : 0;
+    n.moving = true;
+    const stepOnce = (left) => {
+      if (!n.spr.scene || !this.npcs.includes(n)) return;
+      const nx = n.tx + dx, ny = n.ty + dy;
+      if (left === 0 || this.busy || this.solid.has(nx + ',' + ny) || Math.hypot(nx * TILE + 8 - this.player.x, ny * TILE + 15 - this.player.y) < 18) {
+        n.spr.play(`${n.key}_idle${dir}`); n.moving = false; return;
+      }
+      this.solid.delete(n.tx + ',' + n.ty); this.solid.add(nx + ',' + ny);
+      n.tx = nx; n.ty = ny;
+      n.spr.play(`${n.key}_walk${dir}`, true);
+      this.tweens.add({ targets: n.spr, x: nx * TILE + 8, y: ny * TILE + 15, duration: 300, onUpdate: () => n.spr.setDepth(n.spr.y), onComplete: () => stepOnce(left - 1) });
+    };
+    stepOnce(count);
   },
   markCaller(rec) {
     const host = document.getElementById('labels'); if (!host) return;
