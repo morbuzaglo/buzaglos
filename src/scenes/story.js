@@ -255,6 +255,9 @@ export const storyMethods = {
   tickStory(dt) {
     const q = Q.activeQuests().find((x) => x.scene && this.inStoryMap(x));
     const step = q && Q.currentStep(q.id);
+    // Safety net: an automatic step (cutscene, choice, mini-game) that missed its trigger (the screen was busy at that moment) is retried, so a level can never stall on it.
+    this.autoT = (this.autoT || 0) + dt;
+    if (this.autoT > 0.8) { this.autoT = 0; if (step && Q.isAuto(step) && !this.autoRunning) this.runAuto(); }
     if (!(step?.type === 'collect' && step.timeLimit)) { if (this.timer) { this.timer = null; UI.setTimer(null); } return; }
     const idx = S.state.quests[q.id].step;
     if (!this.timer || this.timer.qid !== q.id || this.timer.idx !== idx) this.timer = { qid: q.id, idx, left: step.timeLimit };
