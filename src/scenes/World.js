@@ -146,6 +146,7 @@ export default class World extends Phaser.Scene {
     const def = content.npcs[n.id]; if (!def) return;
     if (this.callerId && !n.call && n.id === this.callerId) return;           // the caller stands at the call point instead
     if (def.character && def.character === S.state.activeChar) return;     // you are this person right now
+    { const sq = Q.activeStory(); if (sq && S.state.quests[sq.id]?.companion === n.id && (sq.maps || [sq.scene?.map]).includes(this.map?.id)) return; }   // already walking with you as the companion
     const key = characterTexture(this, 'n_' + n.id, def.look);
     const spr = this.add.sprite(n.x * TILE + 8, n.y * TILE + 15, key, 0).setOrigin(0.5, 32 / 34);
     spr.play(`${key}_idle${n.dir || 0}`);
