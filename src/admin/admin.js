@@ -80,23 +80,35 @@ function lookCanvas(look, scale = 8) {
   const [c, ctx] = makeCanvas(CHAR_W * 4, CHAR_H); for (let d = 0; d < 4; d++) drawCharFrame(ctx, d * CHAR_W, 0, [0, 2, 1, 3][d], 0, look);
   c.className = 'px'; c.style.width = c.width * scale / 2 + 'px'; c.style.height = c.height * scale / 2 + 'px'; return c;
 }
+const GROUPS = [['extended', 'משפחה מורחבת'], ['friends', 'חברים'], ['extras', 'ניצבים (דמויות רקע בסצנות)']];
+/** Category of a secondary character: explicit n.group, else guessed from the role. */
+function groupOf(n) {
+  if (n.group) return n.group;
+  const r = n.role || '';
+  if (/חבר/.test(r) && !/קרוב|משפחה/.test(r)) return 'friends';
+  if (/קרוב|משפחה|בעל|אשת|בן זוג|בת זוג|דוד|דודה|סב|סבתא|נכד|בן דוד|בת דוד/.test(r)) return 'extended';
+  return 'extras';
+}
 function tabFamily() {
-  const list = h('div', { class: 'card' }, h('h3', {}, 'בני משפחה (גיבורים)'));
+  const list = h('div', { class: 'card' }, h('h3', {}, 'משפחת בוזגלו (גיבורים שאפשר לשחק בהם)'));
   const chips = h('div', { class: 'chips' });
   for (const [id, c] of Object.entries(draft.characters)) chips.append(h('span', { class: 'chip' + (sel.kind === 'characters' && sel.id === id ? ' on' : ''), onclick: () => { sel = { kind: 'characters', id }; render(); } }, c.name));
   chips.append(h('span', { class: 'chip', onclick: () => addPerson('characters') }, '+ בן משפחה'));
-  list.append(chips, h('h3', {}, 'קרובים וחברים (דמויות משנה)'));
-  const chips2 = h('div', { class: 'chips' });
-  for (const [id, c] of Object.entries(draft.npcs)) chips2.append(h('span', { class: 'chip' + (sel.kind === 'npcs' && sel.id === id ? ' on' : ''), onclick: () => { sel = { kind: 'npcs', id }; render(); } }, c.name));
-  chips2.append(h('span', { class: 'chip', onclick: () => addPerson('npcs') }, '+ קרוב/חבר'));
-  list.append(chips2); app.append(list);
+  list.append(chips);
+  for (const [g, title] of GROUPS) {
+    const row = h('div', { class: 'chips' });
+    for (const [id, c] of Object.entries(draft.npcs)) if (!c.character && groupOf(c) === g) row.append(h('span', { class: 'chip' + (sel.kind === 'npcs' && sel.id === id ? ' on' : ''), onclick: () => { sel = { kind: 'npcs', id }; render(); } }, c.name));
+    row.append(h('span', { class: 'chip', onclick: () => addPerson('npcs', g) }, '+ הוספה'));
+    list.append(h('h3', {}, title), row);
+  }
+  app.append(list);
   if (sel.id && draft[sel.kind][sel.id]) app.append(personEditor(sel.kind, sel.id));
 }
-function addPerson(kind) {
+function addPerson(kind, group) {
   const name = prompt('שם (בעברית):'); if (!name) return;
   const id = prompt('מזהה באנגלית (אותיות קטנות, למשל: dana):', slug(name)); if (!id || !/^[a-z][a-z0-9_]{1,40}$/.test(id)) return toast('מזהה לא תקין', 'bad');
   if (draft[kind][id]) return toast('המזהה כבר קיים', 'bad');
-  const base = { name, role: kind === 'npcs' ? 'קרוב משפחה' : 'בן משפחה', look: { ...DEFAULT_LOOK }, placeholder: true };
+  const base = { name, role: kind === 'npcs' ? ({ friends: 'חבר/ה', extras: 'דמות משנית' }[group] || 'קרוב משפחה') : 'בן משפחה', look: { ...DEFAULT_LOOK }, placeholder: true, ...(kind === 'npcs' && group ? { group } : {}) };
   draft[kind][id] = kind === 'characters' ? { ...base, gender: 'f', bio: '', ability: { type: 'dash', name: 'ספרינט', desc: 'פרץ של מהירות.', cooldown: 5 }, strength: '', weakness: '', catchphrase: '', theme: '#3a7bd5' } : { ...base, id, dialogues: [{ id: id + '_default' }] };
   if (kind === 'npcs') draft.dialogues[id + '_default'] = { start: { who: id, text: 'שלום!', next: null } };
   if (kind === 'characters') draft.config.startChars.push(id);
@@ -107,7 +119,7 @@ function personEditor(kind, id) {
   const card = h('div', { class: 'card' }, h('h3', {}, `עריכה: ${p.name}`));
   const field = (label, key, type = 'text', obj = p) => { const i = type === 'area' ? h('textarea', {}, obj[key] || '') : h('input', { type, value: obj[key] ?? '' }); i.addEventListener('change', () => { obj[key] = type === 'number' ? +i.value : i.value; saveDraft(); }); return h('div', {}, h('label', {}, label), i); };
   const sct = (label, key, opts, obj = p, onch) => { const s = h('select', {}, opts.map((o) => h('option', { value: o[0] ?? o, selected: (obj[key] ?? '') === (o[0] ?? o) }, o[1] ?? o))); s.addEventListener('change', () => { obj[key] = s.value === '' ? undefined : s.value; saveDraft(); if (onch) onch(); }); return h('div', {}, h('label', {}, label), s); };
-  card.append(h('div', { class: 'grid2' }, field('שם', 'name'), field('תפקיד', 'role'), isChar ? sct('מגדר (לניסוח בעברית)', 'gender', [['f', 'נקבה'], ['m', 'זכר']]) : h('div'), field('מאפיין / קשר משפחתי', 'relations')));
+  card.append(h('div', { class: 'grid2' }, field('שם', 'name'), field('תפקיד', 'role'), isChar ? sct('מגדר (לניסוח בעברית)', 'gender', [['f', 'נקבה'], ['m', 'זכר']]) : (() => { const g = h('select', {}, GROUPS.map(([v, t]) => h('option', { value: v, selected: groupOf(p) === v }, t))); g.addEventListener('change', () => { p.group = g.value; saveDraft(); render(); }); return h('div', {}, h('label', {}, 'קטגוריה'), g); })(), field('מאפיין / קשר משפחתי', 'relations')));
   if (isChar) card.append(field('תיאור / אישיות', 'bio', 'area'), h('div', { class: 'grid2' }, field('חוזקה', 'strength'), field('חולשה', 'weakness')), field('משפט מזהה', 'catchphrase'),
     h('h3', {}, 'יכולת מיוחדת (כפתור B)'), h('div', { class: 'grid2' }, sct('סוג', 'type', [['dash', 'ריצה מהירה'], ['sniff', 'גילוי חפצים נסתרים'], ['charm', 'קסם אישי (טיפ מדמויות)'], ['fix', 'תיקון חפצים']], p.ability), field('שם היכולת', 'name', 'text', p.ability), field('תיאור', 'desc', 'text', p.ability), field('זמן טעינה (שניות)', 'cooldown', 'number', p.ability)));
   // look

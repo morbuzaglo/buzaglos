@@ -27,7 +27,7 @@ RULES
   Minigame configs: timing {rounds:3,speed:1.1,zone:0.25}; memory {pairs:6}; reaction {targets:10,time:20}; quiz {questions:[{q,a:[3 answers],c:correctIndex}]}.
 - "text" of a step is the objective shown to the player (infinitive/impersonal Hebrew, e.g. "למצוא את המפתח בחצר"); it may use {self:..|other:..}.
 - Every item you reference must exist in context or be defined in "items" ({id,name,type:"quest"|"collectible"|"consumable",icon:one of food,key,gem,book,hat,shoe,potion,toy,star,phone,remote,ticket,shirt,coin,color:"#rrggbb",desc}). Items that are collected need no placement: the game scatters them in the scene (or put them in a scene's pickups / a prop's gives).
-- New secondary characters (a clerk, a relative...) get an npc: {id,name,role,look:{skin,hair,hairStyle:short|long|curly|bun|bald,shirt,pants,accessory:none|glasses|beard,hat?:hex},phrases:[2-4 short Hebrew lines they say when talked to]}. Place them in a scene's "npcs". Give every scene some such background characters.
+- New secondary characters (a clerk, a relative...) get an npc: {id,name,role,"group":"extended" (relatives) | "friends" (friends) | "extras" (background people in a scene),look:{skin,hair,hairStyle:short|long|curly|bun|bald,shirt,pants,accessory:none|glasses|beard,hat?:hex},phrases:[2-4 short Hebrew lines they say when talked to]}. Place them in a scene's "npcs". Give every scene some such background characters.
 - Humor: gentle teasing is fine, but nothing humiliating, sexual, medical, or about money problems/conflicts. If the story contains something sensitive, leave it out and mention it in "notes".
 - Keep it playable: 1 quest per story (2 only if clearly two incidents). Prefer collect/minigame/quiz steps tied to what happened.`;
 
