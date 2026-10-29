@@ -115,17 +115,36 @@ function extractJson(text) {
   return JSON.parse(s.slice(a, b + 1));
 }
 
+const missingItems = (errors) => [...new Set(errors.map((e) => /פריט[^()]*לא קיים \(([A-Za-z0-9_]+)\)/.exec(e)?.[1]).filter(Boolean))];
+const prettyName = (id) => id.replace(/^item_/, '').replace(/_/g, ' ');
+
 async function generateStory(env, { story, context }) {
   if (!story || story.length > 6000) throw new Error('story missing or too long');
-  const user = `הקשר קיים במשחק (אל תמציא דברים מחוץ לו):\n${JSON.stringify(context || {}, null, 1)}\n\nהסיפור שהמשפחה סיפרה (כתבו ממנו משימה/ות):\n${story}`;
-  const text = await claude(env, { system: STORY_SYSTEM_PROMPT, messages: [{ role: 'user', content: user }] });
-  const bundle = extractJson(text);
-  // validate against a copy of the live content merged with the bundle
   const files = await readContent(env); const full = {};
   for (const [name, t] of Object.entries(files)) full[name.replace('.json', '')] = JSON.parse(t);
-  const merged = mergeBundle(full, bundle);
-  const v = validateContent(merged.content);
-  return { bundle, conflicts: merged.conflicts, errors: v.errors, warnings: v.warnings };
+  const user = `הקשר קיים במשחק (אל תמציא דברים מחוץ לו):\n${JSON.stringify(context || {}, null, 1)}\n\nהסיפור שהמשפחה סיפרה (כתבו ממנו משימה/ות):\n${story}`;
+  const messages = [{ role: 'user', content: user }];
+  const text = await claude(env, { system: STORY_SYSTEM_PROMPT, messages });
+  let bundle = extractJson(text), merged, v, fixes = 0;
+  // Self-repair: validate, and send any errors back to Claude (missing items get created) until the bundle is ready to approve.
+  for (let round = 0; ; round++) {
+    merged = mergeBundle(full, bundle); v = validateContent(merged.content);
+    if (!v.errors.length || round >= 3) break;
+    fixes++;
+    const miss = missingItems(v.errors);
+    messages.push({ role: 'assistant', content: JSON.stringify(bundle) });
+    messages.push({ role: 'user', content: `הבדיקה האוטומטית מצאה שגיאות:\n- ${v.errors.join('\n- ')}\n\n${miss.length ? `פריטים חסרים: ${miss.join(', ')}. הגדירו אותם במפתח "items" (שם בעברית, type, icon, color, desc), או השתמשו בפריטים קיימים מההקשר.\n` : ''}תקנו והחזירו את ה-JSON המלא והמתוקן בלבד (אותו מבנה כמו קודם), בלי הסברים.` });
+    try { bundle = extractJson(await claude(env, { system: STORY_SYSTEM_PROMPT, messages })); } catch { break; }
+  }
+  // Fallback: any item that still does not exist is created automatically.
+  const miss = missingItems(v.errors).filter((id) => !(full.items || {})[id]);
+  if (miss.length) {
+    bundle.items ||= {};
+    for (const id of miss) if (!bundle.items[id]) bundle.items[id] = { id, name: prettyName(id), type: 'quest', icon: 'star', color: '#ffd23f', desc: 'פריט מהסיפור' };
+    merged = mergeBundle(full, bundle); v = validateContent(merged.content);
+    bundle.notes = [].concat(bundle.notes || [], `נוצרו אוטומטית פריטים: ${miss.join(', ')} (אפשר לערוך שם ואייקון בטיוטה)`);
+  }
+  return { bundle, conflicts: merged.conflicts, errors: v.errors, warnings: v.warnings, autoFixed: fixes };
 }
 
 async function visionLook(env, { image }) {

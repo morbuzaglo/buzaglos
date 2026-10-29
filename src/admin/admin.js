@@ -150,7 +150,7 @@ function tabStories() {
   for (const [id, c] of Object.entries(draft.characters)) who.append(h('span', { class: 'chip' + (picked.has(id) ? ' on' : ''), onclick: (e) => { picked.has(id) ? picked.delete(id) : picked.add(id); e.target.classList.toggle('on'); gen = { ...(gen || {}), picked: [...picked] }; } }, c.name));
   const go = h('button', { class: 'btn', onclick: async () => {
     if (story.value.trim().length < 20) return toast('כתבו קצת יותר על הסיפור', 'warn');
-    try { go.disabled = true; go.textContent = 'ה-AI כותב...'; const names = [...picked].map((id) => draft.characters[id].name).join(', ');
+    try { go.disabled = true; go.textContent = 'ה-AI כותב ובודק... (עד דקה)'; const names = [...picked].map((id) => draft.characters[id].name).join(', ');
       const r = await api('/api/admin/generate', { story: (names ? `משתתפים: ${names}\n` : '') + story.value, context: storyContext() });
       gen = { storyText: story.value, picked: [...picked], bundleText: JSON.stringify(r.bundle, null, 1), errors: r.errors, warnings: r.warnings, conflicts: r.conflicts }; render();
     } catch (e) { toast(e.message, 'bad'); go.disabled = false; go.textContent = 'יצירה עם AI'; } } }, 'יצירה עם AI');
