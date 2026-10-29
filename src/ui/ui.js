@@ -77,7 +77,7 @@ function showDialogueBox(who, rawText, choices) {
     if (look) paintPortrait(c, look); else c.style.display = 'none';
     d.appendChild(w);
   }
-  const t = el('div', 'txt'); d.appendChild(t);
+  const t = el('div', 'txt'); t.dir = 'auto'; d.appendChild(t);
   let i = 0;
   clearInterval(typing);
   typing = setInterval(() => { i++; t.textContent = text.slice(0, i); if (i % 3 === 0) sfx('talk'); if (i >= text.length) finishTyping(choices, d); }, 24);
@@ -92,7 +92,7 @@ function finishTyping(choices, d) {
   if (d.querySelector('.choices') || d.querySelector('.more')) return;
   if (choices?.length) {
     const box = el('div', 'choices');
-    choices.forEach((c, idx) => { const b = el('button', 'choice', T(c.text)); b.onclick = () => { sfx('tap'); if (dlgResolve) { const r = dlgResolve; dlgResolve = null; r(idx); } }; box.appendChild(b); });
+    choices.forEach((c, idx) => { const b = el('button', 'choice', T(c.text)); b.dir = 'auto'; b.onclick = () => { sfx('tap'); if (dlgResolve) { const r = dlgResolve; dlgResolve = null; r(idx); } }; box.appendChild(b); });
     d.appendChild(box);
   } else d.appendChild(el('div', 'more', '▼'));
 }
@@ -218,7 +218,7 @@ function tabAlbum(body) {
   body.appendChild(card(`<b>${STR.album.title}</b><br><span class="sub">${STR.album.restored(S.state.shards.length, total)}</span>`));
   Q.allQuests().filter((q) => q.reward?.shard).forEach((q) => {
     const got = S.state.shards.includes(q.reward.shard.id);
-    body.appendChild(card(got ? `<b style="color:#7be0ff">◆ ${T(q.reward.shard.title)}</b><br>${T(q.reward.shard.story)}` : `<b class="sub">◇ ???</b><br><span class="sub">${STR.album.hint(content.npcs[q.giver]?.name || q.giver)}</span>`, got ? '' : 'locked'));
+    body.appendChild(card(got ? `<b style="color:#7be0ff">◆ ${T(q.reward.shard.title)}</b><br>${T(q.reward.shard.story)}` : `<b class="sub">◇ ???</b><br><span class="sub">${STR.album.hint(q.order)}</span>`, got ? '' : 'locked'));
   });
 }
 function tabAwards(body) {
@@ -245,7 +245,7 @@ function tabSettings(body) {
   const sv = card(`<b>${STR.settings.saveTitle}</b><br><span class="sub">${STR.settings.saveHelp}</span>`);
   const ta = el('textarea'); ta.placeholder = STR.settings.paste; ta.dir = 'ltr';
   const bx = el('button', 'btn alt', STR.settings.showCode); bx.onclick = () => { ta.value = exportCode(); ta.select(); };
-  const bi = el('button', 'btn', STR.settings.import); bi.onclick = () => { if (importCode(ta.value)) { toast(STR.settings.imported); hooks.continueGame?.(); closePanel(); } else toast(STR.settings.badCode); };
+  const bi = el('button', 'btn', STR.settings.import); bi.onclick = () => { if (importCode(ta.value, (id) => confirm(STR.settings.overwrite(content.characters[id]?.name || id)))) { toast(STR.settings.imported); hooks.continueGame?.(); closePanel(); } else toast(STR.settings.badCode); };
   const btns = el('div', 'row'); btns.style.justifyContent = 'flex-start'; btns.append(bx, bi);
   sv.append(ta, btns); body.appendChild(sv);
   const rs = el('button', 'btn red', STR.settings.restart(content.characters[S.state.activeChar].name)); rs.style.marginBottom = '8px';

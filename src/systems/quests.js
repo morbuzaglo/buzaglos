@@ -48,6 +48,7 @@ export function completeStep(qid) {
 export function completeQuest(qid) {
   const q = content.quests[qid], st = qs()[qid];
   st.state = 'done';
+  for (const it of Object.values(content.items)) if (it.type === 'quest' && itemCount(it.id) > 0) removeItem(it.id, itemCount(it.id));
   if (st.replay) { delete st.replay; emit('questDone', { quest: q, gained: { coins: 0, xp: 0, items: [], shard: null } }); return; }
   const r = q.reward || {};
   const gained = { coins: r.coins ? addCoins(r.coins) : 0, xp: r.xp ? addXp(r.xp) : 0, items: [], shard: null };
@@ -80,7 +81,7 @@ export function checkGoto(map, tx, ty) {
 
 export function objective(qid) {
   const step = currentStep(qid); if (!step) return '';
-  let t = step.text || '';
+  let t = step.text || content.quests[qid]?.summary || '';
   if (step.type === 'collect') t += ` (${Math.min(itemCount(step.item), step.count || 1)}/${step.count || 1})`;
   return t;
 }

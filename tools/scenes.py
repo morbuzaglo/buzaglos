@@ -55,7 +55,7 @@ def build():
     m = M('jp', 'יפן', 28, 16, 'S', 'beach', (3, 13))
     m.rect(2, 2, 9, 6, 'T'); m.rect(17, 7, 7, 6, 'r')
     m.exit(1, 13)
-    m.prop('torii', 12, 6).prop('lantern', 9, 11).prop('lantern', 14, 11).prop('lantern', 4, 5).prop('lantern', 25, 4)
+    m.prop('torii', 12, 6).prop('lantern', 9, 11).prop('lantern', 14, 11).prop('lantern', 4, 5).prop('lantern', 26, 4)
     m.prop('podium', 19, 9, id='sumo', interact=dict(dialogue='sumo_look'))
     for i, (x, y) in enumerate([(5, 12), (13, 13), (24, 4)], 1):
         m.prop('deer', x, y, id=f'deer{i}', gives='deer_photo', givesText='קליק! צילום מושלם של איל שמסתובב לו חופשי ברחוב.', emptyText='האיל כבר צולם. הוא קצת עייף מכל הפפראצי.')
@@ -82,14 +82,14 @@ def build():
     m.exit(1, 11)
     for i, (x, y, n) in enumerate([(4, 3, 'ביגוד'), (10, 3, 'תכשיטים'), (16, 3, 'נעליים'), (21, 3, 'קפה')], 1):
         m.prop('counter', x, y, id=f'stall{i}', interact=dict(dialogue=f'stall{i}'))
-    m.prop('plant', 3, 9).prop('plant', 24, 9).prop('lamp', 13, 9)
+    m.prop('plant', 5, 9).prop('plant', 24, 9).prop('lamp', 13, 9)
     m.pick('phone_pk', 'phone_anat', 11, 5, 'q_phone', hidden=True)
     m.broken(7, 10)
     maps['mall'] = m.out()
     quests['q_phone'] = dict(id='q_phone', title='איפה הטלפון?!', summary='אמא שוב שכחה את הטלפון באחת החנויות.', scene=dict(map='mall', x=3, y=11), maps=['mall'], steps=[
         dict(type='cutscene', lines=[L('narrator', 'שוק גדול, ארבע חנויות, ואמא מתמקחת בכל אחת.'), L('anat', 'כמה זה עולה? בחצי?'), L('narrator', 'שעה אחר כך, ליד הקופה האחרונה...'), L('anat', 'רגע. איפה הטלפון שלי?! אוי, אוי, אוי!')]),
         dict(type='minigame', auto=True, game='sequence', text='להיזכר באיזה סדר ביקרנו בחנויות.', lines=[L('narrator', 'צריך לשחזר: באיזו חנות היא הייתה ובאיזה סדר?')], config=dict(icons=['👗', '💍', '👟', '☕'], length=4, watch='מסתכלים באיך אמא עברה בין החנויות...', repeat='עכשיו חוזרים על המסלול!')),
-        dict(type='collect', item='phone_anat', count=1, text='למצוא את הטלפון של אמא באחת החנויות.', hint='הוא מבריק כשמתקרבים. אפשר גם להשתמש ביכולת מגלה (B).'),
+        dict(type='collect', item='phone_anat', count=1, text='למצוא את הטלפון של אמא באחת החנויות.', hint='הוא מבריק כשמתקרבים. למי שיש יכולת גילוי, אפשר ללחוץ B.'),
         dict(type='cutscene', lines=[L('anat', 'הטלפון שלי! אוי, כמה נבהלתי. מכל החנויות בעולם, דווקא בתכשיטים.'), L('player', 'אולי כדאי לתלות אותו על הצוואר?'), L('anat', 'אולי. אבל אז איפה אני אשים את התכשיטים?')])],
         reward=dict(coins=30, xp=45, shard=dict(id='shard_phone', title='איפה הטלפון?!', story='אמא שוב שכחה את הטלפון בחנות והתחילה להיבהל, עד שמישהו מצא אותו.')))
     item('phone_anat', 'הטלפון של אמא', 'phone', '#e84b4b', 'נשכח שוב בחנות.')
@@ -109,7 +109,7 @@ def build():
     item('cloth', 'בגד לקשירת מזוודות', 'shirt', '#e8a13a', 'יחזיק את המזוודה על הגג.')
     quests['q_barcelona'] = dict(id='q_barcelona', title='בדרך לברצלונה', summary='מפספסים קונקשן בשוויץ, וצריך להגיע להפלגה עד מחר בבוקר.', scene=dict(map='airport', x=3, y=9), maps=['airport', 'road', 'port'], steps=[
         dict(type='cutscene', lines=[L('narrator', 'אמא והאחים והאחיות שלה בדרך לברצלונה, עם קונקשן בשוויץ.'), L('anat', 'מה זאת אומרת פספסנו את הטיסה?!'), L('anat', 'ההפלגה יוצאת מחר בבוקר! חייבים להגיע לברצלונה, גם אם זה יהיה בנסיעה.')]),
-        dict(type='interact', target='rental', text='לגשת לדלפק השכרת הרכב.', lines=[L('narrator', 'הנציג מושיט מפתחות לרכב קטן. ״מקסימום חמישה אנשים, וקצת מזוודות.״'), L('anat', 'ניקח אותו. אנחנו מסתדרים.')]),
+        dict(type='interact', target='rental', text='לגשת לדלפק השכרת הרכב.', lines=[L('narrator', 'הנציג מושיט מפתחות לרכב קטן.'), L('anat', 'ניקח אותו. אנחנו מסתדרים.')]),
         dict(type='collect', item='cloth', count=3, text='למצוא 3 בגדים לקשירת המזוודות (אין מקום בתוך הרכב).', hint='מסתכלים מתחת לספסלים. חלק נסתרים.'),
         dict(type='interact', target='rental_car', text='לקשור את המזוודות לגג הרכב.', lines=[L('anat', 'מהר, לפני שהן יעופו!')], minigame=dict(game='timing', config=dict(rounds=3, speed=1.2, zone=0.24)), consume='cloth', consumeCount=3),
         dict(type='teleport', map='road', x=2, y=4),
@@ -174,7 +174,7 @@ def build():
             dict(text='״הכול בסדר, אפשר להיות רגועים.״', reply=[L('dispatcher', 'בטוחה? תבדקי שוב.')]),
             dict(text='״מצאתי אדם שנפטר, במצב קישיון.״', correct=True, reply=[L('dispatcher', 'קישיון?!?!?! עם הפיקנטו?!?!?!'), L('tohar', 'המוקדנית לא האמינה שהגעתי בפיקנטו.')]),
             dict(text='״אני חוזרת לתחנה לאכול.״', reply=[L('dispatcher', 'תדווחי קודם.')])]),
-        dict(type='cutscene', lines=[L('narrator', 'מאז, בכל פעם שמישהו מספר את הסיפור, כל המשפחה פורצת בצחוק.'), L('tohar', 'קישיון? עם הפיקנטו?! אני לא יכולה לשמוע את זה יותר.')])],
+        dict(type='cutscene', lines=[L('narrator', 'מאז, המשפט של המוקדנית הפך לבדיחה משפחתית.'), L('tohar', 'קישיון? עם הפיקנטו?! אני לא יכולה לשמוע את זה יותר.')])],
         reward=dict(coins=40, xp=55, shard=dict(id='shard_pikanto', title='הפיקנטו', story='טוהר נסעה כחובשת במגן דוד אדום בקיה פיקנטו, והמוקדנית צעקה בהלם: ״קישיון?!?! עם הפיקנטו?!?!״. מאז אנחנו צוחקים על זה.')))
 
     # ======================================================== 7. SEVEN MINUTES (Tohar + Mordechai)
@@ -187,7 +187,7 @@ def build():
     item('ready_item', 'משהו לצאת איתו', 'default', '#f4f4f8', 'בגד, תיק, מפתחות. הכול נחוץ.')
     quests['q_seven'] = dict(id='q_seven', title='שבע דקות', summary='מרדכי בדרך, וטוהר באמצע להתארגן.', scene=dict(map='room', x=3, y=9), maps=['room'], steps=[
         dict(type='cutscene', lines=[L('narrator', 'אירוע משפחתי באולם. טוהר באמצע להתארגן. הטלפון מצלצל.'), L('mordechai', 'אני בדרך לאסוף אותך.'), L('tohar', 'כמה זמן?'), L('mordechai', 'שבע דקות.'), L('tohar', 'שבע דקותתת?!?! שבע דקותתתתת?!?!')]),
-        dict(type='collect', item='ready_item', count=7, timeLimit=70, displaySeconds=420, text='לאסוף 7 דברים לפני שהשעון מגיע לאפס.', hint='שבע דקות הן בערך דקה בשעון הזה. מהר!', failLines=[L('narrator', 'השעון הגיע לאפס! מרדכי מצפצף מלמטה. מתחילים שוב.')]),
+        dict(type='collect', item='ready_item', count=7, timeLimit=45, displaySeconds=420, text='לאסוף 7 דברים לפני שהשעון מגיע לאפס.', hint='שבע דקות הן בערך דקה בשעון הזה. מהר!', failLines=[L('narrator', 'השעון הגיע לאפס! מרדכי מצפצף מלמטה. מתחילים שוב.')]),
         dict(type='cutscene', lines=[L('narrator', 'פעמון הדלת. טוהר יוצאת, מסורקת, עם נעלי נייק לבנות.'), L('mordechai', 'שבע דקות בדיוק.'), L('tohar', 'אני תמיד אומרת: לחץ זה כיף.')])],
         reward=dict(coins=40, xp=55, shard=dict(id='shard_seven', title='שבע דקות', story='מרדכי התקשר לטוהר שהוא בדרך, ״שבע דקות״, והיא התחילה להתארגן ולהסתרק בטירוף.')))
 
@@ -246,10 +246,10 @@ def build():
         dict(type='teleport', map='dream', x=3, y=9),
         dict(type='cutscene', lines=[L('narrator', 'כמה לילות לפני הלידה הראשונה של רינת. מרדכי חולם.'), L('mordechai', 'אני רואה תינוקת. תלתלים... שחורים...')]),
         dict(type='choice', who='mordechai', question='מה מרדכי רואה בחלום?', options=[
-            dict(text='תינוקת עם תלתלים שחורים', correct=True, reply=[L('narrator', 'התינוקת מחייכת בחלום, ותלתלי השיער השחורים שלה מרשימים במיוחד.')]),
+            dict(text='תינוקת עם תלתלים שחורים', correct=True, reply=[L('narrator', 'התינוקת מחייכת בחלום, ותלתלים שחורים מקיפים את פניה.')]),
             dict(text='תינוק בלי שיער בכלל', reply=[L('mordechai', 'לא... זה לא מה שראיתי בחלום.')]),
             dict(text='תאומים בלונדיניים', reply=[L('mordechai', 'יש לי תאום, אבל לא אלה בחלום.')])]),
-        dict(type='cutscene', lines=[L('narrator', 'ואז, בלידה הראשונה, אביגיל נולדת: בדיוק עם תלתלים שחורים.'), L('rinat', 'מרדכי, איך ידעת?!'), L('mordechai', 'חלום, אני אומר לך.'), L('rinat', 'אבוז׳יבו, אתה קוסם!')])],
+        dict(type='cutscene', lines=[L('narrator', 'ואז, בלידה הראשונה, אביגיל נולדה: בדיוק עם תלתלים שחורים.'), L('rinat', 'מרדכי, איך ידעת?!'), L('mordechai', 'חלום, אני אומר לך.'), L('rinat', 'תודה, מרדכי. אתה קוסם!')])],
         reward=dict(coins=45, xp=60, shard=dict(id='shard_rinat', title='חלום בלילה', story='אליאור הציע לרינת נישואין בכותל. מרדכי חלם שתלד בת עם תלתלים שחורים, ובלידה הראשונה זה בדיוק מה שקרה.')))
 
     # ======================================================== 11. YOAV: cleaning + the flashback
@@ -262,14 +262,14 @@ def build():
     m = M('flash', 'זיכרון: הבית החדש', 16, 10, '.', 'home', (3, 7)); m.rect(0, 0, 16, 1, '#'); m.rect(1, 1, 14, 1, 'W'); m.rect(4, 4, 8, 4, 'r'); m.exit(1, 7)
     m.npc('yoav_kid', 8, 5, 0).prop('sofa', 5, 3).prop('plant', 13, 3)
     maps['flash'] = m.out()
-    item('litter', 'פסולת שיש לאסוף', 'default', '#a0a0b0', 'יואב לא ישן בשקט כשיש לכלוך.')
-    quests['q_yoav'] = dict(id='q_yoav', title='הגינה של יואב', summary='יואב אוהב שהכול נקי ומסודר, ויש גם זיכרון חם מגיל 4.', scene=dict(map='yard', x=3, y=11), maps=['yard', 'flash'], steps=[
+    item('litter', 'זבל', 'default', '#a0a0b0', 'יואב לא ישן בשקט כשיש לכלוך.')
+    quests['q_yoav'] = dict(id='q_yoav', title='הגינה של יואב', summary='יואב אוהב שהכול נקי ומסודר, ויש גם סיפור מרגש מגיל 4.', scene=dict(map='yard', x=3, y=11), maps=['yard', 'flash'], steps=[
         dict(type='cutscene', lines=[L('yoav', 'יש פה לכלוך.'), L('narrator', 'יואב אוהב לסדר ולנקות הכול: גינות, גינות ציבוריות, רכבים, בתים.'), L('yoav', 'ניקיון זה לא תחביב. זו שליחות.')]),
-        dict(type='collect', item='litter', count=8, text='לאסוף 8 פסולות בגינה.', hint='חלק מהן מוסתרות מתחת לעצים.'),
+        dict(type='collect', item='litter', count=8, text='לאסוף 8 פריטי זבל בגינה.', hint='חלק מהן מוסתרות מתחת לעצים.'),
         dict(type='interact', target='car_y', text='לשטוף את הרכב.', lines=[L('yoav', 'מלוכלך. לא יעבור.')], minigame=dict(game='reaction', config=dict(targets=10, time=12, emoji='🫧'))),
         dict(type='teleport', map='flash', x=3, y=7),
         dict(type='goto', map='flash', x=7, y=6, radius=2, text='להתקרב לילד הקטן.'),
-        dict(type='cutscene', lines=[L('narrator', 'לפני שנים רבות. יואב בן 4, הילד הכי חמוד: בלונדיני, עם שיער ארוך.'), L('narrator', 'הוא הגיע מבית אומנה, ומאותו יום הוא נשאר במשפחה.'), L('anat', 'ברוך הבא הביתה, יואב.'), L('narrator', 'היום הוא קשוח ומסודר, אבל הוא עדיין חלק מהמשפחה, ובלב יש מקום לכולם.')])],
+        dict(type='cutscene', lines=[L('narrator', 'לפני שנים רבות. יואב בן 4, הילד הכי חמוד: בלונדיני, עם שיער ארוך.'), L('narrator', 'הוא הגיע מבית אומנה, ומאותו יום הוא נשאר במשפחה.'), L('narrator', 'היום הוא קשוח ומסודר, אבל הוא עדיין חלק מהמשפחה, ובלב יש מקום לכולם.')])],
         reward=dict(coins=45, xp=60, shard=dict(id='shard_yoav', title='הגינה של יואב', story='אימצנו את יואב כשהיה בן 4, ילד מתוק ובלונדיני עם שיער ארוך. היום הוא קשוח ומסודר, ואוהב לנקות את הכול.')))
 
     dialogues = {
@@ -324,7 +324,21 @@ def build():
          ['יש פה לכלוך.', 'המשימה: לנקות את הגינה, לשטוף את הרכב, ואחר כך אראה לך משהו. {f:תעזרי|m:תעזור} לי?'],
          ['יואב מחכה בגינה: יש לכלוך, והוא לא נרגע.', 'המשימה: לעזור לו לנקות את הכול, ואז הוא יראה לך משהו מיוחד. {f:מוכנה|m:מוכן}?']),
     ]
+
+    MISSION_PLAYER = {
+        'q_phone': ['{name}, נראה שהטלפון שלך שוב נעלם בשוק!', 'המשימה: לחזור לשוק, לשחזר את המסלול בין החנויות ולמצוא אותו. {f:בואי|m:בוא}, אני איתך!'],
+        'q_japan': ['{name}, מחכה לנו הרפתקה: חוזרים לטיול ההוא ביפן!', 'המשימה: לצלם 3 איילים ברחוב, להתמודד בקרב סומו ולהרכיב מניין של עשרה לתפילה. אני איתך!'],
+        'q_seven': ['{name}, שבע דקות! איך מתארגנים בזמן?', 'המשימה: לאסוף 7 דברים לפני שהשעון נגמר. אני מעודד מהצד!'],
+        'q_cat': ['{name}, פורים בא, ואת הולכת להפתיע את כולם בתחפושת!', 'המשימה: למצוא מגפיים וכובע, להתחפש לחתול במגפיים ולהיכנס לארוחה בגדול. {f:מוכנה|m:מוכן}?'],
+        'q_terry': ['{name}, בואו נחזור לבריכה ההיא בתל אביב!', 'המשימה: ללכת לבריכה, לדבר עם טרי (באנגלית!) ולהחליט אם טסים לדובאי. אני איתך!'],
+        'q_dinner': ['{name}, ליל שישי מתקרב: 12 סלטים ודג מרוקאי!', 'המשימה: לאסוף את כל הסלטים, להשגיח על הדג ולחכות לדבר התורה של אבא. אני איתך!'],
+        'q_barcelona': ['{name}, פספסתם את הקונקשן בשוויץ, וההפלגה מחר בבוקר!', 'המשימה: לשכור רכב, לקשור את המזוודות לגג ולנסוע שעות עד ברצלונה. אני איתך!'],
+        'q_cruise': ['{name}, הנציגה לא מעלה את יואב לספינה: חושבים שיש לו קורונה!', 'המשימה: לשכנע אותה לפני שהספינה תצא. אולי מרדכי יכול לעזור בטלפון. אני איתך!'],
+        'q_pikanto': ['{name}, קריאה דחופה במד״א, ואת בפיקנטו!', 'המשימה: להגיע לכתובת ולדווח למוקד. אני איתך!'],
+        'q_rinat': ['{name}, הכותל, ההצעה של אליאור, והחלום של מרדכי: בואו נחזור לשם!', 'המשימה: להגיע לכותל ואחר כך להיכנס לחלום ולמצוא את התינוקת. אני איתך!'],
+        'q_yoav': ['{name}, יש בגינה לכלוך שמחכה לך.', 'המשימה: לנקות את הגינה, לשטוף את הרכב, ולהגיע למקום שבו הכול התחיל. אני איתך!'],
+    }
     for i, (qid, callers, mself, mother) in enumerate(LEVELS, 1):
+        quests[qid]['missionPlayer'] = MISSION_PLAYER[qid]
         q = quests[qid]; q['order'] = i; q['callers'] = callers; q['missionSelf'] = mself; q['missionOther'] = mother
-        q['summary'] = q['summary'].replace('זיכרון', 'הרפתקה')
     return maps, quests, items, npcs, dialogues

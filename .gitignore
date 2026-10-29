@@ -4,3 +4,5 @@ dist/
 *.log
 .wrangler/
 private/
+__pycache__/
+*.pyc

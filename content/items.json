@@ -189,7 +189,7 @@
  },
  "litter": {
   "id": "litter",
-  "name": "פסולת שיש לאסוף",
+  "name": "זבל",
   "type": "quest",
   "icon": "default",
   "color": "#a0a0b0",

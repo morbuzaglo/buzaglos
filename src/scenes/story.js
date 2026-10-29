@@ -16,13 +16,14 @@ export const storyMethods = {
   pickCaller() {
     this.mission = Q.currentMission();
     this.callerId = null; this.callerRec = null;
-    const hub = content.config.hub || { map: 'house' };
-    if (!this.mission || this.map.id !== hub.map) return;
+    const isScene = this.mission && (this.mission.maps || []).includes(this.map.id);
+    if (!this.mission || isScene) return;
     this.callerId = this.mission.callers.find((id) => content.npcs[id] && content.npcs[id].character !== S.state.activeChar) || null;
   },
   /** Puts the caller at the call point with a "!" mark. */
   setupMission() {
-    if (!this.callerId) return;
+    const hub = content.config.hub || { map: 'house' };
+    if (!this.callerId || this.map.id !== hub.map) return;
     const pt = content.config.callPoint || HUB_CALL;
     this.addNpc({ id: this.callerId, x: pt.x, y: pt.y, dir: pt.dir ?? 2, call: true });
     this.callerRec = this.npcs[this.npcs.length - 1];
@@ -42,7 +43,7 @@ export const storyMethods = {
   async startMission() {
     const q = this.mission; if (!q) return;
     const protag = q.callers[0], me = this.callerId;
-    const texts = me === protag ? q.missionSelf : q.missionOther;
+    const texts = q.callers[0] === S.state.activeChar && q.missionPlayer ? q.missionPlayer : (me === protag ? q.missionSelf : q.missionOther);
     const lines = texts.map((text) => ({ who: me, text }));
     if (S.state.quests[q.id]?.state === 'active') lines.unshift({ who: me, text: STR.mission.resume });
     await UI.say(lines);
@@ -100,7 +101,7 @@ export const storyMethods = {
     const key = characterTexture(this, 'n_' + id, def.look);
     const spr = this.add.sprite(this.player.x - 14, this.player.y, key, 0).setOrigin(0.5, 32 / 34);
     spr.play(`${key}_idle0`); this.layer.add(spr);
-    this.makeLabel(spr, def.name, false);
+    const lab = this.makeLabel(spr, def.name, false); if (lab) lab.hideNear = true;
     this.companion = { id, spr, key, hist: [], moving: false, dir: 0 };
   },
   updateCompanion() {

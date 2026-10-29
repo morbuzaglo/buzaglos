@@ -63,7 +63,7 @@ export default class World extends Phaser.Scene {
 
   // ------------------------------------------------------------------ world building
   startWorld() {
-    this.busy = false;
+    this.busy = false; this.announced = {};
     const st = S.state;
     this.loadMap(st.map, st.x, st.y, st.dir);
   }
@@ -169,6 +169,7 @@ export default class World extends Phaser.Scene {
     for (const l of this.labels || []) {
       const x = (l.spr.x - wv.x) * z, y = (l.spr.y - 31 * l.scale - wv.y) * z - (l.extra || 0);
       l.el.style.transform = `translate(calc(${Math.round(x)}px - 50%), calc(${Math.round(y)}px - 100%))`;
+      if (l.hideNear && this.player) { const dd = Math.hypot(l.spr.x - this.player.x, l.spr.y - this.player.y); l.el.style.visibility = dd < 26 ? 'hidden' : ''; }
       l.el.style.display = x < -60 || y < -40 || x > this.scale.width + 60 || y > this.scale.height + 60 ? 'none' : '';
     }
   }

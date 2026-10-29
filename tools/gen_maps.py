@@ -16,7 +16,7 @@ def out(g):
 
 LEG = {'g': 'grass', 'f': 'flower', 'p': 'path', '.': 'wood', 't': 'tile', 'r': 'rug', '#': 'wall', 'W': 'wallface',
        '~': 'water', 's': 'sand', '=': 'fence', 'd': 'dark', 'c': 'carpet', '^': 'roof'}
-BEACH_CLOSED = 'הדרך לחוף סגורה. אולי סבתא יודעת מי יכול לפתוח אותה?'
+BEACH_CLOSED = 'הדרך לחוף סגורה כרגע.'
 
 maps = {}
 

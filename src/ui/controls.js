@@ -54,5 +54,5 @@ export function initControls() {
   document.addEventListener('gesturestart', (e) => e.preventDefault());
   document.addEventListener('touchmove', (e) => { if (!e.target.closest('#panel .body')) e.preventDefault(); }, { passive: false });
   let last = 0;
-  document.addEventListener('touchend', (e) => { const n = Date.now(); if (n - last < 350) e.preventDefault(); last = n; }, { passive: false });
+  document.addEventListener('touchend', (e) => { const n = Date.now(); if (n - last < 350 && e.target.closest && e.target.closest('#game')) e.preventDefault(); last = n; }, { passive: false });
 }

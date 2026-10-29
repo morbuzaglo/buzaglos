@@ -150,7 +150,7 @@ export function drawCharFrame(ctx, ox, oy, dir, f, look) {
     if (!side) {
       if (glasses) { const fr = '#20202c'; R(8, 7 + hy, 4, 1, fr); R(8, 10 + hy, 4, 1, fr); R(8, 7 + hy, 1, 4, fr); R(11, 7 + hy, 1, 4, fr); R(13, 7 + hy, 4, 1, fr); R(13, 10 + hy, 4, 1, fr); R(13, 7 + hy, 1, 4, fr); R(16, 7 + hy, 1, 4, fr); set(12, 8 + hy, fr); R(6, 8 + hy, 2, 1, fr); R(17, 8 + hy, 1, 1, fr); }
       if (cat) { const fr = '#101014'; R(7, 7 + hy, 5, 2, fr); R(13, 7 + hy, 5, 2, fr); R(8, 9 + hy, 1, 2, fr); R(11, 9 + hy, 1, 2, fr); R(14, 9 + hy, 1, 2, fr); R(17, 9 + hy, 1, 2, fr); R(9, 10 + hy, 2, 1, fr); R(15, 10 + hy, 2, 1, fr); set(6, 6 + hy, fr); set(7, 6 + hy, fr); set(17, 6 + hy, fr); set(18, 6 + hy, fr); R(12, 8 + hy, 1, 1, fr); set(9, 9 + hy, '#ffffff'); set(15, 9 + hy, '#ffffff'); }
-      if (beard) { const B = o.beardColor || H, BD = shade(B, -30); R(7, 10 + hy, 10, 3, B); R(8, 13 + hy, 8, 1, BD); R(7, 9 + hy, 1, 1, B); R(16, 9 + hy, 1, 1, B); R(10, 11 + hy, 4, 1, '#c9605a'); R(9, 10 + hy, 6, 1, BD); R(10, 12 + hy, 4, 1, B); }
+      if (beard) { const B = o.beardColor || H, BD = shade(B, -30); R(7, 11 + hy, 10, 2, B); R(8, 13 + hy, 8, 1, BD); R(10, 11 + hy, 4, 1, '#c9605a'); R(9, 10 + hy, 6, 1, BD); R(10, 12 + hy, 4, 1, B); }
     } else {
       if (glasses) { const fr = '#20202c'; R(7, 7 + hy, 4, 1, fr); R(7, 10 + hy, 4, 1, fr); R(7, 7 + hy, 1, 4, fr); R(10, 7 + hy, 1, 4, fr); R(11, 8 + hy, 3, 1, fr); }
       if (cat) { const fr = '#101014'; R(7, 7 + hy, 4, 2, fr); R(7, 9 + hy, 1, 2, fr); R(10, 9 + hy, 1, 2, fr); R(8, 10 + hy, 2, 1, fr); R(11, 8 + hy, 3, 1, fr); set(10, 6 + hy, fr); }

@@ -38,7 +38,7 @@ function timing(box, cfg, finish) {
     if (locked) return; locked = true;
     const hit = pos >= zoneX && pos <= zoneX + zoneW;
     if (hit) { sfx('coin'); round++; if (round >= rounds) { info.textContent = STR.mg.perfect; finish(true); return; } }
-    else { sfx('bad'); lives--; if (lives <= 0) { info.textContent = STR.mg.burnt; finish(false); return; } }
+    else { sfx('bad'); lives--; if (lives <= 0) { info.textContent = cfg.failText || STR.mg.burnt; finish(false); return; } }
     setTimeout(() => { locked = false; setup(); }, 350);
   };
   btn.onpointerdown = (e) => { e.preventDefault(); press(); };
@@ -87,15 +87,17 @@ function reaction(box, cfg, finish) {
 }
 
 function quiz(box, cfg, finish) {
-  const qs = cfg.questions || []; let i = 0, ok = 0;
+  const qs = (cfg.questions || []).map((q) => { const idx = shuffle(q.a.map((_, i) => i)); return { q: q.q, a: idx.map((i) => q.a[i]), c: idx.indexOf(q.c) }; });
+  let i = 0, ok = 0, locked = false;
   const show = () => {
-    const q = qs[i]; box.innerHTML = '';
+    const q = qs[i]; box.innerHTML = ''; locked = false;
     box.appendChild(el('div', 'card', `<b>${STR.mg.question(i + 1, qs.length)}</b><br>${tpl(q.q).replace(/</g, '&lt;')}`));
     q.a.forEach((a, idx) => {
-      const b = el('button', 'choice', tpl(a).replace(/</g, '&lt;')); b.style.cssText = 'display:block;width:100%;margin-bottom:6px';
+      const b = el('button', 'choice', tpl(a).replace(/</g, '&lt;')); b.dir = 'auto'; b.style.cssText = 'display:block;width:100%;margin-bottom:6px';
       b.onclick = () => {
+        if (locked) return; locked = true;
         const right = idx === q.c; if (right) ok++; sfx(right ? 'coin' : 'bad'); b.style.background = right ? '#2e8b4a' : '#a83240';
-        qs.length; setTimeout(() => { i++; if (i >= qs.length) { const win = ok >= Math.ceil(qs.length * 0.66); box.innerHTML = `<div class="card"><b>${STR.mg.correct(ok, qs.length)}</b></div>`; finish(win); } else show(); }, 650);
+        setTimeout(() => { i++; if (i >= qs.length) { const win = ok >= Math.ceil(qs.length * 0.66); box.innerHTML = `<div class="card"><b>${STR.mg.correct(ok, qs.length)}</b></div>`; finish(win); } else show(); }, 650);
       };
       box.appendChild(b);
     });
@@ -121,7 +123,7 @@ function drive(box, cfg, finish) {
     if (spawnAcc > 0.7) { spawnAcc = 0; const o = el('div', 'mover', icons[(Math.random() * icons.length) | 0]); const l = (Math.random() * lanes) | 0; o.dataset.lane = l; o.dataset.y = '-40'; road.appendChild(o); obs.push(o); }
     for (const o of [...obs]) {
       const y = parseFloat(o.dataset.y) + dt * 190; o.dataset.y = y; place(o, +o.dataset.lane, y);
-      if (y > 255 && y < 305 && +o.dataset.lane === lane && !o.dataset.hit) { o.dataset.hit = '1'; lives--; sfx('bad'); car.style.filter = 'brightness(2)'; setTimeout(() => (car.style.filter = ''), 200); if (lives <= 0) { over = true; info.textContent = STR.mg.timeUp; finish(false); return; } }
+      if (y > 255 && y < 305 && +o.dataset.lane === lane && !o.dataset.hit) { o.dataset.hit = '1'; lives--; sfx('bad'); car.style.filter = 'brightness(2)'; setTimeout(() => (car.style.filter = ''), 200); if (lives <= 0) { over = true; info.textContent = STR.mg.crashed; finish(false); return; } }
       if (y > 340) { o.remove(); obs.splice(obs.indexOf(o), 1); }
     }
     upd();

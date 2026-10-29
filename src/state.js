@@ -60,8 +60,8 @@ function migrate(saved) {
   return merged;
 }
 export function exportCode() { return btoa(unescape(encodeURIComponent(JSON.stringify(S.state)))); }
-export function importCode(code) {
-  try { const obj = JSON.parse(decodeURIComponent(escape(atob(code.trim())))); if (!obj || obj.v !== 1) return false; S.state = migrate(obj); saveGame(); return true; } catch (e) { return false; }
+export function importCode(code, confirmOverwrite) {
+  try { const obj = JSON.parse(decodeURIComponent(escape(atob(code.trim())))); if (!obj || obj.v !== 1) return false; if (peekSave(obj.activeChar) && confirmOverwrite && !confirmOverwrite(obj.activeChar)) return false; S.state = migrate(obj); saveGame(); return true; } catch (e) { return false; }
 }
 
 // ------------------------------------------------------------ economy
