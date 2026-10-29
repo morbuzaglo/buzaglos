@@ -2966,7 +2966,7 @@
    },
    {
     "type": "tv",
-    "id": "photo_screen",
+    "id": "dj_booth",
     "x": 18,
     "y": 3,
     "interact": {}
@@ -3132,6 +3132,233 @@
   "spawn": {
    "x": 3,
    "y": 12
+  }
+ },
+ "garden_burger": {
+  "id": "garden_burger",
+  "name": "ארוחת ההמבורגרים בגינה",
+  "music": "beach",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "======================",
+   "=gggggggggggggggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=pppppppppppppppppppp=",
+   "=pppppppppppppppppppp=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "======================"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 10,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "table",
+    "id": "garden_table",
+    "givesText": "",
+    "emptyText": "על השולחן מחכים המבורגרים גדולים וריחניים.",
+    "x": 11,
+    "y": 7,
+    "interact": {}
+   },
+   {
+    "type": "stove",
+    "id": "grill",
+    "x": 1,
+    "y": 3,
+    "interact": {}
+   },
+   {
+    "type": "tree",
+    "x": 7,
+    "y": 9
+   },
+   {
+    "type": "tree",
+    "x": 7,
+    "y": 3
+   },
+   {
+    "type": "bush",
+    "x": 16,
+    "y": 9
+   },
+   {
+    "type": "umbrella",
+    "x": 11,
+    "y": 4
+   },
+   {
+    "type": "lamp",
+    "x": 14,
+    "y": 3
+   },
+   {
+    "type": "plant",
+    "x": 19,
+    "y": 9
+   },
+   {
+    "type": "mat",
+    "x": 4,
+    "y": 2
+   },
+   {
+    "type": "sign",
+    "id": "menu_sign",
+    "x": 18,
+    "y": 6,
+    "interact": {}
+   },
+   {
+    "type": "lamp",
+    "x": 1,
+    "y": 8
+   },
+   {
+    "type": "bush",
+    "x": 19,
+    "y": 3
+   },
+   {
+    "type": "bush",
+    "x": 4,
+    "y": 8
+   }
+  ],
+  "npcs": [
+   {
+    "id": "terry",
+    "x": 16,
+    "y": 11,
+    "dir": 2
+   },
+   {
+    "id": "yard_neighbor",
+    "x": 4,
+    "y": 4,
+    "dir": 0
+   },
+   {
+    "id": "npc_neighbor_kid",
+    "x": 3,
+    "y": 6,
+    "dir": 1
+   },
+   {
+    "id": "mordechai",
+    "x": 6,
+    "y": 5,
+    "dir": 1
+   },
+   {
+    "id": "eden",
+    "x": 16,
+    "y": 5,
+    "dir": 3
+   },
+   {
+    "id": "anat",
+    "x": 8,
+    "y": 6,
+    "dir": 3
+   },
+   {
+    "id": "yitzhak",
+    "x": 12,
+    "y": 10,
+    "dir": 1
+   }
+  ],
+  "pickups": [
+   {
+    "id": "garden_burger_onion_slice_0",
+    "item": "onion_slice",
+    "x": 17,
+    "y": 3,
+    "hidden": false,
+    "needsQuest": "q_onion_burger"
+   },
+   {
+    "id": "garden_burger_onion_slice_1",
+    "item": "onion_slice",
+    "x": 10,
+    "y": 10,
+    "hidden": false,
+    "needsQuest": "q_onion_burger"
+   },
+   {
+    "id": "garden_burger_onion_slice_2",
+    "item": "onion_slice",
+    "x": 16,
+    "y": 7,
+    "hidden": false,
+    "needsQuest": "q_onion_burger"
+   },
+   {
+    "id": "garden_burger_onion_slice_3",
+    "item": "onion_slice",
+    "x": 18,
+    "y": 11,
+    "hidden": false,
+    "needsQuest": "q_onion_burger"
+   },
+   {
+    "id": "garden_burger_onion_slice_4",
+    "item": "onion_slice",
+    "x": 14,
+    "y": 8,
+    "hidden": false,
+    "needsQuest": "q_onion_burger"
+   },
+   {
+    "id": "garden_burger_onion_slice_5",
+    "item": "onion_slice",
+    "x": 14,
+    "y": 5,
+    "hidden": false,
+    "needsQuest": "q_onion_burger"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 10
   }
  }
 }
