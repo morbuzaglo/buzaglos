@@ -324,15 +324,16 @@ export function showTitle() {
     b.onclick = async () => {
       try {
         sfx('tap');
-        if (id !== 'visitor' && cloudAutoOn()) { toast('טוענים את ההתקדמות...', 1500); try { await syncSlotFromCloud(id); } catch (e) { /* offline: play from this phone's save */ } }
-        if (peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; }
+        if (id !== 'visitor' && cloudAutoOn()) { showLoading('טוען שחקן...'); try { await syncSlotFromCloud(id); } catch (e) { /* offline: play from this phone's save */ } }
+        if (peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); hideLoading(); return; }
+        hideLoading();
         if (id === 'visitor') {
           const guest = await askGuest(); if (!guest) return;
           if (cloudAutoOn()) { try { if (await syncSlotFromCloud(id, guest.name) && peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; } } catch (e) { /* offline */ } }
           t.classList.add('hidden'); startNewGame(id, guest); hooks.newGame?.(); return;
         }
         if ((await modal(STR.title.confirmPick(c.name), ['כן, מתחילים', 'ביטול'])).i === 0) { t.classList.add('hidden'); startNewGame(id); hooks.newGame?.(); }
-      } catch (e) { toast('שגיאה: ' + (e.message || e), 4000); }
+      } catch (e) { hideLoading(); toast('שגיאה: ' + (e.message || e), 4000); }
     };
     grid.appendChild(b);
   }
@@ -343,6 +344,13 @@ export function showTitle() {
   }
   t.appendChild(el('p', '', STR.title.tip));
 }
+/** A visible "loading" message over the title screen. */
+function showLoading(text) {
+  hideLoading(); const o = el('div', 'loadingMsg', esc(text));
+  o.style.cssText = 'position:fixed;inset:0;background:rgba(10,6,24,.78);display:flex;align-items:center;justify-content:center;z-index:9998;color:#ffd23f;font:700 22px system-ui,sans-serif;pointer-events:all';
+  document.body.appendChild(o);
+}
+function hideLoading() { document.querySelectorAll('.loadingMsg').forEach((x) => x.remove()); }
 /** In-page dialog (native confirm/prompt can be blocked by the browser, which made taps do nothing). */
 function modal(text, buttons, withInput) {
   return new Promise((res) => {
