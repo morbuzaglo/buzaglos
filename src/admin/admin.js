@@ -14,6 +14,14 @@ const FILES = ['config', 'characters', 'npcs', 'items', 'quests', 'dialogues', '
 const HE = { mordechai: '', };
 let original = clone(bundled);
 let draft = (() => { try { return JSON.parse(localStorage.getItem(DRAFT_KEY)) || clone(bundled); } catch { return clone(bundled); } })();
+// The draft lives in this browser. Anything that was added to the published game since (by Claude or from another device) is merged in without touching the draft's own edits.
+let newFromGame = 0;
+for (const kind of ['characters', 'npcs', 'items', 'quests', 'dialogues', 'maps', 'achievements']) {
+  draft[kind] ||= {};
+  for (const [id, v] of Object.entries(bundled[kind] || {})) if (!draft[kind][id]) { draft[kind][id] = clone(v); newFromGame++; }
+}
+if ((bundled.config?.finalShards || 0) > (draft.config?.finalShards || 0)) draft.config.finalShards = bundled.config.finalShards;
+if (newFromGame) { try { localStorage.setItem(DRAFT_KEY, JSON.stringify(draft)); } catch (e) { /* quota */ } setTimeout(() => toast(`נוספו לטיוטה ${newFromGame} פריטים חדשים מהמשחק המפורסם (למשל נעם ומתן)`), 600); }
 let session = (() => { try { return JSON.parse(sessionStorage.getItem(SESSION_KEY)) || {}; } catch { return {}; } })();
 let tab = 'family', sel = { kind: 'characters', id: null }, mapSel = 'house', gen = null, placing = null, busy = '';
 const app = document.getElementById('app');
