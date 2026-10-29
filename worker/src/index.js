@@ -49,12 +49,14 @@ async function rateLimit(env, req, key, max, windowSec) {
 }
 
 // ---------------------------------------------------------------- GitHub
-const gh = (env, path, init = {}) => fetch(`https://api.github.com/repos/${env.GITHUB_REPO}${path}`, { ...init, headers: { authorization: `Bearer ${env.GITHUB_TOKEN}`, accept: 'application/vnd.github+json', 'user-agent': 'buzaglos-worker', 'x-github-api-version': '2022-11-28', ...(init.headers || {}) } });
+const gh = (env, path, init = {}) => fetch(`https://api.github.com/repos/${env.GITHUB_REPO}${path}`, { ...init, headers: { ...(env.GITHUB_TOKEN ? { authorization: `Bearer ${env.GITHUB_TOKEN}` } : {}), accept: 'application/vnd.github+json', 'user-agent': 'buzaglos-worker', 'x-github-api-version': '2022-11-28', ...(init.headers || {}) } });
 const b64 = (s) => btoa(String.fromCharCode(...enc.encode(s)));
 const unb64 = (s) => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n/g, '')), (c) => c.charCodeAt(0)));
 
 async function readContent(env) {
-  const list = await (await gh(env, `/contents/content?ref=${env.GITHUB_BRANCH || 'main'}`)).json();
+  const res = await gh(env, `/contents/content?ref=${env.GITHUB_BRANCH || 'main'}`);
+  const list = await res.json();
+  if (!Array.isArray(list)) throw new Error('לא ניתן לקרוא את התוכן מ-GitHub');
   const files = {};
   for (const f of list.filter((x) => x.name.endsWith('.json'))) {
     const r = await (await gh(env, `/contents/${f.path}?ref=${env.GITHUB_BRANCH || 'main'}`)).json();
@@ -64,6 +66,7 @@ async function readContent(env) {
 }
 const ALLOWED_FILES = new Set(['characters.json', 'npcs.json', 'items.json', 'quests.json', 'dialogues.json', 'maps.json', 'shop.json', 'achievements.json', 'config.json']);
 async function publish(env, files, message) {
+  if (!env.GITHUB_TOKEN) throw new Error("פרסום אוטומטי עדיין לא מוגדר (חסר טוקן GitHub). אפשר להוריד את הקבצים.");
   const content = {};
   for (const [name, text] of Object.entries(files)) {
     if (!ALLOWED_FILES.has(name)) throw new Error(`file not allowed: ${name}`);
