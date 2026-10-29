@@ -960,5 +960,27 @@
    "בזירה הזאת אין מקום לפחדנים. יש מקום לארוחה גדולה."
   ],
   "scale": 1.2
+ },
+ "hadardahan": {
+  "name": "הדר",
+  "role": "קרוב משפחה",
+  "look": {
+   "skin": "#e8b9a0",
+   "hair": "#6b4a3a",
+   "hairStyle": "long",
+   "shirt": "#1c1c22",
+   "pants": "#2a2d3a",
+   "accessory": "none",
+   "eyes": "#93e3fd"
+  },
+  "placeholder": true,
+  "id": "hadardahan",
+  "dialogues": [
+   {
+    "id": "hadardahan_default"
+   }
+  ],
+  "relations": "בת דודה",
+  "photoNotes": "שיער חום ארוך וחלק, עור בהיר, עיניים בהירות וחולצה שחורה נוצצת."
  }
 }
