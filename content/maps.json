@@ -2908,5 +2908,230 @@
    "x": 3,
    "y": 7
   }
+ },
+ "party_scene": {
+  "id": "party_scene",
+  "name": "המסיבה",
+  "music": "town",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "##########################",
+   "#WWWWWWWWWWWWWWWWWWWWWWWW#",
+   "#........................#",
+   "#........................#",
+   "#........................#",
+   "#........................#",
+   "#.........rrrrrrr........#",
+   "#.........rrrrrrr........#",
+   "#.........rrrrrrr........#",
+   "#........................#",
+   "#........................#",
+   "#........................#",
+   "#........................#",
+   "#........................#",
+   "##########################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 12,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "tv",
+    "id": "dj_booth",
+    "x": 18,
+    "y": 3,
+    "interact": {}
+   },
+   {
+    "type": "counter",
+    "id": "snack_bar",
+    "x": 10,
+    "y": 3,
+    "interact": {}
+   },
+   {
+    "type": "sofa",
+    "x": 6,
+    "y": 3
+   },
+   {
+    "type": "sofa",
+    "x": 14,
+    "y": 3
+   },
+   {
+    "type": "table",
+    "x": 9,
+    "y": 11
+   },
+   {
+    "type": "lamp",
+    "x": 21,
+    "y": 7
+   },
+   {
+    "type": "lamp",
+    "x": 20,
+    "y": 12
+   },
+   {
+    "type": "plant",
+    "x": 3,
+    "y": 3
+   },
+   {
+    "type": "plant",
+    "x": 13,
+    "y": 10
+   },
+   {
+    "type": "shelf",
+    "x": 22,
+    "y": 3
+   },
+   {
+    "type": "plant",
+    "x": 19,
+    "y": 6
+   },
+   {
+    "type": "lamp",
+    "x": 9,
+    "y": 6
+   },
+   {
+    "type": "plant",
+    "x": 23,
+    "y": 8
+   },
+   {
+    "type": "shelf",
+    "x": 1,
+    "y": 3
+   },
+   {
+    "type": "plant",
+    "x": 1,
+    "y": 10
+   },
+   {
+    "type": "plant",
+    "x": 4,
+    "y": 8
+   },
+   {
+    "type": "lamp",
+    "x": 18,
+    "y": 11
+   },
+   {
+    "type": "shelf",
+    "x": 13,
+    "y": 7
+   },
+   {
+    "type": "plant",
+    "x": 11,
+    "y": 6
+   }
+  ],
+  "npcs": [
+   {
+    "id": "party_dj",
+    "x": 16,
+    "y": 6,
+    "dir": 0
+   },
+   {
+    "id": "party_guest_a",
+    "x": 16,
+    "y": 8,
+    "dir": 2
+   },
+   {
+    "id": "party_guest_b",
+    "x": 7,
+    "y": 7,
+    "dir": 1
+   },
+   {
+    "id": "maayan",
+    "x": 2,
+    "y": 6,
+    "dir": 1
+   },
+   {
+    "id": "noam_friend",
+    "x": 7,
+    "y": 12,
+    "dir": 3
+   },
+   {
+    "id": "matan_friend",
+    "x": 11,
+    "y": 8,
+    "dir": 3
+   }
+  ],
+  "pickups": [
+   {
+    "id": "party_scene_rating_star_0",
+    "item": "rating_star",
+    "x": 22,
+    "y": 11,
+    "hidden": false,
+    "needsQuest": "q_party"
+   },
+   {
+    "id": "party_scene_rating_star_1",
+    "item": "rating_star",
+    "x": 24,
+    "y": 10,
+    "hidden": false,
+    "needsQuest": "q_party"
+   },
+   {
+    "id": "party_scene_rating_star_2",
+    "item": "rating_star",
+    "x": 6,
+    "y": 9,
+    "hidden": false,
+    "needsQuest": "q_party"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 12
+  }
  }
 }

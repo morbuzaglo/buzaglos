@@ -48,7 +48,7 @@ export function buildScene(spec) {
   const solid = new Set();         // exact footprint tiles
   const mark = (x, topY, w, h, pad) => { for (let xx = x - pad; xx < x + w + pad; xx++) for (let yy = topY - pad; yy < topY + h + pad; yy++) occ.add(xx + ',' + yy); };
   const props = [], npcs = [], pickups = [];
-  const addProp = (p) => { const [w, h] = fp(p.type); props.push(p); for (let dx = 0; dx < w; dx++) for (let dy = 0; dy < h; dy++) solid.add((p.x + dx) + ',' + (p.y - dy)); mark(p.x, p.y - h + 1, w, h, 1); };
+  const addProp = (p) => { const [w, h] = fp(p.type); if (p.id && !p.interact && !p.ability && !p.gives) p.interact = {}; props.push(p); for (let dx = 0; dx < w; dx++) for (let dy = 0; dy < h; dy++) solid.add((p.x + dx) + ',' + (p.y - dy)); mark(p.x, p.y - h + 1, w, h, 1); };
   props.push({ type: 'door', x: 1, y: H - 3, id: 'exit', interact: { action: 'exit' } });
   for (let dx = 0; dx <= 4; dx++) for (let dy = -1; dy <= 1; dy++) occ.add((1 + dx) + ',' + (H - 3 + dy));
   const inside = (x, y, w, h) => x >= 1 && x + w <= W - 1 && y - h + 1 >= top && y <= H - 2;
@@ -79,7 +79,7 @@ export function buildScene(spec) {
   };
   const freeTile = (near) => {
     let pool = [];
-    if (near && propById(near)) pool = nearTiles(propById(near), 2, 3);
+    if (near && propById(near)) pool = nearTiles(propById(near), 3, 4);
     if (!pool.length) for (let y = top; y <= H - 2; y++) for (let x = 1; x <= W - 2; x++) if (!occ.has(x + ',' + y) && Math.hypot(x - spawn.x, y - spawn.y) >= 4) pool.push({ x, y });
     if (!pool.length) return null;
     const t = pool[Math.floor(rnd() * pool.length)];
@@ -119,11 +119,14 @@ export function compileBundle(bundle, content) {
       for (const s of q.steps || []) for (const ln of [...(s.lines || []), ...(s.type === 'choice' ? (s.options || []).flatMap((o) => o.reply || []) : [])]) if (ln.who && known(ln.who)) speakers.add(ln.who);
       q.cast = [...speakers];
       if (first === sp.id) for (const c of q.cast || []) if ((content.npcs?.[c] || bundle.npcs?.[c]) && !hasNpc(c)) sp.npcs.push({ id: c });
+      let here = first;   // the scene the player is in at each step (a "teleport" step moves to the next scene)
       for (const s of q.steps || []) {
-        if (s.type === 'talk' && s.npc && !hasNpc(s.npc) && first === sp.id) sp.npcs.push({ id: s.npc });
+        if (s.type === 'teleport' && s.map) here = s.map;
+        const inHere = here === sp.id;
+        if (s.type === 'talk' && s.npc && !hasNpc(s.npc) && inHere) sp.npcs.push({ id: s.npc });
         const target = s.type === 'interact' || s.type === 'use' ? s.target : s.type === 'minigame' && !s.auto ? s.at : null;
-        if (target && !hasProp(target) && !(content.npcs?.[target] || bundle.npcs?.[target]) && first === sp.id) sp.props.push({ type: 'chest', id: target });
-        if (s.type === 'collect' && !sp.pickups.some((p) => p.item === s.item) && !sp.props.some((p) => p.gives === s.item) && !sp.npcs.some((n) => n.gives === s.item) && !(q.steps || []).some((o) => o.give === s.item) && first === sp.id) sp.pickups.push({ item: s.item, count: s.count || 1, hidden: false, quest: q.id });
+        if (target && !hasProp(target) && !(content.npcs?.[target] || bundle.npcs?.[target]) && inHere) sp.props.push({ type: 'chest', id: target });
+        if (s.type === 'collect' && !sp.pickups.some((p) => p.item === s.item) && !sp.props.some((p) => p.gives === s.item) && !sp.npcs.some((n) => n.gives === s.item) && !(q.steps || []).some((o) => o.give === s.item) && inHere) sp.pickups.push({ item: s.item, count: s.count || 1, hidden: false, quest: q.id });
       }
     }
     for (const pk of sp.pickups) if (!pk.quest) pk.quest = questsOf(sp.id)[0]?.id;

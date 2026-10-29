@@ -218,5 +218,13 @@
   "icon": "ticket",
   "color": "#4fc3f7",
   "desc": "הכרטיס לעלות על ההפלגה."
+ },
+ "rating_star": {
+  "id": "rating_star",
+  "name": "כוכב דירוג",
+  "type": "quest",
+  "icon": "star",
+  "color": "#ffd23f",
+  "desc": "כוכב דירוג להדגמה של האפליקציה של מתן."
  }
 }

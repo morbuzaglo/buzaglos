@@ -1,3 +1,13 @@
 {
-  "shopkeeper": ["snack", "juice", "cap_red", "shirt_green", "shirt_gold", "sneakers", "lucky_coin", "stopwatch", "study_book"]
+ "shopkeeper": [
+  "snack",
+  "juice",
+  "cap_red",
+  "shirt_green",
+  "shirt_gold",
+  "sneakers",
+  "lucky_coin",
+  "stopwatch",
+  "study_book"
+ ]
 }

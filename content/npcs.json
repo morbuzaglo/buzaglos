@@ -982,5 +982,92 @@
   ],
   "relations": "בת דודה",
   "photoNotes": "שיער חום ארוך וחלק, עור בהיר, עיניים בהירות וחולצה שחורה נוצצת."
+ },
+ "noam_friend": {
+  "id": "noam_friend",
+  "name": "נעם",
+  "role": "חברה הכי טובה של מעיין",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#3a2415",
+   "hairStyle": "long",
+   "shirt": "#8a5cc8",
+   "pants": "#2b2b3a",
+   "accessory": "glasses"
+  },
+  "phrases": [
+   "אני לא רוקדת. המוח שלי גדול מדי, הגוף לא מצליח לעקוב אחריו.",
+   "אפשר לנתח את הקצב מתמטית, אבל לא ממש לזוז איתו."
+  ],
+  "wander": false
+ },
+ "matan_friend": {
+  "id": "matan_friend",
+  "name": "מתן",
+  "role": "חבר הכי טוב של מעיין",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#2b1a0e",
+   "hairStyle": "short",
+   "shirt": "#2fa39a",
+   "pants": "#3a3a56",
+   "accessory": "none"
+  },
+  "phrases": [
+   "רגע, יש לי רעיון חדש לאפליקציה!",
+   "ידעתם שאפשר לדרג כל מנה במסעדה? אני בניתי את זה."
+  ],
+  "wander": false
+ },
+ "party_dj": {
+  "id": "party_dj",
+  "name": "הדי-ג׳יי",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#14141a",
+   "hairStyle": "short",
+   "shirt": "#1c1c26",
+   "pants": "#1c1c26",
+   "accessory": "sunglasses"
+  },
+  "phrases": [
+   "מי רוצה בקשה? אני לוקח בקשות!",
+   "הרחבה פתוחה לכולם, גם לגאונים."
+  ]
+ },
+ "party_guest_a": {
+  "id": "party_guest_a",
+  "name": "אורחת במסיבה",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#b88a4a",
+   "hairStyle": "curly",
+   "shirt": "#e0457b",
+   "pants": "#2b2b3a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "איזו מסיבה! כבר שעתיים שאני רוקדת.",
+   "מי זה שמדבר על אפליקציה בכל פעם שמתקרבים אליו?"
+  ]
+ },
+ "party_guest_b": {
+  "id": "party_guest_b",
+  "name": "אורח במסיבה",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f6dcc0",
+   "hair": "#8a8a90",
+   "hairStyle": "short",
+   "shirt": "#e8e2d2",
+   "pants": "#4a6a9a",
+   "accessory": "beard"
+  },
+  "phrases": [
+   "הכיבוד פה מעולה. אני נותן לו חמישה כוכבים.",
+   "מישהו יודע איזו מנה פה הכי טעימה?"
+  ]
  }
 }
