@@ -2,7 +2,7 @@
  "title": "בוזגלו",
  "tagline": "אלבום המשפחה השבור",
  "language": "he",
- "apiUrl": "",
+ "apiUrl": "https://buzaglos-api.mordechaybuzaglo.workers.dev",
  "startMap": "house",
  "startX": 8,
  "startY": 9,
