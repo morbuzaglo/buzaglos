@@ -3,6 +3,7 @@
 // secure Worker (no keys or passwords live in this page). Without a Worker it still works in local mode:
 // edit, validate, and download the JSON files to commit by hand.
 import { content as bundled } from '../content.js';
+import { placeBundle } from '../shared/place.js';
 import { validateContent, mergeBundle, HAIR_STYLES, ACCESSORIES, EXTRAS, ABILITIES, ICONS, MINIGAMES } from '../shared/validate.js';
 import { drawCharFrame, DEFAULT_LOOK, CHAR_W, CHAR_H, makeCanvas, tileAtlasCanvas, renderMapCanvas, propCanvas, TILE } from '../art.js';
 
@@ -170,8 +171,31 @@ function tabStories() {
     for (const n of Object.values(bundle.npcs || {})) result.append(h('div', { class: 'row' }, lookCanvas(n.look, 4), h('b', {}, n.name), h('span', { class: 'sub' }, n.role || '')));
     return { bundle, m, v };
   };
-  const add = h('button', { class: 'btn', onclick: () => { const r = check(); if (!r || r.v.errors.length) return toast('אי אפשר להוסיף לפני תיקון השגיאות', 'bad'); draft = r.m.content; saveDraft(); gen = null; toast('התוכן נוסף לטיוטה. אפשר לפרסם בלשונית פרסום.'); render(); } }, 'אישור והוספה לטיוטה');
-  app.append(h('div', { class: 'card' }, h('h3', {}, 'תצוגה מקדימה ועריכה'), h('div', { class: 'sub' }, 'אפשר לערוך את ה-JSON ישירות לפני האישור.'), area, h('div', { class: 'row', style: 'margin:8px 0' }, h('button', { class: 'btn alt', onclick: check }, 'בדיקה'), add), result));
+  const pvBox = h('div');
+  const preview = () => {
+    const r = check(); if (!r) return;
+    const qs = Object.values(r.bundle.quests || {});
+    if (!qs.length) return toast('אין משימה בתוכן הזה לתצוגה', 'warn');
+    if (r.v.errors.length) return toast('יש שגיאות. תקנו אותן לפני התצוגה', 'bad');
+    const c = JSON.parse(JSON.stringify(r.m.content));
+    const hub = c.config.hub || { map: 'house', x: 9, y: 12 };
+    placeBundle(c, r.bundle, { near: hub });
+    const only = {};
+    for (const q of qs) { const o = { ...q }; delete o.requires; delete o.scene; delete o.order; delete o.char; delete o.callers; only[q.id] = o; }
+    c.quests = only;
+    const giverChars = new Set(qs.map((q) => c.npcs[q.giver]?.character).filter(Boolean));
+    const who = Object.keys(c.characters).find((id) => !giverChars.has(id)) || c.config.startChar;
+    try { localStorage.setItem('bz-preview', JSON.stringify({ content: c, who })); } catch (e) { return toast('אין מקום לשמור את התצוגה בדפדפן', 'bad'); }
+    const src = '../index.html?preview=1&t=' + Date.now();
+    pvBox.innerHTML = '';
+    pvBox.append(
+      h('div', { class: 'sub' }, 'זו הטיוטה בתוך המשחק עצמו: ניגשים לדמות שנותנת את המשימה (עם הסימן !), מקבלים אותה ומשחקים אותה. שום דבר לא נשמר.'),
+      h('iframe', { src, class: 'pvframe' }),
+      h('div', { class: 'row' }, h('button', { class: 'btn alt', onclick: () => { pvBox.querySelector('iframe').src = '../index.html?preview=1&t=' + Date.now(); } }, 'התחלה מחדש'), h('a', { class: 'btn alt', href: src, target: '_blank' }, 'פתיחה במסך מלא'), h('button', { class: 'btn', onclick: doAdd }, '✓ אישור והוספה למשחק')));
+  };
+  const doAdd = () => { const r = check(); if (!r || r.v.errors.length) return toast('אי אפשר להוסיף לפני תיקון השגיאות', 'bad'); placeBundle(r.m.content, r.bundle); draft = r.m.content; saveDraft(); gen = null; toast('התוכן נוסף לטיוטה. אפשר לפרסם בלשונית פרסום.'); render(); };
+  const add = h('button', { class: 'btn', onclick: doAdd }, 'אישור והוספה לטיוטה');
+  app.append(h('div', { class: 'card' }, h('h3', {}, 'תצוגה מקדימה ועריכה'), h('div', { class: 'sub' }, 'אפשר לערוך את ה-JSON ישירות לפני האישור.'), area, h('div', { class: 'row', style: 'margin:8px 0' }, h('button', { class: 'btn alt', onclick: check }, 'בדיקה'), h('button', { class: 'btn', onclick: preview }, '▶ צפייה במשחק'), add), pvBox, result));
   if (area.value) check();
 }
 

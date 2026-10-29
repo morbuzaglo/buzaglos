@@ -2,7 +2,7 @@ import Phaser from 'phaser';
 import World from './scenes/World.js';
 import { initControls, setControlsVisible, input } from './ui/controls.js';
 import * as UI from './ui/ui.js';
-import { S, saveGame } from './state.js';
+import { S, saveGame, startNewGame, PREVIEW } from './state.js';
 import * as Q from './systems/quests.js';
 import { content } from './content.js';
 import { initAudio, resumeAudio, setMusic, setSfx, stopMusic } from './audio.js';
@@ -15,7 +15,15 @@ function showGameChrome(v) {
   setControlsVisible(v);
 }
 
+/** Admin Studio preview: the draft content (written by the admin page) replaces the live content; nothing is saved. */
+function loadPreview() {
+  if (!PREVIEW) return null;
+  try { const pv = JSON.parse(localStorage.getItem('bz-preview')); if (pv?.content) { Object.assign(content, pv.content); return pv; } } catch (e) { /* ignore */ }
+  return null;
+}
+
 function boot() {
+  const pv = loadPreview();
   initControls();
   UI.buildHud();
   showGameChrome(false);
@@ -37,6 +45,14 @@ function boot() {
 
   game.events.once('ready', () => {
     world = game.scene.getScene('World');
+    if (pv) {
+      const hub = content.config.hub || { map: 'house', x: 9, y: 12 };
+      startNewGame(pv.who || content.config.startChar);
+      Object.assign(S.state, { map: hub.map, x: hub.x, y: hub.y, dir: 0, flags: { ...(content.config.startFlags || {}) } });
+      S.started = true; showGameChrome(true); UI.buildHud(); world.startWorld();
+      const bar = document.createElement('div'); bar.id = 'pvbar'; bar.textContent = 'תצוגה מקדימה של הטיוטה · לא נשמר'; document.body.appendChild(bar);
+      return;
+    }
     UI.showTitle();
   });
 

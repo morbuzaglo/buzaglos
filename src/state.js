@@ -31,7 +31,9 @@ export const emit = (type, data) => { listeners.forEach((fn) => fn(type, data));
 
 const slotKey = (id) => `buzaglos-save-v2:${id}`;
 const LAST_KEY = 'buzaglos-last-char';
+export const PREVIEW = /[?&]preview=1/.test(location.search);   // Admin Studio draft preview: nothing is saved
 export function saveGame() {
+  if (PREVIEW) return;
   S.state.savedAt = Date.now();
   try { localStorage.setItem(slotKey(S.state.activeChar), JSON.stringify(S.state)); localStorage.setItem(LAST_KEY, S.state.activeChar); } catch (e) { /* storage blocked */ }
 }
@@ -167,7 +169,7 @@ export function checkAchievements() {
 }
 
 // ------------------------------------------------------------ cloud saves (optional; needs content.config.apiUrl)
-export const cloudEnabled = () => !!content.config.apiUrl;
+export const cloudEnabled = () => !PREVIEW && !!content.config.apiUrl;
 const cloudUrl = (code) => `${content.config.apiUrl.replace(/\/$/, '')}/api/save/${encodeURIComponent(code)}`;
 export const validCode = (code) => /^[A-Za-z0-9_-]{8,40}$/.test(code || '');
 export async function cloudSave(code) {
