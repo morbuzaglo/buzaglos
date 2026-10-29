@@ -36,6 +36,12 @@ export function saveGame() {
   if (PREVIEW) return;
   S.state.savedAt = Date.now();
   try { localStorage.setItem(slotKey(S.state.activeChar), JSON.stringify(S.state)); localStorage.setItem(LAST_KEY, S.state.activeChar); } catch (e) { /* storage blocked */ }
+  cloudPushSoon();
+}
+/** The guest character takes the name and grammatical gender the player gave. */
+export function applyGuest() {
+  const g = content.characters.visitor; if (!g || S.state.activeChar !== 'visitor') return;
+  g.name = S.state.guestName || 'אורח'; g.gender = S.state.guestGender === 'f' ? 'f' : 'm';
 }
 /** Moves a pre-v2 single save into its character's slot. */
 function migrateOld() {
@@ -51,10 +57,10 @@ export const hasSave = (id) => !!peekSave(id);
 export const lastChar = () => { try { return localStorage.getItem(LAST_KEY); } catch (e) { return null; } };
 export function loadGame(id) {
   const saved = peekSave(id); if (!saved) return false;
-  S.state = migrate(saved); return true;
+  S.state = migrate(saved); applyGuest(); return true;
 }
 export function clearSave(id) { try { localStorage.removeItem(slotKey(id)); } catch (e) { /* ignore */ } }
-export function startNewGame(charId) { S.state = newState(); if (charId) S.state.activeChar = charId; S.state.chosen = !!charId; }
+export function startNewGame(charId, guest) { S.state = newState(); if (charId) S.state.activeChar = charId; S.state.chosen = !!charId; if (guest) { S.state.guestName = guest.name; S.state.guestGender = guest.gender; } applyGuest(); }
 function migrate(saved) {
   const base = newState();
   const merged = { ...base, ...saved, stats: { ...base.stats, ...saved.stats }, settings: { ...base.settings, ...saved.settings }, owned: { ...base.owned, ...saved.owned } };
@@ -190,4 +196,36 @@ export async function cloudLoad(code) {
   const r = await fetch(cloudUrl(code)); if (!r.ok) return false;
   const obj = await r.json(); if (!obj || obj.v !== 1) return false;
   S.state = migrate(obj); saveGame(); return true;
+}
+
+// ------------------------------------------------------------ automatic cloud saves (per personal code + character; the phone is no longer the only copy)
+// No codes to remember: the family code is built in, and the character you play is your identity (a guest is identified by the name they give).
+const FAMILY_CODE = 'buzaglosfam';
+export const getCloudCode = () => FAMILY_CODE;
+export const cloudAutoOn = () => cloudEnabled();
+const nameHash = (n) => { let h = 5381; for (const ch of String(n || '').trim().toLowerCase()) h = ((h << 5) + h + ch.charCodeAt(0)) >>> 0; return h.toString(36); };
+const slotCloudKey = (id, name) => `${FAMILY_CODE}-${id === 'visitor' ? 'v' + nameHash(name ?? S.state.guestName) : id}`;
+const progressScore = (st) => ((st?.shards?.length || 0) * 1000 + Object.values(st?.quests || {}).filter((q) => q.state === 'done').length * 100 + Object.values(st?.quests || {}).filter((q) => q.state === 'active').length * 10 + (st?.level || 0));
+let pushTimer = null;
+function cloudPushSoon() { if (!cloudAutoOn() || !S.started) return; clearTimeout(pushTimer); pushTimer = setTimeout(() => cloudPushNow(), 15000); }
+export async function cloudPushNow(keepalive = false) {
+  if (!cloudAutoOn() || !S.started || PREVIEW) return false;
+  try { const r = await fetch(cloudUrl(slotCloudKey(S.state.activeChar)), { method: 'PUT', keepalive, headers: { 'content-type': 'application/json' }, body: JSON.stringify(S.state) }); return r.ok; } catch (e) { return false; }
+}
+async function cloudPullSlot(id, name) {
+  try { const r = await fetch(cloudUrl(slotCloudKey(id, name))); if (!r.ok) return null; const o = await r.json(); return o && o.v === 1 ? o : null; } catch (e) { return null; }
+}
+/** Copies the cloud save into this phone when the cloud has more progress (or the same progress, saved later). Returns true if the phone changed. */
+export async function syncSlotFromCloud(id, name) {
+  if (!cloudAutoOn()) return false;
+  const cloud = await cloudPullSlot(id, id === 'visitor' ? (name ?? peekSave(id)?.guestName) : undefined); if (!cloud) return false;
+  const local = peekSave(id), a = progressScore(cloud), b = progressScore(local);
+  if (local && (b > a || (b === a && (local.savedAt || 0) >= (cloud.savedAt || 0)))) return false;
+  try { localStorage.setItem(slotKey(id), JSON.stringify(cloud)); } catch (e) { return false; }
+  return true;
+}
+export async function syncAllFromCloud() {
+  if (!cloudAutoOn()) return 0;
+  const res = await Promise.all(Object.keys(content.characters).filter((id) => id !== 'visitor' || peekSave('visitor')).map((id) => syncSlotFromCloud(id)));
+  return res.filter(Boolean).length;
 }

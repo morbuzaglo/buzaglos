@@ -184,7 +184,7 @@ export default {
       }
       const sm = /^\/api\/save\/([A-Za-z0-9_-]{8,40})$/.exec(path);
       if (sm && env.SAVES) {
-        if (!(await rateLimit(env, req, 'save', 120, 3600))) return json({ error: 'rate limit' }, 429, h);
+        if (!(await rateLimit(env, req, 'save', 1500, 3600))) return json({ error: 'rate limit' }, 429, h);
         if (req.method === 'GET') { const v = await env.SAVES.get('save:' + sm[1]); return v ? new Response(v, { headers: { 'content-type': 'application/json', ...h } }) : json({ error: 'not found' }, 404, h); }
         if (req.method === 'PUT') { const body = await req.text(); if (body.length > 120000) return json({ error: 'too large' }, 413, h); JSON.parse(body); await env.SAVES.put('save:' + sm[1], body); return json({ ok: true }, 200, h); }
       }

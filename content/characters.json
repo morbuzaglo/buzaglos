@@ -228,5 +228,29 @@
   "weakness": "צריך לשכנע אותו לטוס",
   "catchphrase": "יש לי דבר תורה.",
   "theme": "#4a6fa5"
+ },
+ "visitor": {
+  "name": "אורח",
+  "role": "אורח/ת",
+  "gender": "m",
+  "bio": "מישהו שאינו מהמשפחה אבל רוצה לשחק ולהכיר את בוזגלו. סקרן, חביב, ומוכן לכל הרפתקה.",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#3a2415",
+   "hairStyle": "short",
+   "shirt": "#4aa87a",
+   "pants": "#3a3a56",
+   "accessory": "none"
+  },
+  "ability": {
+   "type": "charm",
+   "name": "קסם אורחים",
+   "desc": "קבלת טיפ מדמויות בסביבה.",
+   "cooldown": 6
+  },
+  "strength": "סקרנות",
+  "weakness": "עדיין לא מכיר את המשפחה",
+  "catchphrase": "שלום לכולם! איפה מתחילים?",
+  "theme": "#4aa87a"
  }
 }

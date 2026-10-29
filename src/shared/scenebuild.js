@@ -105,7 +105,7 @@ export function buildScene(spec) {
 export function compileBundle(bundle, content) {
   if (!bundle) return bundle;
   const specs = Array.isArray(bundle.scenes) ? bundle.scenes : Object.values(bundle.scenes || {});
-  const chars = Object.keys(content.characters || {});
+  const chars = Object.keys(content.characters || {}).filter((c) => (content.npcs || {})[c]?.character === c);   // family members that exist as characters in the world (can call, can be cast)
   const qs = Object.values(bundle.quests || {});
   const questsOf = (sid) => qs.filter((q) => (q.maps || []).includes(sid) || q.scene?.map === sid);
   // 1. add what the quests need to the specs (cast, talk-to people, things to collect, objects referenced by steps)

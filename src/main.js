@@ -3,6 +3,7 @@ import World from './scenes/World.js';
 import { initControls, setControlsVisible, input } from './ui/controls.js';
 import * as UI from './ui/ui.js';
 import { S, saveGame, startNewGame, PREVIEW } from './state.js';
+import * as St from './state.js';
 import * as Q from './systems/quests.js';
 import { content } from './content.js';
 import { initAudio, resumeAudio, setMusic, setSfx, stopMusic } from './audio.js';
@@ -41,7 +42,7 @@ function boot() {
     fps: { target: 60 },
   });
   window.__game = game;
-  window.__bz = { S, input, UI, Q, content };
+  window.__bz = { S, input, UI, Q, content, St };
 
   game.events.once('ready', () => {
     world = game.scene.getScene('World');

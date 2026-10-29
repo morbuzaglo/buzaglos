@@ -51,7 +51,7 @@ const playerFor = (q, asHero) => {
   return all.find((c) => c !== hero && !(q.cast || []).includes(c)) || all.find((c) => c !== hero);
 };
 const run = (q, who) => new Promise((resolve) => {
-  const solveJs = `(async()=>{ await T.skipIntro(); const {S,content}=__bz; for(const x of Object.values(content.quests)) if(x.scene&&x.id!=='${q.id}') S.state.quests[x.id]={state:'done'}; T.tp('house',9,12); await T.sleep(2500); await T.click(15); const w=T.w(); w.busy=false; await T.sleep(600); w.enterStory('${q.id}'); await T.sleep(2500);
+  const solveJs = `(async()=>{ window.__bzTest={autowin:{drive:true,sequence:true}}; await T.skipIntro(); const {S,content}=__bz; for(const x of Object.values(content.quests)) if(x.scene&&x.id!=='${q.id}') S.state.quests[x.id]={state:'done'}; T.tp('house',9,12); await T.sleep(2500); await T.click(15); const w=T.w(); w.busy=false; await T.sleep(600); w.enterStory('${q.id}'); await T.sleep(2500);
     const log=[]; const t0=Date.now(); const p=T.solve('${q.id}',log); const res=await Promise.race([p, new Promise(r=>setTimeout(()=>r('timeout'),150000))]);
     return 'RESULT:'+JSON.stringify({state:S.state.quests['${q.id}']?.state, res, shard:S.state.shards.includes(content.quests['${q.id}'].reward?.shard?.id), secs:Math.round((Date.now()-t0)/1000), last:log.slice(-2)}) })()`;
   const steps = [{ js: `window.__who='${who}'; 1`, wait: 200 }, { file: root + 'tools/test_helpers.js', wait: 100 }, { js: solveJs, wait: 300 }];

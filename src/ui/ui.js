@@ -3,6 +3,7 @@ import { content } from '../content.js';
 import {
   S, onChange, saveGame, equippedLook, buy, check, addCoins, addXp, addItem, removeItem, setFlag, getFlag,
   xpForLevel, exportCode, importCode, startNewGame, hasSave, loadGame, cloudEnabled, cloudSave, cloudLoad, validCode, peekSave, clearSave, lastChar,
+  cloudAutoOn, syncSlotFromCloud, syncAllFromCloud,
 } from '../state.js';
 import { paintPortrait, paintIcon, paintTitleBanner } from '../art.js';
 import * as Q from '../systems/quests.js';
@@ -245,13 +246,9 @@ function tabSettings(body) {
   row(STR.settings.sfx, a.sfx, (v) => { setSfx(v); S.state.settings.sfx = v; });
   body.appendChild(card(`<b>${STR.settings.stats}</b><br><span class="sub">${STR.settings.statsLine(S.state.stats)}</span>`));
   if (cloudEnabled()) {
-    const cc = card(`<b>${STR.settings.cloud.title}</b><br><span class="sub">${STR.settings.cloud.help}</span>`);
-    const inp = el('input'); inp.type = 'text'; inp.dir = 'ltr'; inp.placeholder = STR.settings.cloud.code; inp.value = S.state.settings.cloudCode || '';
-    inp.style.cssText = 'width:100%;margin:8px 0;padding:8px;font:14px monospace;user-select:text;-webkit-user-select:text';
-    const run = (fn, okMsg) => async () => { if (!validCode(inp.value)) return toast(STR.settings.cloud.badCode); S.state.settings.cloudCode = inp.value; try { const ok = await fn(inp.value); toast(ok ? okMsg : STR.settings.cloud.fail); if (ok && fn === cloudLoad) { hooks.continueGame?.(); closePanel(); } } catch (e) { toast(STR.settings.cloud.fail); } };
-    const b1 = el('button', 'btn', STR.settings.cloud.save); b1.onclick = run(cloudSave, STR.settings.cloud.saved);
-    const b2 = el('button', 'btn alt', STR.settings.cloud.load); b2.onclick = run(cloudLoad, STR.settings.cloud.loaded);
-    const rw = el('div', 'row'); rw.style.justifyContent = 'flex-start'; rw.append(b1, b2); cc.append(inp, rw); body.appendChild(cc);
+    const cc = card('<b>☁ שמירה בענן</b><br><span class="sub">ההתקדמות נשמרת אוטומטית בענן, בלי קוד. בפתיחת המשחק בטלפון אחר, בוחרים את אותה דמות וההתקדמות חוזרת.</span>');
+    const b2 = el('button', 'btn alt', 'טעינה מהענן עכשיו'); b2.onclick = async () => { const ch = await syncSlotFromCloud(S.state.activeChar); toast(ch ? 'נטענה התקדמות מהענן' : 'אין בענן התקדמות חדשה יותר'); if (ch) { hooks.continueGame?.(); closePanel(); } };
+    const rw = el('div', 'row'); rw.style.justifyContent = 'flex-start'; rw.append(b2); cc.append(rw); body.appendChild(cc);
   }
   const sv = card(`<b>${STR.settings.saveTitle}</b><br><span class="sub">${STR.settings.saveHelp}</span>`);
   const ta = el('textarea'); ta.placeholder = STR.settings.paste; ta.dir = 'ltr';
@@ -324,14 +321,27 @@ export function showTitle() {
     const b = el('button', 'pick' + (id === last ? ' last' : '')); const cv = el('canvas'); paintPortrait(cv, c.look);
     b.append(cv, el('span', '', esc(c.name)), el('small', saved ? 'has' : '', saved ? STR.title.progress(saved.shards?.length || 0, Q.totalShards()) : STR.title.newTag));
     b.dataset.id = id;
-    b.onclick = () => {
+    b.onclick = async () => {
       sfx('tap');
-      if (saved) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; }
+      if (id !== 'visitor' && cloudAutoOn()) await syncSlotFromCloud(id);
+      if (peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; }
+      if (id === 'visitor') { const guest = askGuest(); if (!guest) return; if (cloudAutoOn() && await syncSlotFromCloud(id, guest.name) && peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; } t.classList.add('hidden'); startNewGame(id, guest); hooks.newGame?.(); return; }
       if (confirm(STR.title.confirmPick(c.name))) { t.classList.add('hidden'); startNewGame(id); hooks.newGame?.(); }
     };
     grid.appendChild(b);
   }
-  t.append(grid, el('p', '', STR.title.pickHelp), el('p', '', STR.title.tip));
+  t.append(grid, el('p', '', STR.title.pickHelp));
+  if (cloudEnabled()) {
+    t.appendChild(el('p', 'sub', '☁ ההתקדמות נשמרת גם בענן, כך שהיא חוזרת בכל טלפון (גם אחרי גלישה פרטית).'));
+    syncAllFromCloud().then((n) => { if (n && !$('title').classList.contains('hidden')) showTitle(); });
+  }
+  t.appendChild(el('p', '', STR.title.tip));
+}
+/** The guest character asks for a name and a form of address (Hebrew is gendered). */
+function askGuest() {
+  const name = prompt('איך קוראים לך? (אפשר להשאיר ריק)'); if (name === null) return null;
+  const girl = confirm('לאיזו לשון לפנות אליך? אישור = נקבה (בת), ביטול = זכר (בן)');
+  return { name: name.trim().slice(0, 14) || 'אורח', gender: girl ? 'f' : 'm' };
 }
 export function hideTitle() { $('title').classList.add('hidden'); }
 

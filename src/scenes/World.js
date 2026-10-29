@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { content } from '../content.js';
-import { S, saveGame, bonus, check, addItem, addCoins, addXp, setFlag, getFlag, equippedLook, onChange } from '../state.js';
+import { S, saveGame, cloudPushNow, bonus, check, addItem, addCoins, addXp, setFlag, getFlag, equippedLook, onChange } from '../state.js';
 import {
   TILE, TILE_NAMES, TILE_SOLID, buildTileAtlas, buildProps, renderMapCanvas, characterTexture, iconCanvas, PROP_SIZE, CHAR_W, CHAR_H,
 } from '../art.js';
@@ -37,8 +37,8 @@ export default class World extends Phaser.Scene {
     UI.hooks.resetCooldown = () => { this.abilityCd = 0; };
     UI.hooks.ending = () => UI.showEnding();
     this.events.on('shutdown', () => {});
-    window.addEventListener('pagehide', () => { if (S.started) saveGame(); });
-    document.addEventListener('visibilitychange', () => { if (document.hidden) { if (S.started) saveGame(); }; });
+    window.addEventListener('pagehide', () => { if (S.started) { saveGame(); cloudPushNow(true); } });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { if (S.started) { saveGame(); cloudPushNow(true); } }; });
     // rewards are shown after the current dialogue closes
     this.pendingRewards = [];
     UI.hooks.enterStory = (qid) => this.enterStory(qid);
