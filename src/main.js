@@ -49,7 +49,9 @@ function boot() {
       const hub = content.config.hub || { map: 'house', x: 9, y: 12 };
       startNewGame(pv.who || content.config.startChar);
       Object.assign(S.state, { map: hub.map, x: hub.x, y: hub.y, dir: 0, flags: { ...(content.config.startFlags || {}) } });
+      if (pv.ids) for (const q of Object.values(content.quests)) if (q.scene && !pv.ids.includes(q.id)) S.state.quests[q.id] = { state: 'done' };
       S.started = true; showGameChrome(true); UI.buildHud(); world.startWorld();
+      if (pv.ids && pv.direct) setTimeout(() => world.enterStory(pv.ids[0]), 600);
       const bar = document.createElement('div'); bar.id = 'pvbar'; bar.textContent = 'תצוגה מקדימה של הטיוטה · לא נשמר'; document.body.appendChild(bar);
       return;
     }

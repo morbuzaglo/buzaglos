@@ -12,6 +12,7 @@
 //   POST /api/admin/publish    (admin) { files, message }   -> commits content/*.json to GitHub (triggers the Pages deploy)
 //   GET/PUT /api/save/:code    family save code             -> cloud save of the game progress
 import { validateContent, mergeBundle } from '../../src/shared/validate.js';
+import { compileBundle } from '../../src/shared/scenebuild.js';
 import { STORY_SYSTEM_PROMPT, VISION_PROMPT } from './prompts.js';
 
 const enc = new TextEncoder();
@@ -104,7 +105,7 @@ async function publish(env, files, message) {
 
 // ---------------------------------------------------------------- Anthropic
 async function claude(env, body) {
-  const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' }, body: JSON.stringify({ model: env.ANTHROPIC_MODEL || 'claude-sonnet-5-5', max_tokens: 6000, ...body }) });
+  const r = await fetch('https://api.anthropic.com/v1/messages', { method: 'POST', headers: { 'x-api-key': env.ANTHROPIC_API_KEY, 'anthropic-version': '2023-06-01', 'content-type': 'application/json' }, body: JSON.stringify({ model: env.ANTHROPIC_MODEL || 'claude-sonnet-5-5', max_tokens: 10000, ...body }) });
   if (!r.ok) throw new Error(`Anthropic error ${r.status}: ${(await r.text()).slice(0, 300)}`);
   const data = await r.json();
   return data.content.map((c) => c.text || '').join('');
@@ -124,20 +125,22 @@ async function generateStory(env, { story, context, bundle: prev, instruction })
   for (const [name, t] of Object.entries(files)) full[name.replace('.json', '')] = JSON.parse(t);
   const user = `הקשר קיים במשחק (אל תמציא דברים מחוץ לו):\n${JSON.stringify(context || {}, null, 1)}\n\nהסיפור שהמשפחה סיפרה (כתבו ממנו משימה/ות):\n${story}`;
   const messages = [{ role: 'user', content: user }];
-  if (prev && instruction) { if (String(instruction).length > 2000) throw new Error('instruction too long'); messages.push({ role: 'assistant', content: JSON.stringify(prev) }, { role: 'user', content: `בקשת שינוי מהמשפחה: ${instruction}
+  if (prev && instruction) { if (String(instruction).length > 2000) throw new Error('instruction too long'); const slim = { ...prev }; delete slim.maps;
+    messages.push({ role: 'assistant', content: JSON.stringify(slim) }, { role: 'user', content: `בקשת שינוי מהמשפחה: ${instruction}
 
 החזירו את ה-JSON המלא והמעודכן בלבד (אותו מבנה), ושמרו על כל מה שלא ביקשו לשנות.` }); }
   const text = await claude(env, { system: STORY_SYSTEM_PROMPT, messages });
-  let bundle = extractJson(text), merged, v, fixes = 0;
+  const build = (b) => { delete b.maps; compileBundle(b, full); return b; };
+  let bundle = build(extractJson(text)), merged, v, fixes = 0;
   // Self-repair: validate, and send any errors back to Claude (missing items get created) until the bundle is ready to approve.
   for (let round = 0; ; round++) {
     merged = mergeBundle(full, bundle); v = validateContent(merged.content);
     if (!v.errors.length || round >= 3) break;
     fixes++;
     const miss = missingItems(v.errors);
-    messages.push({ role: 'assistant', content: JSON.stringify(bundle) });
+    { const slim = { ...bundle }; delete slim.maps; messages.push({ role: 'assistant', content: JSON.stringify(slim) }); }
     messages.push({ role: 'user', content: `הבדיקה האוטומטית מצאה שגיאות:\n- ${v.errors.join('\n- ')}\n\n${miss.length ? `פריטים חסרים: ${miss.join(', ')}. הגדירו אותם במפתח "items" (שם בעברית, type, icon, color, desc), או השתמשו בפריטים קיימים מההקשר.\n` : ''}תקנו והחזירו את ה-JSON המלא והמתוקן בלבד (אותו מבנה כמו קודם), בלי הסברים.` });
-    try { bundle = extractJson(await claude(env, { system: STORY_SYSTEM_PROMPT, messages })); } catch { break; }
+    try { bundle = build(extractJson(await claude(env, { system: STORY_SYSTEM_PROMPT, messages }))); } catch { break; }
   }
   // Fallback: any item that still does not exist is created automatically.
   const miss = missingItems(v.errors).filter((id) => !(full.items || {})[id]);
@@ -147,6 +150,7 @@ async function generateStory(env, { story, context, bundle: prev, instruction })
     merged = mergeBundle(full, bundle); v = validateContent(merged.content);
     bundle.notes = [].concat(bundle.notes || [], `נוצרו אוטומטית פריטים: ${miss.join(', ')} (אפשר לערוך שם ואייקון בטיוטה)`);
   }
+  delete bundle.maps;   // compiled from `scenes` again by the Studio, deterministic
   return { bundle, conflicts: merged.conflicts, errors: v.errors, warnings: v.warnings, autoFixed: fixes };
 }
 

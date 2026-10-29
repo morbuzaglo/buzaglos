@@ -29,7 +29,7 @@ function textOk(t) { return typeof t === 'string' && t.trim().length > 0 && t.le
 function checkGenderTemplates(t, where, W) {
   const opens = (t.match(/\{/g) || []).length, closes = (t.match(/\}/g) || []).length;
   if (opens !== closes) W.push(`${where}: סוגריים מסולסלים לא מאוזנים`);
-  for (const m of t.matchAll(/\{([^{}]*)\}/g)) if (!/^(f:[^|}]*\|m:[^}]*|m:[^|}]*\|f:[^}]*|name)$/.test(m[1])) W.push(`${where}: תבנית מגדר לא תקינה {${m[1]}}`);
+  for (const m of t.matchAll(/\{([^{}]*)\}/g)) if (!/^(f:[^|}]*\|m:[^}]*|m:[^|}]*\|f:[^}]*|self:[^|}]*\|other:[^}]*|name)$/.test(m[1])) W.push(`${where}: תבנית מגדר לא תקינה {${m[1]}}`);
 }
 
 export function validateContent(c) {
@@ -101,6 +101,9 @@ export function validateContent(c) {
     if (q.scene && !maps[q.scene.map]) E.push(`${w}: מפת הסצנה לא קיימת (${q.scene.map})`);
     for (const mm of q.maps || []) if (!maps[mm]) E.push(`${w}: מפה לא קיימת (${mm})`);
     if (q.char && !chars[q.char]) E.push(`${w}: דמות נדרשת לא קיימת (${q.char})`);
+    if (q.protagonist && !chars[q.protagonist]) E.push(`${w}: גיבור הסיפור לא קיים (${q.protagonist})`);
+    for (const c of q.cast || []) if (!chars[c] && !npcs[c]) E.push(`${w}: דמות בסיפור לא קיימת (${c})`);
+    if (q.scene) { if (!q.callers?.length) E.push(`${w}: חסרים callers (מי קורא לשחקן)`); for (const k of ['missionSelf', 'missionOther', 'missionPlayer']) if (q.scene && !Array.isArray(q[k])) E.push(`${w}: חסר ${k}`); else if (q.scene) checkLines((q[k] || []).map((t) => ({ who: 'narrator', text: t })), `${w} (${k})`); }
     if (q.offer) checkLines(q.offer, `${w} (הצעה)`); else if (q.giver) E.push(`${w}: חסרה הצעת משימה (offer)`);
     if (!Array.isArray(q.steps) || !q.steps.length) { E.push(`${w}: אין שלבים`); continue; }
     q.steps.forEach((s, i) => {
@@ -109,6 +112,7 @@ export function validateContent(c) {
       if (!textOk(s.text) && s.type !== 'cutscene' && s.type !== 'teleport' && s.type !== 'choice') E.push(`${sw}: חסר טקסט יעד`);
       if (s.lines) checkLines(s.lines, sw);
       if (s.type === 'talk' && !npcs[s.npc]) E.push(`${sw}: דמות לא קיימת (${s.npc})`);
+      if (q.cast && s.type === 'talk' && npcs[s.npc]?.character) E.push(`${sw}: אי אפשר לשלב שיחה אינטראקטיבית עם בן משפחה (${s.npc}) - השחקן עלול להיות אותו אדם. השתמשו ב-cutscene`);
       if (s.type === 'cutscene') checkLines(s.lines, sw);
       if (s.type === 'teleport' && !maps[s.map]) E.push(`${sw}: מפה לא קיימת (${s.map})`);
       if (s.type === 'interact' && !Object.values(maps).some((m) => (m.props || []).some((p) => p.id === s.target))) E.push(`${sw}: אובייקט לא קיים (${s.target})`);
@@ -154,7 +158,7 @@ export function validateContent(c) {
 export function mergeBundle(content, bundle) {
   const out = JSON.parse(JSON.stringify(content));
   const conflicts = [];
-  for (const kind of ['quests', 'dialogues', 'npcs', 'items', 'achievements']) {
+  for (const kind of ['quests', 'dialogues', 'npcs', 'items', 'achievements', 'maps']) {
     const src = bundle[kind]; if (!src) continue;
     const entries = Array.isArray(src) ? src.map((o) => [o.id, o]) : Object.entries(src);
     out[kind] ||= {};

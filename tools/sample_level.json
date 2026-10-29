@@ -1,0 +1,14 @@
+{
+ "scenes":[{"id":"q_lobby_scene","name":"לובי המלון","theme":"hotel","size":"medium","props":[{"type":"counter","id":"reception"},{"type":"sofa"},{"type":"suitcase","id":"bag"},{"type":"plant"},{"type":"table","id":"cafe"}],"npcs":[{"id":"clerk_dana","near":"reception"},{"id":"bellboy_omer"}]}],
+ "npcs":{"clerk_dana":{"id":"clerk_dana","name":"דנה הפקידה","role":"פקידת קבלה","look":{"skin":"#f1d3b5","hair":"#3a2415","hairStyle":"bun","shirt":"#2b5fa8","pants":"#222222","accessory":"none"},"phrases":["ברוכים הבאים למלון!"]},
+ "bellboy_omer":{"id":"bellboy_omer","name":"עומר הסבל","role":"סבל","look":{"skin":"#e8c9a8","hair":"#111111","hairStyle":"short","shirt":"#7a3a3a","pants":"#222222","accessory":"none"},"phrases":["עזרה עם המזוודות?"]}},
+ "quests":{"q_lobby_meet":{"id":"q_lobby_meet","title":"פגישה בלובי","summary":"עדן וטרי נפגשים במלון.","protagonist":"eden","cast":["eden"],"scene":{"map":"q_lobby_scene"},"maps":["q_lobby_scene"],
+ "missionPlayer":["{name}, בואו נחזור ללובי ההוא!","המשימה: לפגוש את טרי."],"missionSelf":["יש לי סיפור על מלון.","המשימה: {f:תבואי|m:תבוא} איתי ללובי."],"missionOther":["עדן מספרת על לובי במלון.","המשימה: {f:תעזרי|m:תעזור} לה."],
+ "steps":[
+ {"type":"cutscene","lines":[{"who":"narrator","text":"לובי של מלון בתל אביב."},{"who":"terry","text":"עדן, רוצה לשתות איתי קפה?"},{"who":"eden","text":"בשמחה!"}]},
+ {"type":"talk","npc":"clerk_dana","text":"{self:לבקש מדנה מפתח לחדר|other:לעזור לעדן לקבל מפתח}","lines":[{"who":"clerk_dana","text":"בבקשה, המפתח."}],"give":"room_key"},
+ {"type":"collect","item":"room_key","count":1,"text":"לקחת את המפתח"},
+ {"type":"interact","target":"bag","text":"לבדוק את המזוודה","lines":[{"who":"narrator","text":"המזוודה כבדה!"}]},
+ {"type":"minigame","auto":true,"game":"quiz","text":"חידון","config":{"questions":[{"q":"איפה נפגשו?","a":["מלון","חוף","שוק"],"c":0}]}}
+ ],"reward":{"coins":30,"xp":40,"shard":{"id":"shard_lobby","title":"לובי","story":"עדן וטרי נפגשו בלובי."}}}}
+}

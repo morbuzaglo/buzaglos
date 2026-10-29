@@ -4,11 +4,21 @@
 import { content } from './content.js';
 import { S } from './state.js';
 
+/** True when the player IS the hero of the story being played (or about to be offered). */
+export function playerIsHero() {
+  const quests = Object.values(content.quests).filter((q) => q.scene);
+  const q = quests.find((x) => S.state.quests[x.id]?.state === 'active') || quests.filter((x) => S.state.quests[x.id]?.state !== 'done').sort((a, b) => (a.order || 99) - (b.order || 99))[0];
+  const hero = q && (q.protagonist || q.callers?.[0]);
+  return !!hero && hero === S.state.activeChar;
+}
+
 export function tpl(text) {
   if (text == null) return '';
   const ch = content.characters[S.state.activeChar];
   const g = ch?.gender === 'f' ? 'f' : 'm';
-  return String(text)
+  let t = String(text);
+  if (t.includes('{self:')) { const me = playerIsHero(); t = t.replace(/\{self:([^|}]*)\|other:([^}]*)\}/g, (_, a, b) => (me ? a : b)); }
+  return t
     .replace(/\{f:([^|}]*)\|m:([^}]*)\}/g, (_, f, m) => (g === 'f' ? f : m))
     .replace(/\{m:([^|}]*)\|f:([^}]*)\}/g, (_, m, f) => (g === 'f' ? f : m))
     .replace(/\{name\}/g, ch?.name || '');

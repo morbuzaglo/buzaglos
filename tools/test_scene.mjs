@@ -1,0 +1,11 @@
+import fs from 'fs';
+import { compileBundle } from '../src/shared/scenebuild.js';
+import { mergeBundle, validateContent } from '../src/shared/validate.js';
+const rd = (n) => JSON.parse(fs.readFileSync(new URL('../content/' + n + '.json', import.meta.url), 'utf8'));
+const c = {}; for (const n of ['characters','npcs','items','quests','dialogues','maps','shop','achievements','config']) c[n] = rd(n);
+const b = JSON.parse(fs.readFileSync(new URL('./sample_level.json', import.meta.url), 'utf8'));
+compileBundle(b, c);
+const m = mergeBundle(c, b); const v = validateContent(m.content);
+console.log('errors', v.errors, 'warnings', v.warnings.length);
+const mp = b.maps.q_lobby_scene; console.log(mp.tiles.join('\n')); console.log(JSON.stringify(mp.props.map(p=>[p.type,p.x,p.y,p.id])), JSON.stringify(mp.npcs), JSON.stringify(mp.pickups), JSON.stringify(b.quests.q_lobby_meet.scene), b.quests.q_lobby_meet.order, b.quests.q_lobby_meet.callers.slice(0,3));
+const base = validateContent(c); console.log('base errors', base.errors.length);

@@ -4,6 +4,7 @@
 // edit, validate, and download the JSON files to commit by hand.
 import { content as bundled } from '../content.js';
 import { placeBundle } from '../shared/place.js';
+import { compileBundle } from '../shared/scenebuild.js';
 import { validateContent, mergeBundle, HAIR_STYLES, ACCESSORIES, EXTRAS, ABILITIES, ICONS, MINIGAMES } from '../shared/validate.js';
 import { drawCharFrame, DEFAULT_LOOK, CHAR_W, CHAR_H, makeCanvas, tileAtlasCanvas, renderMapCanvas, propCanvas, TILE } from '../art.js';
 
@@ -141,7 +142,7 @@ function storyContext() {
   };
 }
 function questCard(q) {
-  return h('div', { class: 'quest' }, h('b', {}, q.title), h('div', { class: 'sub' }, `נותן המשימה: ${draft.npcs[q.giver]?.name || q.giver}  |  שלבים: ${(q.steps || []).length}  |  פרס: ${q.reward?.coins || 0} מטבעות, ${q.reward?.xp || 0} ניסיון${q.reward?.shard ? '  |  רסיס: ' + q.reward.shard.title : ''}`),
+  return h('div', { class: 'quest' }, h('b', {}, q.title), h('div', { class: 'sub' }, `${q.protagonist ? 'גיבור הסיפור: ' + (draft.characters[q.protagonist]?.name || q.protagonist) + (q.cast?.length > 1 ? ' | משתתפים: ' + q.cast.map((c) => draft.characters[c]?.name || draft.npcs[c]?.name || c).join(', ') : '') : 'נותן המשימה: ' + (draft.npcs[q.giver]?.name || q.giver)}  |  שלבים: ${(q.steps || []).length}  |  פרס: ${q.reward?.coins || 0} מטבעות, ${q.reward?.xp || 0} ניסיון${q.reward?.shard ? '  |  רסיס: ' + q.reward.shard.title : ''}`),
     h('ol', {}, (q.steps || []).map((s) => h('li', {}, `${s.text} `, h('span', { class: 'sub' }, `[${s.type}${s.game ? ':' + s.game : ''}]`)))),
     q.reward?.shard ? h('div', { class: 'sub' }, '״' + q.reward.shard.story + '״') : null);
 }
@@ -161,6 +162,7 @@ function tabStories() {
   const check = () => {
     result.innerHTML = '';
     let bundle; try { bundle = JSON.parse(area.value); } catch (e) { result.append(h('div', { class: 'err-list' }, 'JSON לא תקין: ' + e.message)); return null; }
+    delete bundle.maps; try { compileBundle(bundle, draft); } catch (e) { result.append(h('div', { class: 'err-list' }, 'שגיאה בבניית הסצנה: ' + e.message)); return null; }
     const m = mergeBundle(draft, bundle); const v = validateContent(m.content);
     if (bundle.notes) result.append(h('div', { class: 'card warn' }, 'הערות מה-AI: ' + (Array.isArray(bundle.notes) ? bundle.notes.join(' | ') : bundle.notes)));
     if (m.conflicts.length) result.append(h('div', { class: 'warn-list' }, 'מזהים שכבר קיימים (לא יידרסו): ' + m.conflicts.join(', ')));
@@ -168,6 +170,7 @@ function tabStories() {
     if (v.warnings.length) result.append(h('div', { class: 'warn-list' }, h('ul', {}, v.warnings.map((e) => h('li', {}, e)))));
     if (!v.errors.length) result.append(h('div', { class: 'ok' }, '✓ התוכן תקין.'));
     for (const q of Object.values(bundle.quests || {})) result.append(questCard(q));
+    for (const sp of Array.isArray(bundle.scenes) ? bundle.scenes : Object.values(bundle.scenes || {})) result.append(h('div', { class: 'sub' }, `סצנה חדשה: ${sp.name || sp.id} (${sp.theme || 'home'}) | אובייקטים: ${(sp.props || []).length} | דמויות: ${(sp.npcs || []).length}`));
     for (const n of Object.values(bundle.npcs || {})) result.append(h('div', { class: 'row' }, lookCanvas(n.look, 4), h('b', {}, n.name), h('span', { class: 'sub' }, n.role || '')));
     return { bundle, m, v };
   };
@@ -180,27 +183,40 @@ function tabStories() {
       const r = await api('/api/admin/generate', { story: gen?.storyText || 'סיפור משפחתי', context: storyContext(), bundle, instruction: reviseTxt.value });
       gen = { ...(gen || {}), storyText: gen?.storyText, bundleText: JSON.stringify(r.bundle, null, 1), errors: r.errors, warnings: r.warnings, conflicts: r.conflicts }; render();
     } catch (e) { toast(e.message, 'bad'); reviseBtn.disabled = false; reviseBtn.textContent = 'עדכון עם AI'; } } }, 'עדכון עם AI');
-  const preview = () => {
+  const runPreview = (pick, direct) => {
     const r = check(); if (!r) return;
     const qs = Object.values(r.bundle.quests || {});
     if (!qs.length) return toast('אין משימה בתוכן הזה לתצוגה', 'warn');
     if (r.v.errors.length) return toast('יש שגיאות. תקנו אותן לפני התצוגה', 'bad');
     const c = JSON.parse(JSON.stringify(r.m.content));
+    const levels = qs.filter((q) => q.scene);
     const hub = c.config.hub || { map: 'house', x: 9, y: 12 };
-    placeBundle(c, r.bundle, { near: hub });
-    const only = {};
-    for (const q of qs) { const o = { ...q }; delete o.requires; delete o.scene; delete o.order; delete o.char; delete o.callers; only[q.id] = o; }
-    c.quests = only;
-    const giverChars = new Set(qs.map((q) => c.npcs[q.giver]?.character).filter(Boolean));
-    const who = Object.keys(c.characters).find((id) => !giverChars.has(id)) || c.config.startChar;
-    try { localStorage.setItem('bz-preview', JSON.stringify({ content: c, who })); } catch (e) { return toast('אין מקום לשמור את התצוגה בדפדפן', 'bad'); }
+    let who, ids = null;
+    if (levels.length) {
+      // a full level: the real flow (a family member calls, yellow arrow, own scene). Every other level counts as done so this one is next.
+      ids = levels.map((q) => q.id);
+      const heroes = levels[0].protagonist;
+      who = pick || Object.keys(c.characters).find((id) => id !== heroes) || c.config.startChar;
+      placeBundle(c, r.bundle);
+    } else {
+      placeBundle(c, r.bundle, { near: hub });
+      const only = {};
+      for (const q of qs) { const o = { ...q }; delete o.requires; delete o.scene; delete o.order; delete o.char; delete o.callers; only[q.id] = o; }
+      c.quests = only;
+      const giverChars = new Set(qs.map((q) => c.npcs[q.giver]?.character).filter(Boolean));
+      who = pick || Object.keys(c.characters).find((id) => !giverChars.has(id)) || c.config.startChar;
+    }
+    try { localStorage.setItem('bz-preview', JSON.stringify({ content: c, who, ids, direct: !!direct })); } catch (e) { return toast('אין מקום לשמור את התצוגה בדפדפן', 'bad'); }
     const src = '../index.html?preview=1&t=' + Date.now();
+    const sel = h('select', { onchange: () => runPreview(sel.value, direct) }, Object.entries(c.characters).map(([id, ch]) => h('option', { value: id, selected: id === who }, ch.name + (levels[0]?.protagonist === id ? ' (הגיבור)' : ''))));
     pvBox.innerHTML = '';
     pvBox.append(
-      h('div', { class: 'sub' }, 'זו הטיוטה בתוך המשחק עצמו: ניגשים לדמות שנותנת את המשימה (עם הסימן !), מקבלים אותה ומשחקים אותה. שום דבר לא נשמר.'),
+      h('div', { class: 'sub' }, levels.length ? 'זו הטיוטה בתוך המשחק עצמו: מי שמסומן ב-! קורא לשחקן, עוקבים אחרי החץ הצהוב והשלב נפתח בסצנה החדשה. אפשר לבחור מי השחקן כדי לבדוק איך הסיפור נראה לגיבור ולשאר המשפחה. שום דבר לא נשמר.' : 'זו הטיוטה בתוך המשחק עצמו: ניגשים לדמות שנותנת את המשימה (עם הסימן !), מקבלים אותה ומשחקים אותה. שום דבר לא נשמר.'),
+      h('div', { class: 'row' }, h('label', {}, 'משחקים בתור:'), sel, levels.length ? h('button', { class: 'btn alt', onclick: () => runPreview(sel.value, !direct) }, direct ? 'התחלה מהבית (עם החץ)' : 'קפיצה ישירה לסצנה') : null),
       h('iframe', { src, class: 'pvframe' }),
       h('div', { class: 'row' }, h('button', { class: 'btn alt', onclick: () => { pvBox.querySelector('iframe').src = '../index.html?preview=1&t=' + Date.now(); } }, 'התחלה מחדש'), h('a', { class: 'btn alt', href: src, target: '_blank' }, 'פתיחה במסך מלא'), h('button', { class: 'btn', onclick: doAdd }, '✓ אישור והוספה למשחק')));
   };
+  const preview = () => runPreview(null, false);
   const doAdd = () => { const r = check(); if (!r || r.v.errors.length) return toast('אי אפשר להוסיף לפני תיקון השגיאות', 'bad'); placeBundle(r.m.content, r.bundle); draft = r.m.content; saveDraft(); gen = null; toast('התוכן נוסף לטיוטה. אפשר לפרסם בלשונית פרסום.'); render(); };
   const add = h('button', { class: 'btn', onclick: doAdd }, 'אישור והוספה לטיוטה');
   app.append(h('div', { class: 'card' }, h('h3', {}, 'תצוגה מקדימה ועריכה'), h('div', { class: 'sub' }, 'אפשר לערוך את ה-JSON ישירות לפני האישור.'), area, session.token ? h('div', {}, h('label', {}, 'רוצים לשנות משהו? כתבו בעברית פשוטה ולחצו עדכון'), reviseTxt, reviseBtn) : null, h('div', { class: 'row', style: 'margin:8px 0' }, h('button', { class: 'btn alt', onclick: check }, 'בדיקה'), h('button', { class: 'btn', onclick: preview }, '▶ צפייה במשחק'), add), pvBox, result));
