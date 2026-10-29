@@ -71,7 +71,7 @@ function memory(box, cfg, finish) {
 function reaction(box, cfg, finish) {
   const need = cfg.targets || 10, time = cfg.time || 20;
   let hits = 0, left = time, spawnT, tickT;
-  box.innerHTML = `<div id="mgInfo"></div>`;
+  box.innerHTML = `<div class="mgHelp" style="margin:0 0 6px;font-weight:700">${(cfg.instruction || 'לוחצים על כל סמל שקופץ על המסך לפני שהוא נעלם!').replace(/</g, '&lt;')}</div><div id="mgInfo"></div>`;
   const info = box.querySelector('#mgInfo'), arena = el('div', 'arena'); box.appendChild(arena);
   const upd = () => { info.textContent = `${STR.mg.hits} ${hits}/${need}   ${STR.mg.time} ${left}`; };
   const spawn = () => {

@@ -225,7 +225,7 @@ def build():
         dict(type='collect', item='cat_hat', count=1, text='למצוא כובע חתול.'),
         dict(type='interact', target='mirror', text='להתחפש מול המראה.', lines=[L('narrator', 'מגפיים, כובע, ועוד קצת ביטחון עצמי. חתול במגפיים, בדיוק כמו בסרט.'), L('maayan', 'מושלם!')]),
         dict(type='goto', map='purim', x=14, y=6, radius=2, text='להיכנס לארוחה בתחפושת.'),
-        dict(type='minigame', auto=True, game='reaction', config=dict(targets=8, time=12, emoji='😱'), text='לתפוס את כל המבטים המופתעים.', lines=[L('eden', 'מעעיייייייןןןןן!'), L('narrator', 'כולם מסתכלים. היא היחידה שהתחפשה, והכי מצחיקה בחדר.')])],
+        dict(type='minigame', auto=True, game='reaction', config=dict(targets=8, time=12, emoji='😱', instruction='לוחצים על כל פרצוף מופתע 😱 לפני שהוא נעלם! צריך 8.'), text='להפתיע את כולם: ללחוץ על כל פרצוף מופתע שקופץ על המסך לפני שהוא נעלם.', lines=[L('eden', 'מעעיייייייןןןןן!'), L('narrator', 'כולם מסתכלים. היא היחידה שהתחפשה, והכי מצחיקה בחדר.')])],
         reward=dict(coins=40, xp=55, shard=dict(id='shard_cat', title='החתול במגפיים', story='בפורים רצו ארוחה בסגנון שרק ולא הסתדר, ורק מעיין הגיעה מחופשת לחתול במגפיים. כל פעם שמעיין מפתיעה, עדן אומרת: ״מעעיייייין״.')))
     item('boots', 'מגפיים', 'shoe', '#6b4423', 'חצי מהתחפושת.')
     item('cat_hat', 'כובע חתול', 'hat', '#c9892b', 'החצי השני.')
