@@ -226,5 +226,13 @@
   "icon": "star",
   "color": "#ffd23f",
   "desc": "כוכב דירוג להדגמה של האפליקציה של מתן."
+ },
+ "onion_slice": {
+  "id": "onion_slice",
+  "name": "פרוסת בצל",
+  "type": "collectible",
+  "icon": "food",
+  "color": "#d9b3e6",
+  "desc": "פרוסת בצל שברחה מההמבורגר. מרדכי לא רוצה אותה בסביבה."
  }
 }
