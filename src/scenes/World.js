@@ -37,8 +37,8 @@ export default class World extends Phaser.Scene {
     UI.hooks.resetCooldown = () => { this.abilityCd = 0; };
     UI.hooks.ending = () => UI.showEnding();
     this.events.on('shutdown', () => {});
-    window.addEventListener('pagehide', () => saveGame());
-    document.addEventListener('visibilitychange', () => { if (document.hidden) saveGame(); });
+    window.addEventListener('pagehide', () => { if (S.started) saveGame(); });
+    document.addEventListener('visibilitychange', () => { if (document.hidden) { if (S.started) saveGame(); }; });
     // rewards are shown after the current dialogue closes
     this.pendingRewards = [];
     UI.hooks.enterStory = (qid) => this.enterStory(qid);

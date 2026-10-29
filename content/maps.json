@@ -995,6 +995,40 @@
     "uid": "man10",
     "givesText": "״בשמחה! אני מצטרף למניין.״",
     "emptyText": "הוא כבר איתנו במניין."
+   },
+   {
+    "id": "sumo_wrestler",
+    "x": 21,
+    "y": 9,
+    "dir": 2
+   },
+   {
+    "id": "ticket_seller",
+    "x": 16,
+    "y": 10,
+    "dir": 1,
+    "gives": "sumo_ticket",
+    "uid": "tk1",
+    "givesText": "״כרטיס אחד לזירה, בבקשה. תשמרו אותו, הם בודקים.״",
+    "emptyText": "כבר קיבלתם כרטיס. אל תאבדו אותו."
+   },
+   {
+    "id": "ramen_chef",
+    "x": 12,
+    "y": 9,
+    "dir": 0
+   },
+   {
+    "id": "kimono_lady",
+    "x": 6,
+    "y": 10,
+    "dir": 3
+   },
+   {
+    "id": "tourist",
+    "x": 18,
+    "y": 14,
+    "dir": 1
    }
   ],
   "pickups": [],
@@ -1125,7 +1159,50 @@
     }
    }
   ],
-  "npcs": [],
+  "npcs": [
+   {
+    "id": "shopkeeper_a",
+    "x": 5,
+    "y": 2,
+    "dir": 0
+   },
+   {
+    "id": "shopkeeper_b",
+    "x": 11,
+    "y": 2,
+    "dir": 0
+   },
+   {
+    "id": "shopkeeper_a",
+    "x": 17,
+    "y": 2,
+    "dir": 0
+   },
+   {
+    "id": "shopkeeper_b",
+    "x": 22,
+    "y": 2,
+    "dir": 0
+   },
+   {
+    "id": "mall_guard",
+    "x": 18,
+    "y": 6,
+    "dir": 2
+   },
+   {
+    "id": "shopper",
+    "x": 8,
+    "y": 6,
+    "dir": 3
+   },
+   {
+    "id": "shopper",
+    "x": 21,
+    "y": 10,
+    "dir": 2
+   }
+  ],
   "pickups": [
    {
     "id": "phone_pk",
@@ -1246,7 +1323,36 @@
     }
    }
   ],
-  "npcs": [],
+  "npcs": [
+   {
+    "id": "rental_agent",
+    "x": 13,
+    "y": 4,
+    "dir": 2,
+    "gives": "car_key",
+    "uid": "key1",
+    "givesText": "״הנה המפתח, חתמתם על הכול. נסיעה טובה!״",
+    "emptyText": "המפתח כבר אצלכם. אל תאבדו אותו בדרך."
+   },
+   {
+    "id": "traveler",
+    "x": 8,
+    "y": 7,
+    "dir": 3
+   },
+   {
+    "id": "traveler",
+    "x": 19,
+    "y": 6,
+    "dir": 2
+   },
+   {
+    "id": "cleaner",
+    "x": 14,
+    "y": 6,
+    "dir": 0
+   }
+  ],
   "pickups": [
    {
     "id": "cloth1",
@@ -1385,7 +1491,20 @@
     }
    }
   ],
-  "npcs": [],
+  "npcs": [
+   {
+    "id": "dock_worker",
+    "x": 6,
+    "y": 7,
+    "dir": 3
+   },
+   {
+    "id": "sailor",
+    "x": 16,
+    "y": 8,
+    "dir": 2
+   }
+  ],
   "pickups": [],
   "doors": [],
   "spawn": {
@@ -1479,9 +1598,31 @@
   "npcs": [
    {
     "id": "agent",
-    "x": 8,
-    "y": 6,
+    "x": 9,
+    "y": 8,
+    "dir": 0,
+    "gives": "boarding_pass",
+    "uid": "bp1",
+    "givesText": "״כרטיס עלייה לכל המשפחה. תשמרו אותו עד הספינה.״",
+    "emptyText": "הכרטיס כבר אצלכם. עלו לספינה."
+   },
+   {
+    "id": "porter",
+    "x": 16,
+    "y": 8,
     "dir": 0
+   },
+   {
+    "id": "passenger",
+    "x": 17,
+    "y": 6,
+    "dir": 2
+   },
+   {
+    "id": "passenger",
+    "x": 21,
+    "y": 6,
+    "dir": 2
    }
   ],
   "pickups": [
@@ -1620,7 +1761,14 @@
     }
    }
   ],
-  "npcs": [],
+  "npcs": [
+   {
+    "id": "dining_neighbor",
+    "x": 20,
+    "y": 5,
+    "dir": 2
+   }
+  ],
   "pickups": [
    {
     "id": "salad1",
@@ -2079,6 +2227,18 @@
     "x": 6,
     "y": 6,
     "dir": 3
+   },
+   {
+    "id": "pool_swimmer",
+    "x": 12,
+    "y": 9,
+    "dir": 1
+   },
+   {
+    "id": "lifeguard",
+    "x": 19,
+    "y": 5,
+    "dir": 2
    }
   ],
   "pickups": [],
@@ -2147,7 +2307,20 @@
     }
    }
   ],
-  "npcs": [],
+  "npcs": [
+   {
+    "id": "camel_guide",
+    "x": 8,
+    "y": 8,
+    "dir": 3
+   },
+   {
+    "id": "tourist",
+    "x": 16,
+    "y": 9,
+    "dir": 2
+   }
+  ],
   "pickups": [],
   "doors": [],
   "spawn": {
@@ -2266,6 +2439,24 @@
     "x": 16,
     "y": 6,
     "dir": 0
+   },
+   {
+    "id": "clown",
+    "x": 7,
+    "y": 6,
+    "dir": 0
+   },
+   {
+    "id": "pirate",
+    "x": 18,
+    "y": 9,
+    "dir": 2
+   },
+   {
+    "id": "princess",
+    "x": 14,
+    "y": 11,
+    "dir": 0
    }
   ],
   "pickups": [
@@ -2363,6 +2554,18 @@
     "x": 11,
     "y": 8,
     "dir": 0
+   },
+   {
+    "id": "plaza_tourist",
+    "x": 6,
+    "y": 9,
+    "dir": 3
+   },
+   {
+    "id": "plaza_elder",
+    "x": 15,
+    "y": 5,
+    "dir": 2
    }
   ],
   "pickups": [],
@@ -2550,7 +2753,14 @@
     }
    }
   ],
-  "npcs": [],
+  "npcs": [
+   {
+    "id": "yard_neighbor",
+    "x": 16,
+    "y": 5,
+    "dir": 2
+   }
+  ],
   "pickups": [
    {
     "id": "litter1",

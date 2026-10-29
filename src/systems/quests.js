@@ -15,7 +15,7 @@ export function offerableBy(npcId) {
 }
 export function startQuest(id) {
   if (qs()[id]) return;
-  qs()[id] = { state: 'active', step: 0 };
+  qs()[id] = { state: 'active', step: 0, rev: content.quests[id].rev || 0 };
   emit('questStarted', content.quests[id]);
   evaluate(); saveGame();
 }

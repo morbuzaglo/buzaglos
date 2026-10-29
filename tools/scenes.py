@@ -123,7 +123,7 @@ def build():
     m = M('terminal', 'מסוף ההפלגות', 24, 12, 'S', 'beach', (3, 9))
     m.rect(0, 0, 24, 3, '~'); m.exit(1, 9)
     m.prop('ship', 14, 4, id='ship2'); m.prop('desk', 6, 6, id='checkin', interact=dict(dialogue='checkin_look'))
-    m.npc('agent', 8, 6, 0)
+    m.npc('agent', 9, 8, 0)
     for i, (x, y) in enumerate([(4, 4), (12, 9), (20, 8)], 1): m.pick(f'form{i}', 'form', x, y, 'q_cruise', hidden=(i == 3))
     m.broken(10, 9)
     maps['terminal'] = m.out()

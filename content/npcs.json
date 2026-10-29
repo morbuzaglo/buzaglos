@@ -467,5 +467,498 @@
    "מחפשים מניין? אני בעניין."
   ],
   "noLabel": true
+ },
+ "sumo": {
+  "id": "sumo",
+  "name": "מתאבק הסומו",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8b890",
+   "hair": "#101014",
+   "hairStyle": "bun",
+   "shirt": "#e8b890",
+   "pants": "#2b2b6a",
+   "accessory": "none",
+   "wide": true,
+   "sleeves": "none"
+  },
+  "phrases": [
+   "הופ! לא נוגעים בבטן. זה לא מנוף.",
+   "שלושה שבועות אימונים, ארוחת בוקר של שמונה קערות אורז.",
+   "מי רוצה להתמודד? גם אבא וגם הבן יכולים.",
+   "בזירה הזאת אין מקום לפחדנים. יש מקום לארוחה גדולה."
+  ],
+  "scale": 1.2
+ },
+ "ticket_seller": {
+  "id": "ticket_seller",
+  "name": "מוכר הכרטיסים",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#14141a",
+   "hairStyle": "short",
+   "shirt": "#c44a4a",
+   "pants": "#2b2b3a",
+   "accessory": "glasses"
+  },
+  "phrases": [
+   "כרטיס לזירה? רק ליד השער. רגע, איפה הכרטיס?",
+   "סומו זה ספורט רציני. אנחנו לא מצחיקים."
+  ]
+ },
+ "ramen_chef": {
+  "id": "ramen_chef",
+  "name": "שף הראמן",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#14141a",
+   "hairStyle": "short",
+   "shirt": "#ffffff",
+   "pants": "#2b2b3a",
+   "accessory": "none",
+   "hat": "#ffffff",
+   "hatStyle": "cap"
+  },
+  "phrases": [
+   "ראמן חם! כל קערה עם ביצה וחיוך.",
+   "לא כשר? בדקו בשלט. אנחנו אנשים הוגנים."
+  ]
+ },
+ "kimono_lady": {
+  "id": "kimono_lady",
+  "name": "גברת הקימונו",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f6dcc0",
+   "hair": "#14141a",
+   "hairStyle": "bun",
+   "shirt": "#c0357a",
+   "pants": "#7a2d5a",
+   "accessory": "none",
+   "bottom": "longskirt"
+  },
+  "phrases": [
+   "קימונו נלבש משמאל לימין. כן, כולם טועים.",
+   "צילום? רק אם מחייכים."
+  ]
+ },
+ "tourist": {
+  "id": "tourist",
+  "name": "תייר",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#5a3418",
+   "hairStyle": "short",
+   "shirt": "#ffd23f",
+   "pants": "#3a5aa8",
+   "accessory": "sunglasses"
+  },
+  "phrases": [
+   "איפה כאן הכי יפה לצלם?",
+   "הכול נראה כמו סרט. גם האיל שאכל לי את המפה."
+  ]
+ },
+ "shopkeeper_a": {
+  "id": "shopkeeper_a",
+  "name": "מוכרת",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#2b2b2b",
+   "hairStyle": "long",
+   "shirt": "#e84b4b",
+   "pants": "#2b2b3a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "בחצי מחיר? ניסית כבר כאן?",
+   "הכול במבצע, גם מה שלא."
+  ]
+ },
+ "shopkeeper_b": {
+  "id": "shopkeeper_b",
+  "name": "מוכר",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#5a3418",
+   "hairStyle": "short",
+   "shirt": "#4a6fa5",
+   "pants": "#2b2b3a",
+   "accessory": "beard",
+   "beardColor": "#5a3418"
+  },
+  "phrases": [
+   "לקוחה מתמקחת? אני שומר על הכיסים.",
+   "זה לא יקר. זה אמיתי."
+  ]
+ },
+ "mall_guard": {
+  "id": "mall_guard",
+  "name": "מאבטח",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#2b2b2b",
+   "hairStyle": "short",
+   "shirt": "#1c2a4a",
+   "pants": "#1c2a4a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "אבדות ומציאות? בדקו בחנויות.",
+   "אני רואה הכול. חוץ ממפתחות."
+  ]
+ },
+ "shopper": {
+  "id": "shopper",
+  "name": "קונה",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#7a2d1c",
+   "hairStyle": "curly",
+   "shirt": "#2fa39a",
+   "pants": "#3a3a56",
+   "accessory": "none"
+  },
+  "phrases": [
+   "שוק זה הגימנסיה של הקניות.",
+   "אם זה לא במבצע, זה לא קורה."
+  ]
+ },
+ "rental_agent": {
+  "id": "rental_agent",
+  "name": "נציג ההשכרה",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#3a2415",
+   "hairStyle": "short",
+   "shirt": "#2b5fa8",
+   "pants": "#2b2b3a",
+   "accessory": "glasses"
+  },
+  "phrases": [
+   "רכב קטן, מזוודות גדולות. המתמטיקה לא מסתדרת.",
+   "ביטוח מלא? כדאי."
+  ]
+ },
+ "traveler": {
+  "id": "traveler",
+  "name": "נוסעת",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#8a5a2b",
+   "hairStyle": "ponytail",
+   "shirt": "#a35fd0",
+   "pants": "#2b2b3a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "הטיסה בוטלה, הקפה לא.",
+   "שוויץ יפה. גם יקרה."
+  ]
+ },
+ "cleaner": {
+  "id": "cleaner",
+  "name": "מנקה",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#2b2b2b",
+   "hairStyle": "short",
+   "shirt": "#2fa39a",
+   "pants": "#3a3a56",
+   "accessory": "none"
+  },
+  "phrases": [
+   "שומר על הרצפה. מזוודות מעופפות לא מאושרות."
+  ]
+ },
+ "dock_worker": {
+  "id": "dock_worker",
+  "name": "פועל נמל",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#2b2b2b",
+   "hairStyle": "short",
+   "shirt": "#ff9f43",
+   "pants": "#3a3a56",
+   "accessory": "none",
+   "hat": "#ffd23f",
+   "hatStyle": "cap"
+  },
+  "phrases": [
+   "הספינה ענקית, השעון עוד יותר.",
+   "מזוודות על הגג? ראיתי גם יותר גרוע."
+  ]
+ },
+ "sailor": {
+  "id": "sailor",
+  "name": "מלח",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#8a8a90",
+   "hairStyle": "short",
+   "shirt": "#ffffff",
+   "pants": "#1c2a4a",
+   "accessory": "beard",
+   "beardColor": "#8a8a90",
+   "hat": "#1c2a4a",
+   "hatStyle": "cap"
+  },
+  "phrases": [
+   "מזל טוב, הגעתם. עכשיו תעלו.",
+   "ים זה כיף, עד הגל הרביעי."
+  ]
+ },
+ "porter": {
+  "id": "porter",
+  "name": "סבל",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#14141a",
+   "hairStyle": "short",
+   "shirt": "#e84b4b",
+   "pants": "#2b2b3a",
+   "accessory": "none",
+   "hat": "#e84b4b",
+   "hatStyle": "cap"
+  },
+  "phrases": [
+   "מזוודות? אני שומר עליהן כמו על ילדים.",
+   "שמונה מזוודות למשפחה אחת, כבוד."
+  ]
+ },
+ "passenger": {
+  "id": "passenger",
+  "name": "נוסע",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#5a3418",
+   "hairStyle": "short",
+   "shirt": "#4fc3f7",
+   "pants": "#e8e2d2",
+   "accessory": "sunglasses"
+  },
+  "phrases": [
+   "כבר מכין את הכובע לשמש.",
+   "מישהו ראה את הקפטן? אולי הוא במסעדה."
+  ]
+ },
+ "pool_swimmer": {
+  "id": "pool_swimmer",
+  "name": "שוחה",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#5a3418",
+   "hairStyle": "short",
+   "shirt": "#ff7a7a",
+   "pants": "#3a5aa8",
+   "accessory": "none",
+   "sleeves": "none"
+  },
+  "phrases": [
+   "המים מושלמים. רק אל תצלמו אותי.",
+   "שמעתי דיבורים באנגלית. נשמע חשוב."
+  ]
+ },
+ "lifeguard": {
+  "id": "lifeguard",
+  "name": "מציל",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#2b2b2b",
+   "hairStyle": "short",
+   "shirt": "#ff7a7a",
+   "pants": "#ff7a7a",
+   "accessory": "sunglasses",
+   "sleeves": "none"
+  },
+  "phrases": [
+   "בלי קפיצות. בלי ריצות. כן, ראיתי אתכם.",
+   "מי שמדבר אנגלית יכול לשחות בכל מקום."
+  ]
+ },
+ "camel_guide": {
+  "id": "camel_guide",
+  "name": "מדריך גמלים",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#14141a",
+   "hairStyle": "short",
+   "shirt": "#f4f4f8",
+   "pants": "#f4f4f8",
+   "accessory": "beard",
+   "beardColor": "#14141a",
+   "hat": "#f4f4f8",
+   "hatStyle": "scarf"
+  },
+  "phrases": [
+   "גמל לא מפחד מבריכות. הוא פשוט לא מבין אותן.",
+   "דובאי גדולה. הגמל מכיר קיצורי דרך."
+  ]
+ },
+ "clown": {
+  "id": "clown",
+  "name": "ליצן",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f6dcc0",
+   "hair": "#e84b4b",
+   "hairStyle": "curly",
+   "shirt": "#ffd23f",
+   "pants": "#4a6fa5",
+   "accessory": "none"
+  },
+  "phrases": [
+   "פורים שמח! הנחתי את האף איפשהו.",
+   "אל תיבהלו, אני רק ליצן. כמעט."
+  ]
+ },
+ "pirate": {
+  "id": "pirate",
+  "name": "פיראט",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#2b2b2b",
+   "hairStyle": "short",
+   "shirt": "#2b2b2b",
+   "pants": "#5a3418",
+   "accessory": "beard",
+   "beardColor": "#2b2b2b",
+   "hat": "#2b2b2b",
+   "hatStyle": "cap"
+  },
+  "phrases": [
+   "ארררר! מי לקח את משקה הענבים?",
+   "החתול במגפיים? אני מקנא."
+  ]
+ },
+ "princess": {
+  "id": "princess",
+  "name": "נסיכה",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#e8c25a",
+   "hairStyle": "long",
+   "shirt": "#ff7ac8",
+   "pants": "#ff7ac8",
+   "accessory": "none",
+   "bottom": "longskirt"
+  },
+  "phrases": [
+   "הכתר שלי נפל. אל תגידו לאף אחד.",
+   "פורים: היום מותר גם לשחק נסיכה."
+  ]
+ },
+ "plaza_tourist": {
+  "id": "plaza_tourist",
+  "name": "תיירת",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#7a2d1c",
+   "hairStyle": "long",
+   "shirt": "#ffffff",
+   "pants": "#3a5aa8",
+   "accessory": "sunglasses"
+  },
+  "phrases": [
+   "איזו תחושה במקום הזה.",
+   "אפשר צילום? אני אחכה בסבלנות."
+  ]
+ },
+ "plaza_elder": {
+  "id": "plaza_elder",
+  "name": "מתפלל מבוגר",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#d8d8dc",
+   "hairStyle": "short",
+   "shirt": "#ffffff",
+   "pants": "#1c1c26",
+   "accessory": "beard",
+   "beardColor": "#d8d8dc",
+   "hat": "#101014",
+   "hatStyle": "kippah"
+  },
+  "phrases": [
+   "מקום שאפשר לעמוד בו שעה בלי לשים לב.",
+   "כל אחד והבקשה שלו."
+  ]
+ },
+ "yard_neighbor": {
+  "id": "yard_neighbor",
+  "name": "שכן",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#8a8a90",
+   "hairStyle": "short",
+   "shirt": "#6bbf6b",
+   "pants": "#3a3a56",
+   "accessory": "none",
+   "hat": "#c9a24a",
+   "hatStyle": "cap"
+  },
+  "phrases": [
+   "הגינה הזאת עוד תהיה גן עדן.",
+   "מי זרק את הקליפות? לא אני."
+  ]
+ },
+ "dining_neighbor": {
+  "id": "dining_neighbor",
+  "name": "שכנה",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#5a3418",
+   "hairStyle": "bun",
+   "shirt": "#ff9f43",
+   "pants": "#2b2b3a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "מריח דג מרוקאי מהמדרגות. אני עולה.",
+   "שנים עשר סלטים? אני בעד."
+  ]
+ },
+ "sumo_wrestler": {
+  "id": "sumo_wrestler",
+  "name": "מתאבק הסומו",
+  "role": "דמות משנית",
+  "look": {
+   "skin": "#e8b890",
+   "hair": "#101014",
+   "hairStyle": "bun",
+   "shirt": "#e8b890",
+   "pants": "#2b2b6a",
+   "accessory": "none",
+   "wide": true,
+   "sleeves": "none"
+  },
+  "phrases": [
+   "הופ! לא נוגעים בבטן. זה לא מנוף.",
+   "שלושה שבועות אימונים, ארוחת בוקר של שמונה קערות אורז.",
+   "מי רוצה להתמודד? גם אבא וגם הבן יכולים.",
+   "בזירה הזאת אין מקום לפחדנים. יש מקום לארוחה גדולה."
+  ],
+  "scale": 1.2
  }
 }

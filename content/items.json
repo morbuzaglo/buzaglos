@@ -194,5 +194,29 @@
   "icon": "default",
   "color": "#a0a0b0",
   "desc": "יואב לא ישן בשקט כשיש לכלוך."
+ },
+ "sumo_ticket": {
+  "id": "sumo_ticket",
+  "name": "כרטיס לזירת הסומו",
+  "type": "quest",
+  "icon": "ticket",
+  "color": "#e84b4b",
+  "desc": "בלי כרטיס לא נכנסים לזירה."
+ },
+ "car_key": {
+  "id": "car_key",
+  "name": "מפתח הרכב השכור",
+  "type": "quest",
+  "icon": "key",
+  "color": "#c9a24a",
+  "desc": "בלי מפתח אין נסיעה."
+ },
+ "boarding_pass": {
+  "id": "boarding_pass",
+  "name": "כרטיס עלייה לספינה",
+  "type": "quest",
+  "icon": "ticket",
+  "color": "#4fc3f7",
+  "desc": "הכרטיס לעלות על ההפלגה."
  }
 }

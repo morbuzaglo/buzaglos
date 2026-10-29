@@ -99,7 +99,7 @@ Object.assign(T, {
     if (game === 'timing') return T.playTiming();
     if (game === 'memory') return T.playMemory();
     if (game === 'reaction') return T.playReaction();
-    if (game === 'quiz') { for (let k = 0; k < (cfg?.questions?.length || 3); k++) { const q = cfg.questions[k]; await T.sleep(250); const cs = document.querySelectorAll('.mg .choice'); if (cs[q.c]) cs[q.c].click(); await T.sleep(900); } return 1; }
+    if (game === 'quiz') { for (let k = 0; k < (cfg?.questions?.length || 3); k++) { const q = cfg.questions[k]; await T.sleep(250); const cs = [...document.querySelectorAll('.mg .choice')]; const right = cs.find((c) => c.textContent.includes(q.a[q.c])); if (right) right.click(); await T.sleep(900); } return 1; }
     return 1;
   },
   // Generic story solver: reads the current step of the quest and performs it like a player would.

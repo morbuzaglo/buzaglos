@@ -126,6 +126,8 @@ import sys
 sys.path.insert(0, here)
 import scenes
 smaps, squests, sitems, snpcs, sdialogues = scenes.build()
+import extras
+extras.enrich(smaps, squests, sitems, snpcs)
 maps.update(smaps)
 
 def merge_json(name, update, replace=False):

@@ -59,6 +59,13 @@ function migrate(saved) {
   const base = newState();
   const merged = { ...base, ...saved, stats: { ...base.stats, ...saved.stats }, settings: { ...base.settings, ...saved.settings }, owned: { ...base.owned, ...saved.owned } };
   if (!content.characters[merged.activeChar]) merged.activeChar = base.activeChar;
+  // a quest that gained steps since the save was written: move the saved step along so progress is never lost or repeated
+  for (const [qid, st] of Object.entries(merged.quests || {})) {
+    const q = content.quests[qid]; if (!q || st.state !== 'active' || (st.rev || 0) >= (q.rev || 0)) continue;
+    let step = st.step || 0;
+    for (const sh of q.stepShifts || []) if ((st.step || 0) >= sh.at) step += sh.n;
+    st.step = Math.min(step, q.steps.length - 1); st.rev = q.rev;
+  }
   return merged;
 }
 export function exportCode() { return btoa(unescape(encodeURIComponent(JSON.stringify(S.state)))); }
