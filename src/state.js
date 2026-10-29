@@ -213,7 +213,7 @@ export async function cloudPushNow(keepalive = false) {
   try { const r = await fetch(cloudUrl(slotCloudKey(S.state.activeChar)), { method: 'PUT', keepalive, headers: { 'content-type': 'application/json' }, body: JSON.stringify(S.state) }); return r.ok; } catch (e) { return false; }
 }
 async function cloudPullSlot(id, name) {
-  try { const r = await fetch(cloudUrl(slotCloudKey(id, name))); if (!r.ok) return null; const o = await r.json(); return o && o.v === 1 ? o : null; } catch (e) { return null; }
+  try { const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 2500); const r = await fetch(cloudUrl(slotCloudKey(id, name)), { signal: ctl.signal }); clearTimeout(to); if (!r.ok) return null; const o = await r.json(); return o && o.v === 1 ? o : null; } catch (e) { return null; }
 }
 /** Copies the cloud save into this phone when the cloud has more progress (or the same progress, saved later). Returns true if the phone changed. */
 export async function syncSlotFromCloud(id, name) {

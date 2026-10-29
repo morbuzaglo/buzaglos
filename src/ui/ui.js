@@ -323,7 +323,7 @@ export function showTitle() {
     b.dataset.id = id;
     b.onclick = async () => {
       sfx('tap');
-      if (id !== 'visitor' && cloudAutoOn()) await syncSlotFromCloud(id);
+      if (id !== 'visitor' && cloudAutoOn()) { toast('טוענים את ההתקדמות...', 1500); try { await syncSlotFromCloud(id); } catch (e) { /* offline: play from this phone's save */ } }
       if (peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; }
       if (id === 'visitor') { const guest = askGuest(); if (!guest) return; if (cloudAutoOn() && await syncSlotFromCloud(id, guest.name) && peekSave(id)) { t.classList.add('hidden'); loadGame(id); hooks.continueGame?.(); return; } t.classList.add('hidden'); startNewGame(id, guest); hooks.newGame?.(); return; }
       if (confirm(STR.title.confirmPick(c.name))) { t.classList.add('hidden'); startNewGame(id); hooks.newGame?.(); }
