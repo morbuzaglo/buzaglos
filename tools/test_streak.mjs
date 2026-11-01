@@ -70,6 +70,13 @@ t('Thursday -> Sunday: Friday and Shabbat are free', ev.length === 0 && St.info(
 ev = St.settle(at('2026-11-09'));
 t('...but missing the Sunday still loses it', ev[0]?.type === 'lost');
 
+// holidays are free days too: Pesach 2027 starts Wed evening 21-Apr (Thu 22-Apr is the holiday), then Fri and Shabbat
+reset(); finish(1); Object.assign(St.info(), { count: 4, lastDay: '2027-04-20' });
+ev = St.settle(at('2027-04-24'));
+t('Tuesday -> Saturday over Pesach: eve, holiday, Friday are all free', ev.length === 0 && St.info().count === 4, JSON.stringify(ev));
+ev = St.settle(at('2027-04-26'));
+t('...but missing a normal Sunday still loses it', ev[0]?.type === 'lost', JSON.stringify(ev));
+
 // buying a freeze
 reset(); state.state.coins = 100; let b = St.buyFreeze(); t('buy a freeze for coins', b.ok && St.info().freezes === 1 && state.state.coins === 100 - St.FREEZE_PRICE);
 state.state.coins = 1000; St.buyFreeze(); b = St.buyFreeze(); t('cannot hold more than the max', !b.ok && St.info().freezes === St.FREEZE_MAX);
