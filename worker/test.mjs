@@ -72,4 +72,10 @@ r = await call('/api/streak/' + K, { method: 'PUT', body: { char: 'eden', name: 
 t('after applying, the phone state is stored', rec.count === 12 && rec.lost.restored === true);
 r = await call('/api/admin/streak', { method: 'POST', token, body: { key: K, action: 'restore' } }); t('cannot restore twice', r.status >= 400);
 r = await call('/api/admin/streak', { method: 'POST', token, body: { key: K, action: 'set', count: 20, freezes: 2 } }); rec = (await r.json()).player; t('admin set', rec.override.seq === 2 && rec.count === 20 && rec.freezes === 2);
+// free days (no streak required)
+r = await call('/api/freedays'); t('free days start empty', (await r.json()).days.length === 0);
+r = await call('/api/admin/freedays', { method: 'POST', body: { days: [] } }); t('free days need a token', r.status === 401);
+r = await call('/api/admin/freedays', { method: 'POST', token, body: { days: [{ date: '2026-11-20', note: 'מבחנים' }, { date: '2026-11-10' }, { date: 'bad' }, { date: '2026-11-20' }] } }); let fd = (await r.json()).days;
+t('free days: sorted, deduped, invalid dropped', fd.length === 2 && fd[0].date === '2026-11-10' && fd[1].note === 'מבחנים');
+r = await call('/api/freedays'); t('free days are public', (await r.json()).days.length === 2);
 console.log(fails ? `${fails} FAILED` : 'ALL PASSED'); process.exit(fails ? 1 : 0);

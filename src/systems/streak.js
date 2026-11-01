@@ -2,7 +2,7 @@
 // A day only counts as "missed" if the player really had a stage waiting that day (a stage is stamped with the day it was added).
 // So if no new stage is published, nobody loses a freeze or the streak.
 import { content } from '../content.js';
-import { isRestDay } from './shabbat.js';
+import { isRestDay as shabbatRest } from './shabbat.js';
 import { S, emit, saveGame, getCloudCode, cloudEnabled, equippedLook } from '../state.js';
 
 export const FREEZE_PRICE = 60;          // coins
@@ -15,6 +15,21 @@ export const dayKey = (t = Date.now()) => { const d = new Date(t); return `${d.g
 export const dayNum = (key) => { const [y, m, d] = key.split('-').map(Number); return Math.round(Date.UTC(y, m - 1, d) / DAY); };
 export const dayFromNum = (n) => { const d = new Date(n * DAY); return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())}`; };
 
+// days the admin declared "no streak required" (cached so it also works offline)
+let freeDays = new Set();
+try { freeDays = new Set(JSON.parse(localStorage.getItem('bz-freedays') || '[]').map((d) => dayNum(d))); } catch (e) { /* none */ }
+const isRestDay = (n) => shabbatRest(n) || freeDays.has(n);
+export const setFreeDays = (dates) => { freeDays = new Set(dates.map(dayNum)); };
+export async function loadFreeDays() {
+  if (!cloudEnabled()) return;
+  try {
+    const ctl = new AbortController(), to = setTimeout(() => ctl.abort(), 3000);
+    const r = await fetch(`${content.config.apiUrl.replace(/\/$/, '')}/api/freedays`, { signal: ctl.signal }); clearTimeout(to);
+    if (!r.ok) return;
+    const dates = ((await r.json()).days || []).map((d) => d.date).filter((d) => /^\d{4}-\d\d-\d\d$/.test(d));
+    freeDays = new Set(dates.map(dayNum)); localStorage.setItem('bz-freedays', JSON.stringify(dates));
+  } catch (e) { /* offline: use the cached list */ }
+}
 export const blank = () => ({ count: 0, best: 0, freezes: 0, lastDay: null, lost: null, appliedSeq: 0 });
 export function ensure() { return (S.state.streak ||= blank()); }
 export const info = () => ensure();
@@ -117,6 +132,7 @@ export async function sync(keepalive = false) {
 }
 /** On opening the game: settle the days that passed, then tell the server (and take admin changes). */
 export async function start() {
+  await loadFreeDays();
   const ev = settle(); ensure();
   if (ev.length) { emit('streak', ev); saveGame(); }
   await sync();

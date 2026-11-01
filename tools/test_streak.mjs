@@ -77,6 +77,14 @@ t('Tuesday -> Saturday over Pesach: eve, holiday, Friday are all free', ev.lengt
 ev = St.settle(at('2027-04-26'));
 t('...but missing a normal Sunday still loses it', ev[0]?.type === 'lost', JSON.stringify(ev));
 
+// days the admin declares as free
+reset(); finish(1); Object.assign(St.info(), { count: 6, lastDay: '2026-11-19' });
+ev = St.settle(at('2026-11-23'));
+t('without a free day, a missed Sunday loses the streak', ev[0]?.type === 'lost', JSON.stringify(ev));
+reset(); finish(1); Object.assign(St.info(), { count: 6, lastDay: '2026-11-19' }); St.setFreeDays(['2026-11-22']);
+ev = St.settle(at('2026-11-23'));
+t('an admin-declared free day costs nothing', ev.length === 0 && St.info().count === 6, JSON.stringify(ev)); St.setFreeDays([]);
+
 // buying a freeze
 reset(); state.state.coins = 100; let b = St.buyFreeze(); t('buy a freeze for coins', b.ok && St.info().freezes === 1 && state.state.coins === 100 - St.FREEZE_PRICE);
 state.state.coins = 1000; St.buyFreeze(); b = St.buyFreeze(); t('cannot hold more than the max', !b.ok && St.info().freezes === St.FREEZE_MAX);

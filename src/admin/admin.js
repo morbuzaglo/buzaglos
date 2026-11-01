@@ -63,19 +63,42 @@ const slug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').re
 // ---------------------------------------------------------------- shell
 function render() {
   app.innerHTML = '';
-  app.append(h('h1', {}, 'סטודיו הניהול של בוזגלו'), h('div', { class: 'sub' }, session.token ? `מחובר לשרת ✓  (${session.apiUrl})` : 'מצב מקומי: עריכה, בדיקה והורדת קבצים. כדי להשתמש ב-AI ובפרסום אוטומטי, התחברו לשרת.'));
-  if (!session.token) app.append(loginCard()); else app.append(h('button', { class: 'btn gray', onclick: () => { session = {}; sessionStorage.removeItem(SESSION_KEY); render(); } }, 'התנתקות'));
+  const top = h('div', { class: 'top' }, h('div', { class: 'logo' }, '🛠️'),
+    h('div', { class: 'titles' }, h('h1', {}, 'סטודיו הניהול של בוזגלו'), h('span', { class: 'status' + (session.token ? ' on' : '') }, h('i'), session.token ? 'מחובר לשרת' : 'מצב מקומי: עריכה, בדיקה והורדת קבצים')),
+    session.token ? h('button', { class: 'btn gray small', onclick: () => { session = {}; sessionStorage.removeItem(SESSION_KEY); render(); } }, 'התנתקות') : null);
+  app.append(top);
+  if (!session.token) app.append(loginCard());
   const tabs = h('div', { class: 'tabs' });
-  [['family', 'משפחה'], ['stories', 'סיפורים (AI)'], ['economy', 'כלכלה'], ['maps', 'מפות'], ['players', 'שחקנים ורצפים'], ['publish', 'פרסום']].forEach(([k, l]) => tabs.append(h('button', { class: 'tab' + (tab === k ? ' on' : ''), onclick: () => { tab = k; render(); } }, l)));
+  [['family', '👨‍👩‍👧', 'משפחה'], ['stories', '✨', 'סיפורים (AI)'], ['economy', '💰', 'כלכלה'], ['maps', '🗺️', 'מפות'], ['players', '🔥', 'שחקנים ורצפים'], ['publish', '🚀', 'פרסום']].forEach(([k, i, l]) => tabs.append(h('button', { class: 'tab' + (tab === k ? ' on' : ''), onclick: () => { tab = k; render(); } }, h('b', {}, i), l)));
   app.append(tabs);
   ({ family: tabFamily, stories: tabStories, economy: tabEconomy, maps: tabMaps, players: tabPlayers, publish: tabPublish })[tab]();
 }
 
 // ---------------------------------------------------------------- players: daily streaks (see, restore, edit)
-let playersData = null;
+let playersData = null, freeDaysData = null;
+/** Days with "no streak required": nobody loses a freeze or a streak for them. */
+function freeDaysCard() {
+  const card = h('div', { class: 'card' }, h('h3', {}, '📅 ימים פטורים מרצף'), h('div', { class: 'sub' }, 'בימים האלה אף אחד לא מפסיד קפיאה או רצף, גם אם לא שיחק. (שישי, שבת וחגים פטורים אוטומטית.)'));
+  const list = h('div', {});
+  const date = h('input', { type: 'date' }), note = h('input', { type: 'text', placeholder: 'סיבה (לא חובה), למשל: מבחנים', maxlength: 60 });
+  const save = async (days) => { try { const r = await api('/api/admin/freedays', { days }); freeDaysData = r.days; toast('נשמר'); draw(); } catch (e) { toast(e.message, 'bad'); } };
+  const draw = () => {
+    list.innerHTML = '';
+    const today = new Date().toLocaleDateString('en-CA');
+    if (!freeDaysData) { list.append(h('div', { class: 'sub' }, 'טוען...')); return; }
+    if (!freeDaysData.length) list.append(h('div', { class: 'sub' }, 'אין ימים פטורים כרגע.'));
+    for (const d of freeDaysData) list.append(h('div', { class: 'dayrow' }, h('span', { class: 'day-pill' + (d.date < today ? ' past' : '') }, new Date(d.date + 'T12:00:00').toLocaleDateString('he-IL', { weekday: 'short', day: 'numeric', month: 'numeric', year: 'numeric' })), h('div', { class: 'grow sub' }, d.note || ''), h('button', { class: 'btn red small', onclick: () => save(freeDaysData.filter((x) => x.date !== d.date)) }, '✕')));
+  };
+  card.append(h('div', { class: 'grid2' }, h('div', {}, h('label', {}, 'תאריך'), date), h('div', {}, h('label', {}, 'הערה'), note)),
+    h('div', { style: 'margin:12px 0' }, h('button', { class: 'btn', onclick: () => { if (!date.value) return toast('בחרו תאריך', 'warn'); save([...(freeDaysData || []).filter((x) => x.date !== date.value), { date: date.value, note: note.value }]); date.value = ''; note.value = ''; } }, 'הוספת יום פטור')), list);
+  draw();
+  if (!freeDaysData) api('/api/freedays').then((r) => { freeDaysData = r.days; draw(); }).catch((e) => { list.innerHTML = ''; list.append(h('div', { class: 'err-list' }, e.message)); });
+  return card;
+}
 function tabPlayers() {
   if (!session.token) return app.append(h('div', { class: 'card warn' }, 'התחברו לשרת כדי לראות את הרצפים של השחקנים.'));
-  const box = h('div', { class: 'card' }, h('h3', {}, 'רצפים יומיים של השחקנים'), h('div', { class: 'sub' }, 'כל שחקן עושה שלב אחד ביום. קפיאה מגינה על הרצף ביום שמפספסים. אם לא פורסם שלב חדש, אף אחד לא מפסיד רצף או קפיאה.'));
+  app.append(freeDaysCard());
+  const box = h('div', { class: 'card' }, h('h3', {}, '🔥 רצפים יומיים של השחקנים'), h('div', { class: 'sub' }, 'כל שחקן עושה שלב אחד ביום. קפיאה מגינה על הרצף ביום שמפספסים. אם לא פורסם שלב חדש, אף אחד לא מפסיד רצף או קפיאה.'));
   app.append(box);
   const list = h('div', {}); box.append(list);
   const names = {}; for (const [id, c] of Object.entries(draft.characters || {})) names[id] = c.name;
@@ -86,13 +109,13 @@ function tabPlayers() {
     if (!rows.length) list.append(h('div', { class: 'sub' }, 'אין עדיין נתונים. שחקנים יופיעו כאן אחרי שיפתחו את המשחק.'));
     for (const p of rows) {
       const lost = p.lost && !p.lost.restored ? p.lost : null;
-      const card = h('div', { class: 'card' }, h('b', {}, `${names[p.char] || p.name || p.char}  🔥 ${p.count || 0}  ❄ ${p.freezes || 0}`),
-        h('div', { class: 'sub' }, `שיא: ${p.best || 0} · יום אחרון עם שלב: ${p.lastDay || 'עדיין לא'} · ◎ ${p.coins || 0} · רמה ${p.level || 1}`),
+      const card = h('div', { class: 'card pcard' }, h('div', { class: 'row' }, h('span', { class: 'name grow' }, names[p.char] || p.name || p.char), h('span', { class: 'stat' }, '🔥 ' + (p.count || 0)), h('span', { class: 'stat' }, '❄️ ' + (p.freezes || 0)), h('span', { class: 'stat' }, '◎ ' + (p.coins || 0))),
+        h('div', { class: 'sub' }, `שיא: ${p.best || 0} · יום אחרון עם שלב: ${p.lastDay || 'עדיין לא'} · רמה ${p.level || 1}`),
         p.lost ? h('div', { class: lost ? 'err-list' : 'sub' }, `${lost ? 'הרצף נקטע' : 'רצף שנקטע ושוחזר'}: היה ${p.lost.count} ימים (${p.lost.day})`) : null,
         h('div', { class: 'row' },
-          lost ? h('button', { class: 'btn', onclick: () => { if (confirm(`לשחזר לרצף של ${lost.count} ימים?`)) act(p.key, 'restore'); } }, `שחזור מלא (${lost.count})`) : null,
-          h('button', { class: 'btn gray', onclick: () => { const c = prompt('אורך הרצף (ימים):', String(p.count || 0)); if (c == null) return; const f = prompt('מספר קפיאות:', String(p.freezes || 0)); if (f == null) return; act(p.key, 'set', { count: +c, freezes: +f }); } }, 'עריכה ידנית'),
-          h('button', { class: 'btn gray', onclick: () => act(p.key, 'set', { count: p.count || 0, freezes: (p.freezes || 0) + 1 }) }, '+ קפיאה')));
+          lost ? h('button', { class: 'btn small', onclick: () => { if (confirm(`לשחזר לרצף של ${lost.count} ימים?`)) act(p.key, 'restore'); } }, `שחזור מלא (${lost.count})`) : null,
+          h('button', { class: 'btn gray small', onclick: () => { const c = prompt('אורך הרצף (ימים):', String(p.count || 0)); if (c == null) return; const f = prompt('מספר קפיאות:', String(p.freezes || 0)); if (f == null) return; act(p.key, 'set', { count: +c, freezes: +f }); } }, 'עריכה ידנית'),
+          h('button', { class: 'btn gray small', onclick: () => act(p.key, 'set', { count: p.count || 0, freezes: (p.freezes || 0) + 1 }) }, '+ קפיאה')));
       list.append(card);
     }
   };

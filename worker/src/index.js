@@ -213,6 +213,21 @@ async function allStreaks(env) {
   } while (cursor);
   return out;
 }
+// Days the admin declares as "no streak required": nobody loses a freeze or a streak for them.
+const FREEDAYS = 'cfg:freedays';
+async function readFreeDays(env) { return (await env.SAVES.get(FREEDAYS, 'json')) || []; }
+async function setFreeDays(env, days) {
+  if (!Array.isArray(days) || days.length > 400) throw new Error('bad list');
+  const seen = new Set(), out = [];
+  for (const d of days) {
+    const date = String(d?.date || '');
+    if (!/^\d{4}-\d\d-\d\d$/.test(date) || Number.isNaN(Date.parse(date)) || seen.has(date)) continue;
+    seen.add(date); out.push({ date, note: String(d.note || '').slice(0, 60) });
+  }
+  out.sort((a, b) => a.date.localeCompare(b.date));
+  await env.SAVES.put(FREEDAYS, JSON.stringify(out));
+  return out;
+}
 async function adminStreak(env, { key, action, count, freezes }) {
   if (!validStreakKey(key)) throw new Error('bad key');
   const ex = await env.SAVES.get(streakKey(key), 'json'); if (!ex) throw new Error('שחקן לא נמצא');
@@ -248,6 +263,7 @@ export default {
         if (path === '/api/admin/content' && req.method === 'GET') return json({ files: await readContent(env) }, 200, h);
         if (path === '/api/admin/generate' && req.method === 'POST') { if (!(await rateLimit(env, req, 'gen', 20, 3600))) return json({ error: 'הגעתם למגבלת הבקשות לשעה' }, 429, h); return keepAlive(h, async () => generateStory(env, await req.json())); }
         if (path === '/api/admin/vision' && req.method === 'POST') { if (!(await rateLimit(env, req, 'vis', 30, 3600))) return json({ error: 'הגעתם למגבלת הבקשות לשעה' }, 429, h); return json(await visionLook(env, await req.json()), 200, h); }
+        if (path === '/api/admin/freedays' && req.method === 'POST') return json({ days: await setFreeDays(env, (await req.json()).days) }, 200, h);
         if (path === '/api/admin/streaks' && req.method === 'GET') return json({ players: await allStreaks(env) }, 200, h);
         if (path === '/api/admin/streak' && req.method === 'POST') return json({ player: await adminStreak(env, await req.json()) }, 200, h);
         if (path === '/api/admin/publish' && req.method === 'POST') { const { files, message } = await req.json(); return json({ published: await publish(env, files, message) }, 200, h); }
@@ -259,6 +275,7 @@ export default {
         if (req.method === 'PUT') return json(await putStreak(env, stm[1], await req.json()), 200, h);
         if (req.method === 'GET') { const v = await env.SAVES.get(streakKey(stm[1]), 'json'); return v ? json(v, 200, h) : json({ error: 'not found' }, 404, h); }
       }
+      if (path === '/api/freedays' && env.SAVES) return json({ days: await readFreeDays(env) }, 200, h);
       if (path === '/api/leaderboard' && env.SAVES) {
         if (!(await rateLimit(env, req, 'board', 600, 3600))) return json({ error: 'rate limit' }, 429, h);
         const all = await allStreaks(env);
