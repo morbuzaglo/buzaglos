@@ -3837,7 +3837,7 @@
   "id": "kotel_birthday",
   "gen": true,
   "name": "הכותל המערבי",
-  "music": "beach",
+  "music": "mystery",
   "legend": {
    "g": "grass",
    "f": "flower",
@@ -3863,19 +3863,19 @@
    "C": "cloud"
   },
   "tiles": [
-   "======================",
-   "=AAAAAAAAAAAAAAAAAAAA=",
-   "=AAAAAAAAAAppAAAAAAAA=",
-   "=AAAAAAAAAAppAAAAAAAA=",
-   "=AAAAAAAAAAppAAAAAAAA=",
-   "=AAAAAAAAAAppAAAAAAAA=",
-   "=pppppppppppppppppppp=",
-   "=pppppppppppppppppppp=",
-   "=AAAAAAAAAAppAAAAAAAA=",
-   "=AAAAAAAAAAppAAAAAAAA=",
-   "=AAAAAAAAAAppAAAAAAAA=",
-   "=AAAAAAAAAAppAAAAAAAA=",
-   "======================"
+   "KKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKK",
+   "KKKKKKKKKKKKKKKKKKKKKK",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "#SSSSSSSSSSSSSSSSSSSS#",
+   "######################"
   ],
   "props": [
    {
@@ -3890,8 +3890,8 @@
    {
     "type": "sign",
     "id": "wall_sign",
-    "x": 2,
-    "y": 7,
+    "x": 3,
+    "y": 5,
     "interact": {
      "text": "שלט: הכותל המערבי. כאן מתחיל כל יום הולדת של רינת או של טוהר."
     }
@@ -3899,32 +3899,32 @@
    {
     "type": "shelf",
     "id": "prayer_notes",
-    "x": 18,
-    "y": 10,
+    "x": 11,
+    "y": 4,
     "interact": {
      "text": "מקום לפתקים עם בקשות. כל פתק מקופל בזהירות."
     }
    },
    {
     "type": "lantern",
-    "x": 11,
-    "y": 10,
+    "x": 6,
+    "y": 4,
     "interact": {
      "text": "פנס אבן עתיק שמאיר את הרחבה בערב."
     }
    },
    {
     "type": "lantern",
-    "x": 5,
-    "y": 5,
+    "x": 16,
+    "y": 4,
     "interact": {
      "text": "עוד פנס. הרחבה כולה נראית קסומה."
     }
    },
    {
     "type": "tree",
-    "x": 14,
-    "y": 4,
+    "x": 19,
+    "y": 8,
     "interact": {
      "text": "עץ זית זקן. נותן צל נעים לכל מי שמתפלל."
     }
@@ -3932,23 +3932,23 @@
    {
     "type": "bush",
     "x": 5,
-    "y": 2,
+    "y": 10,
     "interact": {
      "text": "שיח ירוק עם פרחים קטנים."
     }
    },
    {
     "type": "table",
-    "x": 17,
-    "y": 7,
+    "x": 14,
+    "y": 6,
     "interact": {
      "text": "שולחן עם ספרי תהילים לכל מי שרוצה."
     }
    },
    {
     "type": "plant",
-    "x": 11,
-    "y": 5,
+    "x": 9,
+    "y": 11,
     "interact": {
      "text": "עציץ קטן ליד הכניסה לרחבה."
     }
@@ -3956,7 +3956,7 @@
    {
     "type": "sofa",
     "x": 8,
-    "y": 3,
+    "y": 8,
     "interact": {
      "text": "ספסל לנוח עליו ולחשוב על הבקשה."
     }
@@ -3971,16 +3971,16 @@
    },
    {
     "type": "lamp",
-    "x": 6,
-    "y": 9,
+    "x": 3,
+    "y": 8,
     "interact": {
      "text": "מנורה על עמוד, מחכה לערב."
     }
    },
    {
     "type": "rock",
-    "x": 8,
-    "y": 9,
+    "x": 18,
+    "y": 11,
     "interact": {
      "text": "אבן ירושלמית חמה מהשמש."
     }
@@ -3989,8 +3989,8 @@
   "npcs": [
    {
     "id": "kotel_guide",
-    "x": 2,
-    "y": 2,
+    "x": 5,
+    "y": 6,
     "dir": 1,
     "phrases": [
      "שתי חברות שחוגגות יחד כל יום הולדת, ועכשיו גם שלישית? איזה יופי של מסורת.",
@@ -3999,8 +3999,8 @@
    },
    {
     "id": "kotel_pilgrim",
-    "x": 3,
-    "y": 4,
+    "x": 8,
+    "y": 5,
     "dir": 2,
     "phrases": [
      "בקשה אחת זה הרבה, בקשה שנייה זה כבר שאפו.",
@@ -4010,7 +4010,7 @@
    {
     "id": "kotel_kid",
     "x": 15,
-    "y": 6,
+    "y": 8,
     "dir": 2,
     "phrases": [
      "אני ביקשתי גלידה. זה בסדר?",
@@ -4019,7 +4019,7 @@
    },
    {
     "id": "rinat",
-    "x": 13,
+    "x": 10,
     "y": 7,
     "dir": 2,
     "phrases": [
@@ -4029,8 +4029,8 @@
    },
    {
     "id": "tohar",
-    "x": 19,
-    "y": 3,
+    "x": 12,
+    "y": 7,
     "dir": 0,
     "phrases": [
      "כמו בכל שנה, קודם מתפללות.",
@@ -4039,8 +4039,8 @@
    },
    {
     "id": "maayan",
-    "x": 20,
-    "y": 9,
+    "x": 17,
+    "y": 6,
     "dir": 2,
     "phrases": [
      "אני לא מפריעה, אני רק מצטרפת!",
@@ -4544,6 +4544,648 @@
     "needsQuest": "q_birthday_trip"
    }
   ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 10
+  }
+ },
+ "ariel_lecture": {
+  "id": "ariel_lecture",
+  "gen": true,
+  "name": "הרצאה באוניברסיטת אריאל",
+  "music": "town",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "######################",
+   "#WWWWWWWWWWWWWWWWWWWW#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttrrrrrrrtttttt#",
+   "#tttttttrrrrrrrtttttt#",
+   "#tttttttrrrrrrrtttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "######################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 10,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "sign",
+    "id": "whiteboard",
+    "x": 8,
+    "y": 8,
+    "interact": {
+     "text": "הלוח מלא במטריצות ובמשוואות. אלגברה לינארית, שיעור ראשון."
+    }
+   },
+   {
+    "type": "desk",
+    "id": "front_desk",
+    "x": 9,
+    "y": 3,
+    "interact": {
+     "text": "השולחן של המרצה, עם ערימת דפים ומרקר."
+    }
+   },
+   {
+    "type": "desk",
+    "id": "mordechai_desk",
+    "x": 17,
+    "y": 3,
+    "interact": {
+     "text": "השולחן של מרדכי בשורה הראשונה. הוא הגיע ראשון, כמובן."
+    }
+   },
+   {
+    "type": "desk",
+    "x": 13,
+    "y": 3,
+    "interact": {
+     "text": "שולחן סטודנטים, עם מחברת פתוחה."
+    }
+   },
+   {
+    "type": "desk",
+    "x": 2,
+    "y": 3,
+    "interact": {
+     "text": "עוד שולחן סטודנטים, עם בקבוק מים."
+    }
+   },
+   {
+    "type": "desk",
+    "x": 17,
+    "y": 8,
+    "interact": {
+     "text": "שולחן ריק בשורה האחורית."
+    }
+   },
+   {
+    "type": "shelf",
+    "x": 6,
+    "y": 3,
+    "interact": {
+     "text": "מדף עם ספרי הנדסה כבדים."
+    }
+   },
+   {
+    "type": "plant",
+    "x": 10,
+    "y": 9,
+    "interact": {
+     "text": "עציץ שמנסה לשרוד את הלימודים."
+    }
+   },
+   {
+    "type": "plant",
+    "x": 6,
+    "y": 8,
+    "interact": {
+     "text": "עוד עציץ ליד הדלת."
+    }
+   },
+   {
+    "type": "lamp",
+    "x": 10,
+    "y": 6,
+    "interact": {
+     "text": "מנורה שמאירה את הלוח."
+    }
+   },
+   {
+    "type": "table",
+    "x": 3,
+    "y": 8,
+    "interact": {
+     "text": "שולחן צדדי עם דפי תרגילים."
+    }
+   },
+   {
+    "type": "sofa",
+    "x": 14,
+    "y": 6,
+    "interact": {
+     "text": "ספסל ליד הדלת, לסטודנטים שמאחרים."
+    }
+   }
+  ],
+  "npcs": [
+   {
+    "id": "ariel_lecturer",
+    "x": 6,
+    "y": 11,
+    "dir": 2,
+    "phrases": [
+     "אלגברה לינארית היא הבסיס לכל ההנדסה.",
+     "שאלות? תרשמו לפני שאתם שואלים."
+    ]
+   },
+   {
+    "id": "ariel_student_a",
+    "x": 15,
+    "y": 9,
+    "dir": 0,
+    "phrases": [
+     "הוא כבר כתב שלושה עמודים. אני עוד לא הבנתי מה זה וקטור.",
+     "מרדכי יושב בשורה הראשונה, אפשר לראות שהוא מתרגש."
+    ]
+   },
+   {
+    "id": "ariel_student_b",
+    "x": 9,
+    "y": 11,
+    "dir": 2,
+    "phrases": [
+     "הכול כאן נשמע קשה, אבל מעניין.",
+     "מישהו יודע איפה הספרייה?"
+    ]
+   },
+   {
+    "id": "mordechai",
+    "x": 12,
+    "y": 7,
+    "dir": 3,
+    "phrases": [
+     "שיעור ראשון באוניברסיטה! אני מתרגש.",
+     "מה זה מטריצה הפוכה בכלל?"
+    ]
+   },
+   {
+    "id": "yitzhak",
+    "x": 1,
+    "y": 6,
+    "dir": 0,
+    "phrases": [
+     "מרדכי מתחיל ללמוד באוניברסיטה, איזה יום גדול.",
+     "אם יהיה קשה, יש לך את מי לשאול."
+    ]
+   }
+  ],
+  "pickups": [
+   {
+    "id": "ariel_lecture_study_page_0",
+    "item": "study_page",
+    "x": 18,
+    "y": 11,
+    "hidden": false,
+    "needsQuest": "q_ariel"
+   },
+   {
+    "id": "ariel_lecture_study_page_1",
+    "item": "study_page",
+    "x": 18,
+    "y": 5,
+    "hidden": false,
+    "needsQuest": "q_ariel"
+   },
+   {
+    "id": "ariel_lecture_study_page_2",
+    "item": "study_page",
+    "x": 20,
+    "y": 5,
+    "hidden": false,
+    "needsQuest": "q_ariel"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 10
+  }
+ },
+ "ariel_library": {
+  "id": "ariel_library",
+  "gen": true,
+  "name": "הספרייה באוניברסיטה",
+  "music": "town",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "######################",
+   "#WWWWWWWWWWWWWWWWWWWW#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttrrrrrrrtttttt#",
+   "#tttttttrrrrrrrtttttt#",
+   "#tttttttrrrrrrrtttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "######################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 10,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "shelf",
+    "id": "book_shelf",
+    "x": 10,
+    "y": 3,
+    "interact": {
+     "text": "מדף ספרים. אלגברה לינארית, חדוא, פיזיקה."
+    }
+   },
+   {
+    "type": "desk",
+    "id": "quiet_desk",
+    "x": 12,
+    "y": 3,
+    "interact": {
+     "text": "שולחן בפינה השקטה. כאן מרדכי מתקשר לאבא."
+    }
+   },
+   {
+    "type": "shelf",
+    "x": 16,
+    "y": 3,
+    "interact": {
+     "text": "עוד מדף, עם ספרי הנדסת מכונות."
+    }
+   },
+   {
+    "type": "shelf",
+    "x": 6,
+    "y": 3,
+    "interact": {
+     "text": "מדף עם מילונים ומדריכים."
+    }
+   },
+   {
+    "type": "desk",
+    "x": 2,
+    "y": 3,
+    "interact": {
+     "text": "שולחן עם מחשב נייד פתוח."
+    }
+   },
+   {
+    "type": "desk",
+    "x": 11,
+    "y": 6,
+    "interact": {
+     "text": "שולחן עם ערימת ספרים שלא נגמרת."
+    }
+   },
+   {
+    "type": "table",
+    "x": 15,
+    "y": 6,
+    "interact": {
+     "text": "שולחן קבוצתי ללימודים."
+    }
+   },
+   {
+    "type": "lamp",
+    "x": 9,
+    "y": 8,
+    "interact": {
+     "text": "מנורת קריאה ירוקה."
+    }
+   },
+   {
+    "type": "lamp",
+    "x": 6,
+    "y": 9,
+    "interact": {
+     "text": "עוד מנורת קריאה."
+    }
+   },
+   {
+    "type": "plant",
+    "x": 19,
+    "y": 3,
+    "interact": {
+     "text": "עציץ שקט בספרייה."
+    }
+   },
+   {
+    "type": "sofa",
+    "x": 18,
+    "y": 10,
+    "interact": {
+     "text": "ספה לקריאה, מושלמת לנשום קצת."
+    }
+   },
+   {
+    "type": "sign",
+    "x": 15,
+    "y": 10,
+    "interact": {
+     "text": "שלט: בבקשה לשמור על השקט."
+    }
+   }
+  ],
+  "npcs": [
+   {
+    "id": "ariel_librarian",
+    "x": 7,
+    "y": 6,
+    "dir": 1,
+    "phrases": [
+     "ששש, זו ספרייה.",
+     "הספרים על אלגברה לינארית נמצאים במדף הזה."
+    ]
+   },
+   {
+    "id": "ariel_reader",
+    "x": 20,
+    "y": 5,
+    "dir": 3,
+    "phrases": [
+     "גם אני לא הבנתי כלום בשיעור הראשון.",
+     "יש כאן שקט, זה עוזר לחשוב."
+    ]
+   },
+   {
+    "id": "mordechai",
+    "x": 8,
+    "y": 11,
+    "dir": 0,
+    "phrases": [
+     "אני צריך לצאת מכאן לנשום, ולהתקשר לאבא.",
+     "זה קשה לי. אבל אני לא מוותר."
+    ]
+   }
+  ],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 10
+  }
+ },
+ "ariel_graduation": {
+  "id": "ariel_graduation",
+  "gen": true,
+  "name": "טקס הסיום",
+  "music": "beach",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "======================",
+   "=gggggggggggggggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=pppppppppppppppppppp=",
+   "=pppppppppppppppppppp=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "======================"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 10,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "podium",
+    "id": "stage",
+    "x": 14,
+    "y": 3,
+    "interact": {
+     "text": "הבמה של הטקס. כאן מקבלים תעודות."
+    }
+   },
+   {
+    "type": "sign",
+    "id": "diploma_sign",
+    "x": 8,
+    "y": 3,
+    "interact": {
+     "text": "שלט: מזל טוב לבוגרי הנדסת מכונות."
+    }
+   },
+   {
+    "type": "lantern",
+    "x": 1,
+    "y": 5,
+    "interact": {
+     "text": "פנס מקושט בצבעי הטקס."
+    }
+   },
+   {
+    "type": "lantern",
+    "x": 17,
+    "y": 3,
+    "interact": {
+     "text": "עוד פנס מקושט."
+    }
+   },
+   {
+    "type": "tree",
+    "x": 5,
+    "y": 3,
+    "interact": {
+     "text": "עץ גדול ליד הבמה."
+    }
+   },
+   {
+    "type": "tree",
+    "x": 9,
+    "y": 7,
+    "interact": {
+     "text": "עץ עם בלונים תלויים."
+    }
+   },
+   {
+    "type": "bush",
+    "x": 10,
+    "y": 9,
+    "interact": {
+     "text": "שיח עם פרחים לכבוד הבוגרים."
+    }
+   },
+   {
+    "type": "table",
+    "x": 4,
+    "y": 6,
+    "interact": {
+     "text": "שולחן עם כיבוד וכוסות."
+    }
+   },
+   {
+    "type": "sofa",
+    "x": 14,
+    "y": 7,
+    "interact": {
+     "text": "ספסל לאורחים."
+    }
+   },
+   {
+    "type": "umbrella",
+    "x": 6,
+    "y": 10,
+    "interact": {
+     "text": "שמשייה שמגינה מהשמש בטקס."
+    }
+   },
+   {
+    "type": "plant",
+    "x": 17,
+    "y": 10,
+    "interact": {
+     "text": "עציץ פרחים ליד הבמה."
+    }
+   },
+   {
+    "type": "lamp",
+    "x": 19,
+    "y": 7,
+    "interact": {
+     "text": "פנס שמאיר את הרחבה."
+    }
+   }
+  ],
+  "npcs": [
+   {
+    "id": "ariel_dean",
+    "x": 12,
+    "y": 7,
+    "dir": 0,
+    "phrases": [
+     "מזל טוב לכל הבוגרים!",
+     "זו הייתה דרך ארוכה, אבל הצלחתם."
+    ]
+   },
+   {
+    "id": "ariel_graduate",
+    "x": 14,
+    "y": 9,
+    "dir": 0,
+    "phrases": [
+     "סיימנו! אני עדיין לא מאמין.",
+     "אלגברה לינארית? אל תזכיר לי."
+    ]
+   },
+   {
+    "id": "ariel_guest",
+    "x": 3,
+    "y": 2,
+    "dir": 0,
+    "phrases": [
+     "איזה טקס יפה.",
+     "ההורים כאן כל כך גאים."
+    ]
+   },
+   {
+    "id": "mordechai",
+    "x": 11,
+    "y": 3,
+    "dir": 1,
+    "phrases": [
+     "שבוע אחד, ואז עוד שבוע, ועכשיו סיימתי.",
+     "אבא צדק."
+    ]
+   },
+   {
+    "id": "yitzhak",
+    "x": 19,
+    "y": 2,
+    "dir": 1,
+    "phrases": [
+     "אמרתי לך, התחלות חדשות זה קשה.",
+     "אני גאה בך."
+    ]
+   }
+  ],
+  "pickups": [],
   "doors": [],
   "spawn": {
    "x": 3,

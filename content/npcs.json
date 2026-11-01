@@ -1277,5 +1277,149 @@
    "הכלב שלי חושב שהציור של כולן יפה.",
    "איזה כיף לראות שלוש חברות מציירות ביחד."
   ]
+ },
+ "ariel_lecturer": {
+  "id": "ariel_lecturer",
+  "name": "המרצה",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#e0b894",
+   "hair": "#8a8a90",
+   "hairStyle": "short",
+   "shirt": "#3a5a8a",
+   "pants": "#2b2b3a",
+   "accessory": "glasses"
+  },
+  "phrases": [
+   "אלגברה לינארית היא הבסיס לכל ההנדסה.",
+   "שאלות? תרשמו לפני שאתם שואלים."
+  ]
+ },
+ "ariel_student_a": {
+  "id": "ariel_student_a",
+  "name": "סטודנטית",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#5a3a22",
+   "hairStyle": "long",
+   "shirt": "#e0457b",
+   "pants": "#3a3a56",
+   "accessory": "none"
+  },
+  "phrases": [
+   "הוא כבר כתב שלושה עמודים. אני עוד לא הבנתי מה זה וקטור.",
+   "מרדכי יושב בשורה הראשונה, אפשר לראות שהוא מתרגש."
+  ]
+ },
+ "ariel_student_b": {
+  "id": "ariel_student_b",
+  "name": "סטודנט",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#14141a",
+   "hairStyle": "curly",
+   "shirt": "#2fa39a",
+   "pants": "#2b2b3a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "הכול כאן נשמע קשה, אבל מעניין.",
+   "מישהו יודע איפה הספרייה?"
+  ]
+ },
+ "ariel_librarian": {
+  "id": "ariel_librarian",
+  "name": "הספרנית",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#f6dcc0",
+   "hair": "#b88a4a",
+   "hairStyle": "bun",
+   "shirt": "#8a5cc8",
+   "pants": "#3a3a56",
+   "accessory": "glasses"
+  },
+  "phrases": [
+   "ששש, זו ספרייה.",
+   "הספרים על אלגברה לינארית נמצאים במדף הזה."
+  ]
+ },
+ "ariel_reader": {
+  "id": "ariel_reader",
+  "name": "סטודנט בספרייה",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#2b1a0e",
+   "hairStyle": "short",
+   "shirt": "#e0a030",
+   "pants": "#4a6a9a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "גם אני לא הבנתי כלום בשיעור הראשון.",
+   "יש כאן שקט, זה עוזר לחשוב."
+  ]
+ },
+ "ariel_dean": {
+  "id": "ariel_dean",
+  "name": "הדיקן",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#e0b894",
+   "hair": "#d8d8d8",
+   "hairStyle": "short",
+   "shirt": "#1c1c26",
+   "pants": "#1c1c26",
+   "accessory": "glasses"
+  },
+  "phrases": [
+   "מזל טוב לכל הבוגרים!",
+   "זו הייתה דרך ארוכה, אבל הצלחתם."
+  ]
+ },
+ "ariel_graduate": {
+  "id": "ariel_graduate",
+  "name": "בוגר",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#3a2415",
+   "hairStyle": "short",
+   "shirt": "#1c1c26",
+   "pants": "#1c1c26",
+   "accessory": "none"
+  },
+  "phrases": [
+   "סיימנו! אני עדיין לא מאמין.",
+   "אלגברה לינארית? אל תזכיר לי."
+  ]
+ },
+ "ariel_guest": {
+  "id": "ariel_guest",
+  "name": "אורחת בטקס",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#3a2415",
+   "hairStyle": "curly",
+   "shirt": "#f0c040",
+   "pants": "#4a6a9a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "איזה טקס יפה.",
+   "ההורים כאן כל כך גאים."
+  ]
  }
 }
