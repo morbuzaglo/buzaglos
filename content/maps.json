@@ -3832,5 +3832,722 @@
    "x": 3,
    "y": 10
   }
+ },
+ "kotel_birthday": {
+  "id": "kotel_birthday",
+  "gen": true,
+  "name": "הכותל המערבי",
+  "music": "beach",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "======================",
+   "=AAAAAAAAAAAAAAAAAAAA=",
+   "=AAAAAAAAAAppAAAAAAAA=",
+   "=AAAAAAAAAAppAAAAAAAA=",
+   "=AAAAAAAAAAppAAAAAAAA=",
+   "=AAAAAAAAAAppAAAAAAAA=",
+   "=pppppppppppppppppppp=",
+   "=pppppppppppppppppppp=",
+   "=AAAAAAAAAAppAAAAAAAA=",
+   "=AAAAAAAAAAppAAAAAAAA=",
+   "=AAAAAAAAAAppAAAAAAAA=",
+   "=AAAAAAAAAAppAAAAAAAA=",
+   "======================"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 10,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "sign",
+    "id": "wall_sign",
+    "x": 2,
+    "y": 7,
+    "interact": {
+     "text": "שלט: הכותל המערבי. כאן מתחילים כל יום הולדת של רינת וטוהר."
+    }
+   },
+   {
+    "type": "shelf",
+    "id": "prayer_notes",
+    "x": 18,
+    "y": 10,
+    "interact": {
+     "text": "מקום לפתקים עם בקשות. כל פתק מקופל בזהירות."
+    }
+   },
+   {
+    "type": "lantern",
+    "x": 11,
+    "y": 10,
+    "interact": {
+     "text": "פנס אבן עתיק שמאיר את הרחבה בערב."
+    }
+   },
+   {
+    "type": "lantern",
+    "x": 5,
+    "y": 5,
+    "interact": {
+     "text": "עוד פנס. הרחבה כולה נראית קסומה."
+    }
+   },
+   {
+    "type": "tree",
+    "x": 14,
+    "y": 4,
+    "interact": {
+     "text": "עץ זית זקן. נותן צל נעים לכל מי שמתפלל."
+    }
+   },
+   {
+    "type": "bush",
+    "x": 5,
+    "y": 2,
+    "interact": {
+     "text": "שיח ירוק עם פרחים קטנים."
+    }
+   },
+   {
+    "type": "table",
+    "x": 17,
+    "y": 7,
+    "interact": {
+     "text": "שולחן עם ספרי תהילים לכל מי שרוצה."
+    }
+   },
+   {
+    "type": "plant",
+    "x": 11,
+    "y": 5,
+    "interact": {
+     "text": "עציץ קטן ליד הכניסה לרחבה."
+    }
+   },
+   {
+    "type": "sofa",
+    "x": 8,
+    "y": 3,
+    "interact": {
+     "text": "ספסל לנוח עליו ולחשוב על הבקשה."
+    }
+   },
+   {
+    "type": "umbrella",
+    "x": 14,
+    "y": 10,
+    "interact": {
+     "text": "שמשייה שמגינה מהשמש הירושלמית."
+    }
+   },
+   {
+    "type": "lamp",
+    "x": 6,
+    "y": 9,
+    "interact": {
+     "text": "מנורה על עמוד, מחכה לערב."
+    }
+   },
+   {
+    "type": "rock",
+    "x": 8,
+    "y": 9,
+    "interact": {
+     "text": "אבן ירושלמית חמה מהשמש."
+    }
+   }
+  ],
+  "npcs": [
+   {
+    "id": "kotel_guide",
+    "x": 2,
+    "y": 2,
+    "dir": 1,
+    "phrases": [
+     "שלוש בנות ביום הולדת? איזה יופי של מסורת.",
+     "הכותל הזה שמע בקשות מכל העולם, ומרינת וטוהר כבר כמעט כל שנה."
+    ]
+   },
+   {
+    "id": "kotel_pilgrim",
+    "x": 3,
+    "y": 4,
+    "dir": 2,
+    "phrases": [
+     "בקשה אחת זה הרבה, בקשה שנייה זה כבר שאפו.",
+     "שקט פה, אפשר לשמוע את הלב."
+    ]
+   },
+   {
+    "id": "kotel_kid",
+    "x": 15,
+    "y": 6,
+    "dir": 2,
+    "phrases": [
+     "אני ביקשתי גלידה. זה בסדר?",
+     "גם לילדים מותר לבקש."
+    ]
+   },
+   {
+    "id": "rinat",
+    "x": 13,
+    "y": 7,
+    "dir": 2,
+    "phrases": [
+     "היום הולדת שלי, אז אני מבקשת בקשות גדולות.",
+     "הכותל הוא תמיד התחנה הראשונה."
+    ]
+   },
+   {
+    "id": "tohar",
+    "x": 19,
+    "y": 3,
+    "dir": 0,
+    "phrases": [
+     "כמו בכל שנה, קודם מתפללות.",
+     "אני מבקשת שהיום יעבור בשלום, עם מעיין."
+    ]
+   },
+   {
+    "id": "maayan",
+    "x": 20,
+    "y": 9,
+    "dir": 2,
+    "phrases": [
+     "אני לא מפריעה, אני רק מצטרפת!",
+     "אפשר גם אני לכתוב בקשה?"
+    ]
+   }
+  ],
+  "pickups": [],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 10
+  }
+ },
+ "cafe_birthday": {
+  "id": "cafe_birthday",
+  "gen": true,
+  "name": "המסעדה",
+  "music": "town",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "######################",
+   "#WWWWWWWWWWWWWWWWWWWW#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttrrrrrrrtttttt#",
+   "#tttttttrrrrrrrtttttt#",
+   "#tttttttrrrrrrrtttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "#tttttttttttttttttttt#",
+   "######################"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 10,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "counter",
+    "id": "cashier",
+    "x": 13,
+    "y": 3,
+    "interact": {
+     "text": "הקופה. כאן מתחילה כל מריבה על התשלום."
+    }
+   },
+   {
+    "type": "table",
+    "id": "birthday_table",
+    "x": 6,
+    "y": 9,
+    "interact": {
+     "text": "השולחן של שלוש החברות. כוסות קפה קר מכל הכיוונים."
+    }
+   },
+   {
+    "type": "table",
+    "x": 12,
+    "y": 8,
+    "interact": {
+     "text": "שולחן ליד החלון, עם נר קטן באמצע."
+    }
+   },
+   {
+    "type": "table",
+    "x": 18,
+    "y": 7,
+    "interact": {
+     "text": "שולחן ריק, מחכה ללקוחות הבאים."
+    }
+   },
+   {
+    "type": "sofa",
+    "x": 4,
+    "y": 3,
+    "interact": {
+     "text": "ספה נוחה לשתות עליה קפה קר."
+    }
+   },
+   {
+    "type": "plant",
+    "x": 15,
+    "y": 8,
+    "interact": {
+     "text": "עציץ גדול ליד הכניסה."
+    }
+   },
+   {
+    "type": "plant",
+    "x": 2,
+    "y": 5,
+    "interact": {
+     "text": "עציץ קטן על הדלפק."
+    }
+   },
+   {
+    "type": "lamp",
+    "x": 8,
+    "y": 5,
+    "interact": {
+     "text": "מנורה תלויה שמאירה את השולחנות."
+    }
+   },
+   {
+    "type": "fridge",
+    "x": 18,
+    "y": 3,
+    "interact": {
+     "text": "מקרר עם משקאות קרים וקרח."
+    }
+   },
+   {
+    "type": "stove",
+    "x": 11,
+    "y": 3,
+    "interact": {
+     "text": "מהמטבח בוקע ריח מעולה."
+    }
+   },
+   {
+    "type": "shelf",
+    "x": 18,
+    "y": 10,
+    "interact": {
+     "text": "מדף עם קנקני קפה וכוסות."
+    }
+   },
+   {
+    "type": "sign",
+    "x": 4,
+    "y": 6,
+    "interact": {
+     "text": "שלט: קפה קר, 'המנה של היום'."
+    }
+   }
+  ],
+  "npcs": [
+   {
+    "id": "cafe_waiter",
+    "x": 10,
+    "y": 5,
+    "dir": 3,
+    "phrases": [
+     "הן שוב רבות מי משלמת? תתפשרו, שיהיה נעים.",
+     "קפה קר אחד, שניים, שלושה, ועוד אחד לדרך."
+    ]
+   },
+   {
+    "id": "cafe_customer",
+    "x": 15,
+    "y": 5,
+    "dir": 0,
+    "phrases": [
+     "איזה רעש ליד הקופה, מה קורה שם?",
+     "אני רק רוצה לשתות את הקפה בשקט."
+    ]
+   },
+   {
+    "id": "cafe_barista",
+    "x": 13,
+    "y": 5,
+    "dir": 1,
+    "phrases": [
+     "קפה קר עם הרבה קרח, כמו שהחברות הזמינו.",
+     "ליום הולדת מגיע קפה עם קצפת."
+    ]
+   },
+   {
+    "id": "rinat",
+    "x": 9,
+    "y": 10,
+    "dir": 2,
+    "phrases": [
+     "בנות, נא להפסיק לריב על התשלום.",
+     "הקפה הקר טעים, אבל הפאדיחות לא."
+    ]
+   },
+   {
+    "id": "tohar",
+    "x": 14,
+    "y": 11,
+    "dir": 0,
+    "phrases": [
+     "אני משלמת, זה היום הולדת שלה!",
+     "מעיין, תני לי לשלם."
+    ]
+   },
+   {
+    "id": "maayan",
+    "x": 2,
+    "y": 2,
+    "dir": 0,
+    "phrases": [
+     "לא, אני משלמת! הצטרפתי ליום.",
+     "קפה קר זה בכלל לא יקר."
+    ]
+   }
+  ],
+  "pickups": [
+   {
+    "id": "cafe_birthday_iced_coffee_0",
+    "item": "iced_coffee",
+    "x": 9,
+    "y": 7,
+    "hidden": false,
+    "needsQuest": "q_birthday_trip"
+   },
+   {
+    "id": "cafe_birthday_iced_coffee_1",
+    "item": "iced_coffee",
+    "x": 6,
+    "y": 5,
+    "hidden": false,
+    "needsQuest": "q_birthday_trip"
+   },
+   {
+    "id": "cafe_birthday_iced_coffee_2",
+    "item": "iced_coffee",
+    "x": 20,
+    "y": 2,
+    "hidden": false,
+    "needsQuest": "q_birthday_trip"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 10
+  }
+ },
+ "park_birthday": {
+  "id": "park_birthday",
+  "gen": true,
+  "name": "הפארק",
+  "music": "beach",
+  "legend": {
+   "g": "grass",
+   "f": "flower",
+   "p": "path",
+   ".": "wood",
+   "t": "tile",
+   "r": "rug",
+   "#": "wall",
+   "W": "wallface",
+   "~": "water",
+   "s": "sand",
+   "=": "fence",
+   "d": "dark",
+   "c": "carpet",
+   "^": "roof",
+   "S": "stone",
+   "T": "tatami",
+   "A": "asphalt",
+   "L": "lane",
+   "Q": "pool",
+   "D": "deck",
+   "K": "kotel",
+   "C": "cloud"
+  },
+  "tiles": [
+   "======================",
+   "=gggggggggggggggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=pppppppppppppppppppp=",
+   "=pppppppppppppppppppp=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "=ggggggggggppgggggggg=",
+   "======================"
+  ],
+  "props": [
+   {
+    "type": "door",
+    "x": 1,
+    "y": 10,
+    "id": "exit",
+    "interact": {
+     "action": "exit"
+    }
+   },
+   {
+    "type": "album",
+    "id": "canvas_rinat",
+    "x": 17,
+    "y": 4,
+    "interact": {
+     "text": "הקנבס של רינת. לדעתה, זה היפה ביותר."
+    }
+   },
+   {
+    "type": "album",
+    "id": "canvas_tohar",
+    "x": 10,
+    "y": 5,
+    "interact": {
+     "text": "הקנבס של טוהר. לדעתה, זה היפה ביותר."
+    }
+   },
+   {
+    "type": "album",
+    "id": "canvas_maayan",
+    "x": 2,
+    "y": 5,
+    "interact": {
+     "text": "הקנבס של מעיין. לדעתה, זה היפה ביותר."
+    }
+   },
+   {
+    "type": "tree",
+    "x": 8,
+    "y": 3,
+    "interact": {
+     "text": "עץ גדול שנותן צל לציירות."
+    }
+   },
+   {
+    "type": "tree",
+    "x": 2,
+    "y": 8,
+    "interact": {
+     "text": "עץ עם ציפור קטנה שמסתכלת על הציורים."
+    }
+   },
+   {
+    "type": "bush",
+    "x": 9,
+    "y": 10,
+    "interact": {
+     "text": "שיח עם פרחים. מושלם לציור."
+    }
+   },
+   {
+    "type": "bush",
+    "x": 7,
+    "y": 6,
+    "interact": {
+     "text": "עוד שיח. כל אחת ציירה אותו אחרת."
+    }
+   },
+   {
+    "type": "sofa",
+    "x": 2,
+    "y": 3,
+    "interact": {
+     "text": "ספסל בפארק, אפשר לשבת ולהתרשם."
+    }
+   },
+   {
+    "type": "table",
+    "x": 14,
+    "y": 5,
+    "interact": {
+     "text": "שולחן פיקניק עם צבעי גואש ופלטות."
+    }
+   },
+   {
+    "type": "rock",
+    "x": 11,
+    "y": 2,
+    "interact": {
+     "text": "אבן גדולה שמשמשת כמשענת."
+    }
+   },
+   {
+    "type": "lamp",
+    "x": 12,
+    "y": 8,
+    "interact": {
+     "text": "פנס פארק, כבוי בשעת היום."
+    }
+   },
+   {
+    "type": "plant",
+    "x": 9,
+    "y": 8,
+    "interact": {
+     "text": "עציץ פרחים בפינה."
+    }
+   }
+  ],
+  "npcs": [
+   {
+    "id": "park_jogger",
+    "x": 16,
+    "y": 10,
+    "dir": 2,
+    "phrases": [
+     "אני רץ סיבוב שלישי ועדיין לא הבנתי איזה ציור הכי יפה.",
+     "יפה שאתן מציירות בפארק!"
+    ]
+   },
+   {
+    "id": "park_grandma",
+    "x": 5,
+    "y": 5,
+    "dir": 0,
+    "phrases": [
+     "פעם גם אני ציירתי, אבל לא בגואש.",
+     "כל הציורים יפים, ילדות, אל תריבו."
+    ]
+   },
+   {
+    "id": "park_dog_walker",
+    "x": 19,
+    "y": 6,
+    "dir": 3,
+    "phrases": [
+     "הכלב שלי חושב שהציור של כולן יפה.",
+     "איזה כיף לראות שלוש חברות מציירות ביחד."
+    ]
+   },
+   {
+    "id": "rinat",
+    "x": 13,
+    "y": 2,
+    "dir": 3,
+    "phrases": [
+     "הציור שלי הכי יפה, זה ברור.",
+     "איזה כיף לצייר בפארק."
+    ]
+   },
+   {
+    "id": "tohar",
+    "x": 19,
+    "y": 11,
+    "dir": 2,
+    "phrases": [
+     "הציור שלי עם הצבעים הכי חזקים.",
+     "שלוש ציירות, שלושה סגנונות."
+    ]
+   },
+   {
+    "id": "maayan",
+    "x": 16,
+    "y": 2,
+    "dir": 2,
+    "phrases": [
+     "הציור שלי יזכה בפרס.",
+     "נדחפתי, אבל זה השתלם!"
+    ]
+   }
+  ],
+  "pickups": [
+   {
+    "id": "park_birthday_paint_tube_0",
+    "item": "paint_tube",
+    "x": 7,
+    "y": 11,
+    "hidden": false,
+    "needsQuest": "q_birthday_trip"
+   },
+   {
+    "id": "park_birthday_paint_tube_1",
+    "item": "paint_tube",
+    "x": 20,
+    "y": 4,
+    "hidden": false,
+    "needsQuest": "q_birthday_trip"
+   },
+   {
+    "id": "park_birthday_paint_tube_2",
+    "item": "paint_tube",
+    "x": 17,
+    "y": 6,
+    "hidden": false,
+    "needsQuest": "q_birthday_trip"
+   }
+  ],
+  "doors": [],
+  "spawn": {
+   "x": 3,
+   "y": 10
+  }
  }
 }

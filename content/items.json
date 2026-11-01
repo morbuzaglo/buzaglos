@@ -242,5 +242,21 @@
   "icon": "toy",
   "color": "#d94f70",
   "desc": "קופסה יפה, אבל אין בה כלום."
+ },
+ "paint_tube": {
+  "id": "paint_tube",
+  "name": "שפופרת גואש",
+  "type": "quest",
+  "icon": "potion",
+  "color": "#e0457b",
+  "desc": "שפופרת צבע גואש לציור בפארק."
+ },
+ "iced_coffee": {
+  "id": "iced_coffee",
+  "name": "קפה קר",
+  "type": "quest",
+  "icon": "food",
+  "color": "#8a5a3a",
+  "desc": "כוס קפה קר עם הרבה קרח."
  }
 }

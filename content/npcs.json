@@ -1115,5 +1115,167 @@
    }
   ],
   "relations": "דוד"
+ },
+ "kotel_guide": {
+  "id": "kotel_guide",
+  "name": "מדריך בכותל",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#e0b894",
+   "hair": "#2b2b2b",
+   "hairStyle": "short",
+   "shirt": "#f2efe6",
+   "pants": "#2b2b3a",
+   "accessory": "beard"
+  },
+  "phrases": [
+   "שלוש בנות ביום הולדת? איזה יופי של מסורת.",
+   "הכותל הזה שמע בקשות מכל העולם, ומרינת וטוהר כבר כמעט כל שנה."
+  ]
+ },
+ "kotel_pilgrim": {
+  "id": "kotel_pilgrim",
+  "name": "מתפללת",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#5a3a22",
+   "hairStyle": "bun",
+   "shirt": "#6a8fbd",
+   "pants": "#3a3a56",
+   "accessory": "none"
+  },
+  "phrases": [
+   "בקשה אחת זה הרבה, בקשה שנייה זה כבר שאפו.",
+   "שקט פה, אפשר לשמוע את הלב."
+  ]
+ },
+ "kotel_kid": {
+  "id": "kotel_kid",
+  "name": "ילד בכותל",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#e8c9a8",
+   "hair": "#3a2415",
+   "hairStyle": "short",
+   "shirt": "#e0a030",
+   "pants": "#4a6a9a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "אני ביקשתי גלידה. זה בסדר?",
+   "גם לילדים מותר לבקש."
+  ]
+ },
+ "cafe_waiter": {
+  "id": "cafe_waiter",
+  "name": "המלצר",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#14141a",
+   "hairStyle": "short",
+   "shirt": "#e8e2d2",
+   "pants": "#1c1c26",
+   "accessory": "none"
+  },
+  "phrases": [
+   "הן שוב רבות מי משלמת? תתפשרו, שיהיה נעים.",
+   "קפה קר אחד, שניים, שלושה, ועוד אחד לדרך."
+  ]
+ },
+ "cafe_customer": {
+  "id": "cafe_customer",
+  "name": "לקוח",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#f6dcc0",
+   "hair": "#8a8a90",
+   "hairStyle": "short",
+   "shirt": "#5a7a5a",
+   "pants": "#4a4a4a",
+   "accessory": "glasses"
+  },
+  "phrases": [
+   "איזה רעש ליד הקופה, מה קורה שם?",
+   "אני רק רוצה לשתות את הקפה בשקט."
+  ]
+ },
+ "cafe_barista": {
+  "id": "cafe_barista",
+  "name": "הבריסטה",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#b88a4a",
+   "hairStyle": "long",
+   "shirt": "#2fa39a",
+   "pants": "#2b2b3a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "קפה קר עם הרבה קרח, כמו שהחברות הזמינו.",
+   "ליום הולדת מגיע קפה עם קצפת."
+  ]
+ },
+ "park_jogger": {
+  "id": "park_jogger",
+  "name": "רץ בפארק",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#e0b894",
+   "hair": "#2b1a0e",
+   "hairStyle": "short",
+   "shirt": "#e0457b",
+   "pants": "#2b2b3a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "אני רץ סיבוב שלישי ועדיין לא הבנתי איזה ציור הכי יפה.",
+   "יפה שאתן מציירות בפארק!"
+  ]
+ },
+ "park_grandma": {
+  "id": "park_grandma",
+  "name": "סבתא בפארק",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#f1d3b5",
+   "hair": "#d8d8d8",
+   "hairStyle": "bun",
+   "shirt": "#8a5cc8",
+   "pants": "#3a3a56",
+   "accessory": "glasses"
+  },
+  "phrases": [
+   "פעם גם אני ציירתי, אבל לא בגואש.",
+   "כל הציורים יפים, ילדות, אל תריבו."
+  ]
+ },
+ "park_dog_walker": {
+  "id": "park_dog_walker",
+  "name": "מטיילת עם כלב",
+  "role": "דמות משנית",
+  "group": "extras",
+  "look": {
+   "skin": "#d9a679",
+   "hair": "#3a2415",
+   "hairStyle": "curly",
+   "shirt": "#f0c040",
+   "pants": "#4a6a9a",
+   "accessory": "none"
+  },
+  "phrases": [
+   "הכלב שלי חושב שהציור של כולן יפה.",
+   "איזה כיף לראות שלוש חברות מציירות ביחד."
+  ]
  }
 }
