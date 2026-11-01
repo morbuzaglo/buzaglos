@@ -16,6 +16,7 @@ export function offerableBy(npcId) {
 export function startQuest(id) {
   if (qs()[id]) return;
   qs()[id] = { state: 'active', step: 0, rev: content.quests[id].rev || 0 };
+  trackQuest(id);
   emit('questStarted', content.quests[id]);
   evaluate(); saveGame();
 }
@@ -85,13 +86,14 @@ export function objective(qid) {
   if (step.type === 'collect') t += ` (${Math.min(itemCount(step.item), step.count || 1)}/${step.count || 1})`;
   return t;
 }
-export function trackedQuest() { return activeQuests()[0] || null; }
+export function trackedQuest() { const act = activeQuests(); return act.find((q) => q.id === S.state.trackedQuest) || act[0] || null; }
+export function trackQuest(id) { S.state.trackedQuest = id; }
 export function isQuestItemWanted(itemId) {
   return activeQuests().some((q) => { const s = currentStep(q.id); return s?.type === 'collect' && s.item === itemId; });
 }
 
 export const isAuto = (step) => !!step && (step.type === 'cutscene' || step.type === 'teleport' || step.type === 'choice' || (step.type === 'minigame' && step.auto));
-export function activeStory() { return activeQuests().find((q) => q.scene) || null; }
+export function activeStory() { const st = activeQuests().filter((q) => q.scene); return st.find((q) => q.id === S.state.trackedQuest) || st[0] || null; }
 export function questStatus(q) {
   const st = qs()[q.id]?.state;
   if (st === 'done') return 'done';

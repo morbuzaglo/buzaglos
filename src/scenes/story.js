@@ -147,6 +147,7 @@ export const storyMethods = {
       this.clearStoryCollected(q);
     } else if (!st) Q.startQuest(qid);
     st = S.state.quests[qid];
+    Q.trackQuest(qid);
     if (this.callerId) st.companion = this.callerId;
     const where = st.at || q.scene;
     this.transitioning = false;
