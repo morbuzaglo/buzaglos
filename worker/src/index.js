@@ -161,6 +161,19 @@ async function visionLook(env, { image }) {
   return extractJson(text);
 }
 
+// Long AI jobs: stream spaces (valid leading JSON whitespace) so mobile Safari does not drop the idle connection; errors travel in the body.
+function keepAlive(h, job) {
+  const enc = new TextEncoder(); const { readable, writable } = new TransformStream(); const w = writable.getWriter();
+  (async () => {
+    const t = setInterval(() => w.write(enc.encode(' ')).catch(() => {}), 5000);
+    let out;
+    try { out = await job(); } catch (e) { out = { error: e.message || String(e), details: e.details }; }
+    clearInterval(t);
+    await w.write(enc.encode(JSON.stringify(out))); await w.close();
+  })();
+  return new Response(readable, { status: 200, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...h } });
+}
+
 // ---------------------------------------------------------------- router
 export default {
   async fetch(req, env) {
@@ -178,7 +191,7 @@ export default {
         const token = (req.headers.get('authorization') || '').replace(/^Bearer /, '');
         if (!(await verifyToken(env, token))) return json({ error: 'לא מורשה' }, 401, h);
         if (path === '/api/admin/content' && req.method === 'GET') return json({ files: await readContent(env) }, 200, h);
-        if (path === '/api/admin/generate' && req.method === 'POST') { if (!(await rateLimit(env, req, 'gen', 20, 3600))) return json({ error: 'הגעתם למגבלת הבקשות לשעה' }, 429, h); return json(await generateStory(env, await req.json()), 200, h); }
+        if (path === '/api/admin/generate' && req.method === 'POST') { if (!(await rateLimit(env, req, 'gen', 20, 3600))) return json({ error: 'הגעתם למגבלת הבקשות לשעה' }, 429, h); return keepAlive(h, async () => generateStory(env, await req.json())); }
         if (path === '/api/admin/vision' && req.method === 'POST') { if (!(await rateLimit(env, req, 'vis', 30, 3600))) return json({ error: 'הגעתם למגבלת הבקשות לשעה' }, 429, h); return json(await visionLook(env, await req.json()), 200, h); }
         if (path === '/api/admin/publish' && req.method === 'POST') { const { files, message } = await req.json(); return json({ published: await publish(env, files, message) }, 200, h); }
       }

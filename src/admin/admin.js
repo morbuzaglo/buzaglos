@@ -54,7 +54,7 @@ const api = async (path, body, method) => {
   if (!session.apiUrl) throw new Error('לא מחוברים לשרת (מצב מקומי)');
   const r = await fetch(session.apiUrl.replace(/\/$/, '') + path, { method: method || (body ? 'POST' : 'GET'), headers: { 'content-type': 'application/json', ...(session.token ? { authorization: 'Bearer ' + session.token } : {}) }, body: body ? JSON.stringify(body) : undefined });
   const data = await r.json().catch(() => ({}));
-  if (!r.ok) { const e = new Error(data.error || `שגיאה ${r.status}`); e.details = data.details; throw e; }
+  if (!r.ok || data.error) { const e = new Error(data.error || `שגיאה ${r.status}`); e.details = data.details; throw e; }
   return data;
 };
 const toast = (msg, cls = 'ok') => { const t = h('div', { class: 'card ' + cls, style: 'position:fixed;bottom:14px;left:14px;right:14px;z-index:99;text-align:center;font-weight:700' }, msg); document.body.append(t); setTimeout(() => t.remove(), 3200); };
