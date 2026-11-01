@@ -57,21 +57,21 @@ const unb64 = (s) => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\n
 async function readContent(env) {
   if (!env.GITHUB_TOKEN) {   // public repo: raw files (no API rate limit)
     const files = {};
-    for (const name of ALLOWED_FILES) {
+    await Promise.all([...ALLOWED_FILES].map(async (name) => {
       const r = await fetch(`https://raw.githubusercontent.com/${env.GITHUB_REPO}/${env.GITHUB_BRANCH || 'main'}/content/${name}`);
       if (!r.ok) throw new Error('לא ניתן לקרוא את התוכן מ-GitHub (' + name + ')');
       files[name] = await r.text();
-    }
+    }));
     return files;
   }
   const res = await gh(env, `/contents/content?ref=${env.GITHUB_BRANCH || 'main'}`);
   const list = await res.json();
   if (!Array.isArray(list)) throw new Error('לא ניתן לקרוא את התוכן מ-GitHub');
   const files = {};
-  for (const f of list.filter((x) => x.name.endsWith('.json'))) {
+  await Promise.all(list.filter((x) => x.name.endsWith('.json')).map(async (f) => {      // all files at once: the login used to wait for them one by one
     const r = await (await gh(env, `/contents/${f.path}?ref=${env.GITHUB_BRANCH || 'main'}`)).json();
     files[f.name] = unb64(r.content);
-  }
+  }));
   return files;
 }
 const ALLOWED_FILES = new Set(['characters.json', 'npcs.json', 'items.json', 'quests.json', 'dialogues.json', 'maps.json', 'shop.json', 'achievements.json', 'config.json']);

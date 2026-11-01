@@ -50,9 +50,16 @@ function h(tag, attrs, ...kids) {
   for (const k of kids.flat()) if (k != null && k !== false) e.append(k.nodeType ? k : document.createTextNode(k));
   return e;
 }
-const api = async (path, body, method) => {
+/** fetch with a time limit and readable errors (Hebrew) instead of the browser's "Failed to fetch". */
+async function request(url, init, ms = 120000) {
+  const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), ms);
+  try { return await fetch(url, { ...init, signal: ctl.signal }); }
+  catch (e) { throw new Error(e.name === 'AbortError' ? `השרת לא ענה תוך ${Math.round(ms / 1000)} שניות. נסו שוב.` : 'אין חיבור לשרת. בדקו את האינטרנט ואת כתובת השרת.'); }
+  finally { clearTimeout(timer); }
+}
+const api = async (path, body, method, ms) => {
   if (!session.apiUrl) throw new Error('לא מחוברים לשרת (מצב מקומי)');
-  const r = await fetch(session.apiUrl.replace(/\/$/, '') + path, { method: method || (body ? 'POST' : 'GET'), headers: { 'content-type': 'application/json', ...(session.token ? { authorization: 'Bearer ' + session.token } : {}) }, body: body ? JSON.stringify(body) : undefined });
+  const r = await request(session.apiUrl.replace(/\/$/, '') + path, { method: method || (body ? 'POST' : 'GET'), headers: { 'content-type': 'application/json', ...(session.token ? { authorization: 'Bearer ' + session.token } : {}) }, body: body ? JSON.stringify(body) : undefined }, ms);
   const data = await r.json().catch(() => ({}));
   if (!r.ok || data.error) { const e = new Error(data.error || `שגיאה ${r.status}`); e.details = data.details; throw e; }
   return data;
@@ -64,7 +71,7 @@ const slug = (s) => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, '_').re
 function render() {
   app.innerHTML = '';
   const top = h('div', { class: 'top' }, h('div', { class: 'logo' }, '🛠️'),
-    h('div', { class: 'titles' }, h('h1', {}, 'סטודיו הניהול של בוזגלו'), h('span', { class: 'status' + (session.token ? ' on' : '') }, h('i'), session.token ? 'מחובר לשרת' : 'מצב מקומי: עריכה, בדיקה והורדת קבצים')),
+    h('div', { class: 'titles' }, h('h1', {}, 'סטודיו הניהול של בוזגלו'), h('span', { class: 'status' + (session.token ? ' on' : '') }, h('i'), session.token ? 'מחובר לשרת' + (syncState ? ' · ' + syncState : '') : 'מצב מקומי: עריכה, בדיקה והורדת קבצים')),
     session.token ? h('button', { class: 'btn gray small', onclick: () => { session = {}; sessionStorage.removeItem(SESSION_KEY); render(); } }, 'התנתקות') : null);
   app.append(top);
   if (!session.token) app.append(loginCard());
@@ -123,20 +130,44 @@ function tabPlayers() {
   box.append(h('button', { class: 'btn gray', onclick: () => { playersData = null; render(); } }, 'רענון'));
 }
 
+let syncState = '';      // shown next to the connection light while the published content is loaded in the background
 function loginCard() {
   const url = h('input', { type: 'url', placeholder: 'https://buzaglos-api.<account>.workers.dev', value: session.apiUrl || localStorage.getItem('bz-admin-api') || '' });
   const pw = h('input', { type: 'password', placeholder: 'סיסמת מנהל', autocomplete: 'current-password' });
+  const msg = h('div', { class: 'loginmsg hidden' });
+  const btn = h('button', { class: 'btn' }, 'כניסה');
+  const say = (text, kind) => { msg.className = 'loginmsg ' + (kind || ''); msg.textContent = text; };
   const go = async () => {
+    if (!url.value.trim()) return say('חסרה כתובת השרת.', 'bad');
+    if (!pw.value) return say('הקלידו את סיסמת המנהל.', 'bad');
+    btn.disabled = true; btn.textContent = 'נכנסים...'; say('מתחברים לשרת...', 'wait');
     try {
       localStorage.setItem('bz-admin-api', url.value);
-      const r = await fetch(url.value.replace(/\/$/, '') + '/api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ password: pw.value }) });
-      const d = await r.json(); if (!r.ok) throw new Error(d.error || 'שגיאת התחברות');
-      session = { apiUrl: url.value, token: d.token }; sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
-      try { const c = await api('/api/admin/content'); const live = {}; for (const [n, t] of Object.entries(c.files)) live[n.replace('.json', '')] = JSON.parse(t); const n = syncDraft({ ...clone(bundled), ...live }); if (n) toast(`עודכנו בטיוטה ${n} פריטים מהמשחק המפורסם`); } catch (e) { toast('התחברנו, אך קריאת התוכן מהמאגר נכשלה: ' + e.message, 'warn'); }
-      render();
-    } catch (e) { toast(e.message, 'bad'); }
+      const base = url.value.trim().replace(/\/$/, '');
+      const r = await request(base + '/api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ password: pw.value }) }, 15000);
+      const d = await r.json().catch(() => ({}));
+      if (r.status === 401) throw new Error('הסיסמה שגויה. נסו שוב.');
+      if (r.status === 429) throw new Error('יותר מדי ניסיונות. נסו שוב בעוד דקה.');
+      if (!r.ok) throw new Error(d.error || `השרת החזיר שגיאה (${r.status}).`);
+      session = { apiUrl: base, token: d.token }; sessionStorage.setItem(SESSION_KEY, JSON.stringify(session));
+      say('הסיסמה נכונה, נכנסים...', 'ok');
+      syncState = 'טוען את התוכן המפורסם...'; render();
+      loadPublished();
+    } catch (e) { say(e.message, 'bad'); btn.disabled = false; btn.textContent = 'כניסה'; }
   };
-  return h('div', { class: 'card' }, h('h3', {}, 'התחברות לשרת'), h('label', {}, 'כתובת השרת (Worker)'), url, h('label', {}, 'סיסמה'), pw, h('div', { class: 'row', style: 'margin-top:10px' }, h('button', { class: 'btn', onclick: go }, 'כניסה')));
+  pw.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+  btn.onclick = go;
+  return h('div', { class: 'card' }, h('h3', {}, '🔐 התחברות לשרת'), h('label', {}, 'כתובת השרת (Worker)'), url, h('label', {}, 'סיסמה'), pw, msg, h('div', { class: 'row', style: 'margin-top:12px' }, btn));
+}
+/** After the login: pull the live game content into the draft in the background, with a visible status. */
+async function loadPublished() {
+  try {
+    const c = await api('/api/admin/content', undefined, undefined, 45000);
+    const live = {}; for (const [n, t] of Object.entries(c.files)) live[n.replace('.json', '')] = JSON.parse(t);
+    const n = syncDraft({ ...clone(bundled), ...live }); syncState = '';
+    toast(n ? `מחובר. עודכנו בטיוטה ${n} פריטים מהמשחק המפורסם` : 'מחובר. הכול מעודכן');
+  } catch (e) { syncState = ''; toast('התחברנו, אך טעינת התוכן המפורסם נכשלה: ' + e.message, 'warn'); }
+  render();
 }
 
 // ---------------------------------------------------------------- family

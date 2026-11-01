@@ -74,3 +74,7 @@ td input { padding: 6px 8px; font-size: 15px; }
 .dayrow b { font-size: 17px; } .dayrow .grow { min-width: 0; }
 .day-pill { background: var(--green); color: #052a17; border: 3px solid var(--edge); padding: 2px 10px; font-weight: 700; font-size: 15px; }
 .day-pill.past { background: #3b3563; color: #8f86bd; }
+.hidden { display: none !important; }
+.loginmsg { margin-top: 14px; padding: 12px 14px; border: 3px solid var(--edge); box-shadow: var(--bevel); font-weight: 700; font-size: 17px; }
+.loginmsg.bad { background: #4a1426; color: #ffc0cc; } .loginmsg.wait { background: #12365a; color: #a5dcff; } .loginmsg.ok { background: #14452c; color: #9bf5c4; }
+.loginmsg.wait::before { content: '⏳ '; }
