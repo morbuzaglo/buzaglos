@@ -38,7 +38,7 @@ export function buildHud() {
   hud.appendChild(box);
   const q = el('div', 'hudbox'); q.id = 'hudQuest';
   hud.appendChild(q);
-  const mb = el('button', 'mbtn', STR.menu); mb.onclick = () => { sfx('tap'); openMenu(); };
+  const mb = el('button', 'mbtn', STR.menu); mb.onclick = () => { sfx('tap'); openMenu(undefined, false); };
   hud.appendChild(mb);
   const hb = el('button', 'mbtn', '🏠'); hb.onclick = () => { sfx('tap'); hooks.showHome?.('path'); };
   hud.appendChild(hb);
@@ -166,16 +166,19 @@ export function openPanelRaw(title, onClose) { const p = openShell(title, onClos
 function card(inner, cls = '') { return el('div', 'card ' + cls, inner); }
 function iconCanvas(item) { const c = el('canvas'); paintIcon(c, item.icon || 'default', item.color); return c; }
 
-let menuTab = 'quests';
-export function openMenu(tab) {
+let menuTab = 'quests', menuSolo = false;
+const SECTION_TITLES = { settings: 'הגדרות ושמירה', awards: 'הישגים', album: 'אלבום זיכרונות', bag: 'תיק ולבוש', quests: 'משימות' };
+/** solo: show just that one section (opened from the home screen), without the old tab strip. */
+export function openMenu(tab, solo) {
   if (tab) menuTab = tab;
-  const p = openShell(STR.menu, () => { hooks.charChanged?.(); refreshHud(); saveGame(); });
+  if (solo !== undefined) menuSolo = solo;
+  const p = openShell(menuSolo ? SECTION_TITLES[menuTab] : STR.menu, () => { hooks.charChanged?.(); refreshHud(); saveGame(); });
   const tabs = el('div', 'tabs');
   ['quests', 'bag', 'album', 'awards', 'settings'].forEach((k) => {
     const label = STR.tabs[k === 'settings' ? 'more' : k];
     const b = el('button', 'tab' + (menuTab === k ? ' on' : ''), label); b.onclick = () => { sfx('tap'); menuTab = k; openMenu(); }; tabs.appendChild(b);
   });
-  p.appendChild(tabs);
+  if (!menuSolo) p.appendChild(tabs);
   const body = el('div', 'body'); p.appendChild(body);
   ({ quests: tabQuests, bag: tabBag, album: tabAlbum, awards: tabAwards, settings: tabSettings })[menuTab](body);
 }

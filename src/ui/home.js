@@ -142,7 +142,7 @@ function tabShop(body) {
 // ------------------------------------------------------------------ more
 function tabMore(body) {
   const items = [['settings', '⚙️', 'הגדרות ושמירה'], ['awards', '🏅', 'הישגים'], ['album', '📖', 'אלבום זיכרונות'], ['bag', '🎒', 'תיק ולבוש']];
-  items.forEach(([k, ico, label]) => { const b = el('button', 'hMenu', `<span>${ico}</span><b>${label}</b>`); b.onclick = () => { sfx('tap'); UI.openMenu(k); }; body.appendChild(b); });
+  items.forEach(([k, ico, label]) => { const b = el('button', 'hMenu', `<span>${ico}</span><b>${label}</b>`); b.onclick = () => { sfx('tap'); UI.openMenu(k, true); }; body.appendChild(b); });
   const out = el('button', 'hMenu', '<span>🚪</span><b>החלפת שחקן / מסך פתיחה</b>'); out.onclick = () => { hide(); saveGame(); UI.hooks.toTitle?.(); }; body.appendChild(out);
 }
 
