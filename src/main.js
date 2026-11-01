@@ -8,7 +8,8 @@ import { S, saveGame, startNewGame, PREVIEW } from './state.js';
 import * as St from './state.js';
 import * as Q from './systems/quests.js';
 import { content } from './content.js';
-import { initAudio, resumeAudio, setMusic, setSfx, stopMusic } from './audio.js';
+import { initAudio, resumeAudio, pauseAudio, setMusic, setSfx, stopMusic } from './audio.js';
+import * as Shabbat from './systems/shabbat.js';
 
 let world = null;
 
@@ -44,7 +45,7 @@ function boot() {
     fps: { target: 60 },
   });
   window.__game = game;
-  window.__bz = { S, input, UI, Q, content, St };
+  window.__bz = { S, input, UI, Q, content, St, Shabbat };
 
   game.events.once('ready', () => {
     world = game.scene.getScene('World');
@@ -79,6 +80,19 @@ function boot() {
   };
   UI.hooks.showHome = (t) => Home.show(t);
   UI.hooks.toTitle = () => { Home.off(); S.started = false; stopMusic(); showGameChrome(false); if (world) world.busy = true; UI.showTitle(); };
+
+  // Shabbat: the game is closed from candle lighting to Havdalah
+  let closed = false;
+  const watchShabbat = () => {
+    const w = Shabbat.current(), box = document.getElementById('shabbat');
+    if (w && !closed) {
+      closed = true; if (S.started) saveGame(); pauseAudio(); game.pause();
+      const o = document.createElement('div'); o.id = 'shabbat';
+      o.innerHTML = `<div class="shCandles">🕯️ 🕯️</div><h1>שבת שלום</h1><p>המשחק סגור בשבת, מכניסת השבת ועד צאתה.</p><p class="shTime">ייפתח שוב במוצאי שבת<br><b>${Shabbat.clock(w.to)}</b></p><p class="shSmall">זמנים לפי ${Shabbat.place().startsWith('Jerusalem') ? 'ירושלים' : Shabbat.place().replace(', Israel', '')}. שבת שלום ומבורך!</p>`;
+      document.body.appendChild(o);
+    } else if (!w && closed) { closed = false; box?.remove(); game.resume(); resumeAudio(); }
+  };
+  watchShabbat(); setInterval(watchShabbat, 15000); document.addEventListener('visibilitychange', watchShabbat);
 
   // register the service worker (offline play + installable PWA)
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {

@@ -11,6 +11,7 @@ export function initAudio() {
   musicGain = ctx.createGain(); musicGain.gain.value = 0.16; musicGain.connect(master);
   sfxGain = ctx.createGain(); sfxGain.gain.value = 0.5; sfxGain.connect(master);
 }
+export function pauseAudio() { if (ctx && ctx.state === 'running') ctx.suspend(); }
 export function resumeAudio() { if (ctx && ctx.state !== 'running') ctx.resume(); }
 export function setMusic(on) { musicOn = on; if (!on) stopMusic(); else if (currentTrack) playMusic(currentTrack, true); }
 export function setSfx(on) { sfxOn = on; }

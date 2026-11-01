@@ -2,6 +2,7 @@
 // A day only counts as "missed" if the player really had a stage waiting that day (a stage is stamped with the day it was added).
 // So if no new stage is published, nobody loses a freeze or the streak.
 import { content } from '../content.js';
+import { isRestDay } from './shabbat.js';
 import { S, emit, saveGame, getCloudCode, cloudEnabled, equippedLook } from '../state.js';
 
 export const FREEZE_PRICE = 60;          // coins
@@ -32,7 +33,8 @@ export function settle(now = Date.now()) {
   const s = ensure(), today = dayNum(dayKey(now)), ev = [];
   if (!s.lastDay || !(s.count > 0)) return ev;
   const start = Math.max(dayNum(s.lastDay) + 1, firstMissable(dayKey(now)));
-  const missed = today - start;                         // days start .. today-1
+  let missed = 0;                                      // days start .. today-1, except Friday and Shabbat (the game is closed then)
+  for (let d = start; d < today; d++) if (!isRestDay(d)) missed++;
   if (missed <= 0) return ev;
   if (s.freezes >= missed) {
     s.freezes -= missed; s.lastDay = dayFromNum(today - 1);

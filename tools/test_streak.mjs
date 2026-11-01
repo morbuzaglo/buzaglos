@@ -61,6 +61,15 @@ reset(); Object.assign(St.info(), { count: 6, lastDay: '2026-11-08', freezes: 0 
 ev = St.stageDone(at('2026-11-09'));
 t('7-day streak gifts a freeze', St.info().count === 7 && St.info().freezes === 1 && ev.some((e) => e.type === 'gift'));
 
+// Friday and Shabbat never count as missed (the game is closed then)
+const dow = (d) => new Date(d + 'T12:00:00').getDay();
+t('test dates: 2026-11-05 is a Thursday', dow('2026-11-05') === 4);
+reset(); finish(1); Object.assign(St.info(), { count: 3, lastDay: '2026-11-05' });
+ev = St.settle(at('2026-11-08'));
+t('Thursday -> Sunday: Friday and Shabbat are free', ev.length === 0 && St.info().count === 3, JSON.stringify(ev));
+ev = St.settle(at('2026-11-09'));
+t('...but missing the Sunday still loses it', ev[0]?.type === 'lost');
+
 // buying a freeze
 reset(); state.state.coins = 100; let b = St.buyFreeze(); t('buy a freeze for coins', b.ok && St.info().freezes === 1 && state.state.coins === 100 - St.FREEZE_PRICE);
 state.state.coins = 1000; St.buyFreeze(); b = St.buyFreeze(); t('cannot hold more than the max', !b.ok && St.info().freezes === St.FREEZE_MAX);
