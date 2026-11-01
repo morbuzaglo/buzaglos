@@ -240,3 +240,4 @@ canvas { image-rendering: pixelated; }
 .wCat span { font-size: 24px; line-height: 1.1; } .wCat small { font-size: 13px; font-weight: 700; }
 .wCat.on { background: var(--panel2); color: var(--green); box-shadow: var(--bevel), 0 0 0 3px var(--green); }
 .hBtns.row2 { flex-direction: row; } .hBtns.row2 .hBtn { flex: 1; }
+#title { touch-action: pan-y; -webkit-overflow-scrolling: touch; overscroll-behavior: contain; }
