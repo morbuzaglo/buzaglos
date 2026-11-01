@@ -140,10 +140,12 @@ function loginCard() {
   const go = async () => {
     if (!url.value.trim()) return say('חסרה כתובת השרת.', 'bad');
     if (!pw.value) return say('הקלידו את סיסמת המנהל.', 'bad');
-    btn.disabled = true; btn.textContent = 'נכנסים...'; say('מתחברים לשרת...', 'wait');
+    btn.disabled = true; btn.textContent = 'נכנסים...';
+    const base = url.value.trim().replace(/\/$/, ''), t0 = Date.now();
+    const tick = setInterval(() => say(`מתחברים לשרת... ${Math.round((Date.now() - t0) / 1000)} שניות`, 'wait'), 500); say('מתחברים לשרת...', 'wait');
     try {
       localStorage.setItem('bz-admin-api', url.value);
-      const base = url.value.trim().replace(/\/$/, '');
+      if (!/^https:\/\/[^\s/]+\.[^\s/]+/.test(base)) throw new Error('כתובת השרת צריכה להתחיל ב-https:// ולהיות מלאה, למשל https://buzaglos-api.NAME.workers.dev');
       const r = await request(base + '/api/login', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ password: pw.value }) }, 15000);
       const d = await r.json().catch(() => ({}));
       if (r.status === 401) throw new Error('הסיסמה שגויה. נסו שוב.');
@@ -153,7 +155,16 @@ function loginCard() {
       say('הסיסמה נכונה, נכנסים...', 'ok');
       syncState = 'טוען את התוכן המפורסם...'; render();
       loadPublished();
-    } catch (e) { say(e.message, 'bad'); btn.disabled = false; btn.textContent = 'כניסה'; }
+    } catch (e) {
+      clearInterval(tick); say(e.message, 'bad'); btn.disabled = false; btn.textContent = 'כניסה';
+      if (/אין חיבור|לא ענה/.test(e.message)) {          // tell a dead network from a broken login: does the server answer a plain health check?
+        const t1 = Date.now();
+        say(e.message + '\nבודקים אם השרת נגיש בכלל...', 'bad');
+        try { const r = await request(base + '/api/health', {}, 8000); say(`${e.message}\nבדיקת השרת: נגיש (${Date.now() - t1}ms, קוד ${r.status}). הבעיה בבקשת ההתחברות עצמה.\nכתובת: ${base}`, 'bad'); }
+        catch (e2) { say(`${e.message}\nבדיקת השרת: לא נגיש מהמכשיר הזה (${e2.message}).\nכתובת: ${base}`, 'bad'); }
+      }
+      return;
+    } finally { clearInterval(tick); }
   };
   pw.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
   btn.onclick = go;
