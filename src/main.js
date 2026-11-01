@@ -2,6 +2,8 @@ import Phaser from 'phaser';
 import World from './scenes/World.js';
 import { initControls, setControlsVisible, input } from './ui/controls.js';
 import * as UI from './ui/ui.js';
+import * as Home from './ui/home.js';
+import * as Streak from './systems/streak.js';
 import { S, saveGame, startNewGame, PREVIEW } from './state.js';
 import * as St from './state.js';
 import * as Q from './systems/quests.js';
@@ -66,14 +68,17 @@ function boot() {
     world.startWorld(); world.busy = true; saveGame();
     await UI.showIntro();
     world.busy = false; saveGame();
+    Streak.start().then(() => { UI.refreshHud(); Home.refresh(); }); Home.show('path');
   };
   UI.hooks.continueGame = () => {
     S.started = true;
     initAudio(); resumeAudio(); applySettings();
     showGameChrome(true); UI.buildHud();
     world.startWorld();
+    Streak.start().then(() => { UI.refreshHud(); Home.refresh(); }); Home.show('path');
   };
-  UI.hooks.toTitle = () => { S.started = false; stopMusic(); showGameChrome(false); if (world) world.busy = true; UI.showTitle(); };
+  UI.hooks.showHome = (t) => Home.show(t);
+  UI.hooks.toTitle = () => { Home.hide(); S.started = false; stopMusic(); showGameChrome(false); if (world) world.busy = true; UI.showTitle(); };
 
   // register the service worker (offline play + installable PWA)
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {

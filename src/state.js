@@ -17,6 +17,7 @@ export function newState() {
     stats: { steps: 0, talks: 0, minigames: 0, coinsEarned: 0, abilityUses: 0, purchases: 0 },
     unlockedChars: [...cfg.startChars],
     settings: { music: true, sfx: true },
+    streak: { count: 0, best: 0, freezes: 0, lastDay: null, lost: null, appliedSeq: 0 },
     playSeconds: 0, savedAt: 0,
   };
 }
@@ -24,7 +25,7 @@ export function newState() {
 export const S = { state: newState(), started: false };
 const listeners = new Set();
 export const onChange = (fn) => { listeners.add(fn); return () => listeners.delete(fn); };
-const SAVE_EVENTS = new Set(['coins', 'xp', 'item', 'itemLost', 'flag', 'questStarted', 'stepDone', 'questDone', 'achievement', 'levelup']);
+const SAVE_EVENTS = new Set(['coins', 'xp', 'item', 'itemLost', 'flag', 'questStarted', 'stepDone', 'questDone', 'achievement', 'levelup', 'streak']);
 let saveTimer = null;
 export function scheduleSave() { clearTimeout(saveTimer); saveTimer = setTimeout(() => { if (S.started) saveGame(); }, 500); }
 export const emit = (type, data) => { listeners.forEach((fn) => fn(type, data)); if (SAVE_EVENTS.has(type)) scheduleSave(); };
@@ -63,7 +64,7 @@ export function clearSave(id) { try { localStorage.removeItem(slotKey(id)); } ca
 export function startNewGame(charId, guest) { S.state = newState(); if (charId) S.state.activeChar = charId; S.state.chosen = !!charId; if (guest) { S.state.guestName = guest.name; S.state.guestGender = guest.gender; } applyGuest(); }
 function migrate(saved) {
   const base = newState();
-  const merged = { ...base, ...saved, stats: { ...base.stats, ...saved.stats }, settings: { ...base.settings, ...saved.settings }, owned: { ...base.owned, ...saved.owned } };
+  const merged = { ...base, ...saved, stats: { ...base.stats, ...saved.stats }, settings: { ...base.settings, ...saved.settings }, owned: { ...base.owned, ...saved.owned }, streak: { ...base.streak, ...saved.streak } };
   if (!content.characters[merged.activeChar]) merged.activeChar = base.activeChar;
   // a quest that gained steps since the save was written: move the saved step along so progress is never lost or repeated
   for (const [qid, st] of Object.entries(merged.quests || {})) {

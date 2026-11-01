@@ -7,10 +7,11 @@ import {
 } from '../state.js';
 import { paintPortrait, paintIcon, paintTitleBanner } from '../art.js';
 import * as Q from '../systems/quests.js';
+import * as Streak from '../systems/streak.js';
 import { sfx, setMusic, setSfx, audioSettings } from '../audio.js';
 import { STR, tpl } from '../i18n.js';
 
-export const hooks = { enterStory: null, teleport: null, ending: null, charChanged: null, resetCooldown: null, newGame: null, continueGame: null, toTitle: null };
+export const hooks = { enterStory: null, teleport: null, ending: null, charChanged: null, resetCooldown: null, newGame: null, continueGame: null, toTitle: null, showHome: null };
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -39,6 +40,8 @@ export function buildHud() {
   hud.appendChild(q);
   const mb = el('button', 'mbtn', STR.menu); mb.onclick = () => { sfx('tap'); openMenu(); };
   hud.appendChild(mb);
+  const hb = el('button', 'mbtn', '🏠'); hb.onclick = () => { sfx('tap'); hooks.showHome?.('path'); };
+  hud.appendChild(hb);
   if (!$('timerBox')) { const tb = el('div', 'hidden'); tb.id = 'timerBox'; $('ui').appendChild(tb); }
   paintIcon($('hudCoin'), 'coin');
   refreshHud();
@@ -55,9 +58,9 @@ export function refreshHud() {
   $('hudLvl').textContent = `${STR.lvl} ${st.level}`;
   $('hudXp').style.width = Math.round((st.xp / xpForLevel(st.level)) * 100) + '%';
   $('hudCoins').textContent = st.coins;
-  $('hudShards').textContent = `${st.shards.length}/${Q.totalShards()} ◆`;
+  $('hudShards').textContent = `🔥 ${Streak.info().count}  ·  ${st.shards.length}/${Q.totalShards()} ◆`;
   const tq = Q.trackedQuest();
-  $('hudQuest').innerHTML = tq ? `<b>${T(tq.title)}</b><br>${T(Q.objective(tq.id))}` : `<span class="dim">${st.shards.length >= Q.totalShards() ? STR.goAttic : (Q.currentMission() ? STR.mission.hint : STR.explore)}</span>`;
+  $('hudQuest').innerHTML = tq ? `<b>${T(tq.title)}</b><br>${T(Q.objective(tq.id))}` : `<span class="dim">${st.shards.length >= Q.totalShards() ? STR.goAttic : (Q.currentMission() ? (Streak.canPlayToday() ? STR.mission.hint : 'השלב הבא ייפתח מחר ⏳') : STR.explore)}</span>`;
   const b = $('btnB'); const ab = ch.ability; b.innerHTML = `B<small>${esc(ab?.name || '')}</small><span class="cd"></span>`;
 }
 
@@ -310,8 +313,14 @@ function titleHeader(t) {
   const banner = el('canvas'); paintTitleBanner(banner, Object.values(content.characters).map((c) => c.look));
   t.append(banner, el('h1', '', esc(cfg.title)), el('p', '', esc(cfg.tagline)));
 }
+/** The streak a saved player would have if they opened the game now (days that passed are applied to a copy). */
+function savedStreak(saved) {
+  const prev = S.state; try { S.state = saved; Streak.settle(); return saved.streak?.count || 0; } catch (e) { return 0; } finally { S.state = prev; }
+}
 export function showTitle() {
   const t = $('title'); t.classList.remove('hidden'); t.innerHTML = '';
+  const ad = el('button', 'adminBtn', 'אדמין'); ad.onclick = () => { sfx('tap'); window.open(new URL('admin/index.html', location.href).href, 'bzadmin', 'width=520,height=820,resizable=yes,scrollbars=yes'); };
+  t.appendChild(ad);
   titleHeader(t);
   t.appendChild(el('h3', '', STR.title.who));
   const last = lastChar();
@@ -319,7 +328,7 @@ export function showTitle() {
   for (const [id, c] of Object.entries(content.characters)) {
     const saved = peekSave(id);
     const b = el('button', 'pick' + (id === last ? ' last' : '')); const cv = el('canvas'); paintPortrait(cv, c.look);
-    b.append(cv, el('span', '', esc(c.name)), el('small', saved ? 'has' : '', saved ? STR.title.progress(saved.shards?.length || 0, Q.totalShards()) : STR.title.newTag));
+    b.append(cv, el('span', '', esc(c.name)), el('small', saved ? 'has' : '', saved ? `🔥 ${savedStreak(saved)}` : STR.title.newTag));
     b.dataset.id = id;
     b.onclick = async () => {
       try {

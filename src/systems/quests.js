@@ -1,5 +1,6 @@
 // Quest engine: offers, step matching, completion and rewards. Logic only (no DOM, no Phaser).
 import { content } from '../content.js';
+import * as Streak from './streak.js';
 import { S, emit, check, addCoins, addXp, addItem, removeItem, itemCount, setFlag, saveGame } from '../state.js';
 
 export const allQuests = () => Object.values(content.quests);
@@ -57,6 +58,7 @@ export function completeQuest(qid) {
   Object.entries(r.flags || {}).forEach(([k, v]) => setFlag(k, v));
   if (r.shard && !S.state.shards.includes(r.shard.id)) { S.state.shards.push(r.shard.id); gained.shard = r.shard; }
   emit('questDone', { quest: q, gained });
+  Streak.stageDone();
 }
 
 /** Auto-complete steps that complete themselves (collect). Call after item changes. */

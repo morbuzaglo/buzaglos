@@ -21,7 +21,7 @@ globalThis.fetch = async (url, init = {}) => {
 };
 const kv = new Map();
 const env = { ADMIN_PASSWORD: 'secret-pw', SESSION_SECRET: 'x'.repeat(40), GITHUB_REPO: 'o/r', GITHUB_TOKEN: 't', ANTHROPIC_API_KEY: 'k', ALLOWED_ORIGIN: 'https://o.github.io',
-  SAVES: { get: async (k) => kv.get(k) ?? null, put: async (k, v) => kv.set(k, v) } };
+  SAVES: { get: async (k, type) => { const v = kv.get(k) ?? null; return v != null && type === 'json' ? JSON.parse(v) : v; }, put: async (k, v) => kv.set(k, v), list: async ({ prefix }) => ({ keys: [...kv.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })), list_complete: true }) } };
 const call = (path, { method = 'GET', body, token, origin = 'https://o.github.io' } = {}) => worker.fetch(new Request('https://api.test' + path, { method, headers: { origin, 'content-type': 'application/json', ...(token ? { authorization: 'Bearer ' + token } : {}) }, body: body ? JSON.stringify(body) : undefined }), env);
 let fails = 0; const t = (name, cond, info = '') => { if (!cond) fails++; console.log(cond ? 'PASS' : 'FAIL', name, info); };
 
@@ -51,4 +51,22 @@ r = await call('/api/admin/publish', { method: 'POST', token, body: { files: { '
 r = await call('/api/save/ABCDEFGH12', { method: 'PUT', body: { v: 1, coins: 5 } }); t('cloud save PUT', r.status === 200);
 r = await call('/api/save/ABCDEFGH12'); t('cloud save GET', (await r.json()).coins === 5);
 r = await call('/api/save/short'); t('save code too short -> 404', r.status === 404);
+
+// streaks: mirror, leaderboard, admin view, restore
+const K = 'buzaglosfam-eden';
+r = await call('/api/streak/' + K, { method: 'PUT', body: { char: 'eden', name: 'עדן', coins: 50, level: 2, shards: 3, count: 12, best: 12, freezes: 1, lastDay: '2026-11-03', lost: null, appliedSeq: 0 } }); let rec = await r.json();
+t('streak PUT stores the mirror', r.status === 200 && rec.count === 12);
+r = await call('/api/streak/buzaglosfam-vabc12345', { method: 'PUT', body: { char: 'visitor', count: 5 } }); t('streak: guest keys rejected', r.status === 400);
+r = await call('/api/leaderboard'); let lb = await r.json(); t('leaderboard lists players', lb.players.length === 1 && lb.players[0].count === 12 && lb.players[0].coins === 50);
+r = await call('/api/admin/streaks'); t('admin streaks needs a token', r.status === 401);
+r = await call('/api/streak/' + K, { method: 'PUT', body: { char: 'eden', name: 'עדן', coins: 60, level: 2, shards: 3, count: 0, best: 12, freezes: 0, lastDay: null, lost: { count: 12, day: '2026-11-09', freezes: 0 }, appliedSeq: 0 } }); rec = await r.json();
+t('streak loss is recorded', rec.count === 0 && rec.lost.count === 12);
+r = await call('/api/admin/streaks', { token }); let as = await r.json(); t('admin sees the lost streak', as.players[0].lost.count === 12 && as.players[0].key === K);
+r = await call('/api/admin/streak', { method: 'POST', token, body: { key: K, action: 'restore' } }); rec = (await r.json()).player; t('admin restore -> override', r.status === 200 && rec.override.count === 12 && rec.override.seq === 1);
+r = await call('/api/streak/' + K, { method: 'PUT', body: { char: 'eden', name: 'עדן', coins: 70, level: 2, shards: 3, count: 0, best: 12, freezes: 0, lastDay: null, lost: { count: 12, day: '2026-11-09', freezes: 0 }, appliedSeq: 0 } }); rec = await r.json();
+t('a stale phone cannot overwrite the restore', rec.count === 12 && rec.override.seq === 1 && rec.coins === 70);
+r = await call('/api/streak/' + K, { method: 'PUT', body: { char: 'eden', name: 'עדן', coins: 70, level: 2, shards: 3, count: 12, best: 12, freezes: 0, lastDay: '2026-11-09', lost: { count: 12, day: '2026-11-09', freezes: 0, restored: true }, appliedSeq: 1 } }); rec = await r.json();
+t('after applying, the phone state is stored', rec.count === 12 && rec.lost.restored === true);
+r = await call('/api/admin/streak', { method: 'POST', token, body: { key: K, action: 'restore' } }); t('cannot restore twice', r.status >= 400);
+r = await call('/api/admin/streak', { method: 'POST', token, body: { key: K, action: 'set', count: 20, freezes: 2 } }); rec = (await r.json()).player; t('admin set', rec.override.seq === 2 && rec.count === 20 && rec.freezes === 2);
 console.log(fails ? `${fails} FAILED` : 'ALL PASSED'); process.exit(fails ? 1 : 0);

@@ -387,9 +387,10 @@ export default class World extends Phaser.Scene {
   afterQuestChange() { this.refreshPickups(); this.refreshProps(); UI.refreshHud(); }
 
   async flushRewards() {
-    const was = this.busy; this.busy = true;
+    const was = this.busy; this.busy = true; let hadStory = false;
     while (this.pendingRewards.length) {
       const { quest, gained } = this.pendingRewards.shift();
+      if (quest.scene && (gained.coins || gained.xp || gained.shard)) hadStory = true;
       const lines = [quest.title];
       if (gained.coins) lines.push(STR.coinsGot(gained.coins));
       if (gained.xp) lines.push(STR.xpGot(gained.xp));
@@ -402,6 +403,7 @@ export default class World extends Phaser.Scene {
     }
     this.busy = was;
     this.afterQuestChange();
+    if (hadStory) UI.hooks.showHome?.('path');
   }
 
   // ------------------------------------------------------------------ abilities

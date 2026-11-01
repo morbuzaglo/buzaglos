@@ -78,6 +78,12 @@ const ALLOWED_FILES = new Set(['characters.json', 'npcs.json', 'items.json', 'qu
 async function publish(env, files, message) {
   if (!env.GITHUB_TOKEN) throw new Error("פרסום אוטומטי עדיין לא מוגדר (חסר טוקן GitHub). אפשר להוריד את הקבצים.");
   const content = {};
+  const today = new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Jerusalem' });
+  if (files['quests.json']) {   // stamp the day a new stage was added: the streak system only counts a day as missed if a stage was waiting
+    const qs = JSON.parse(files['quests.json']);
+    for (const q of Object.values(qs)) if (q && q.scene && !q.addedOn) q.addedOn = today;
+    files = { ...files, 'quests.json': JSON.stringify(qs) };
+  }
   for (const [name, text] of Object.entries(files)) {
     if (!ALLOWED_FILES.has(name)) throw new Error(`file not allowed: ${name}`);
     content[name.replace('.json', '')] = JSON.parse(text);
@@ -174,6 +180,43 @@ function keepAlive(h, job) {
   return new Response(readable, { status: 200, headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store', ...h } });
 }
 
+// ---------------------------------------------------------------- streaks (mirror of each player's streak: admin view, leaderboard, restore)
+const num = (v, max = 1e9) => Math.max(0, Math.min(max, Math.floor(Number(v) || 0)));
+const streakKey = (k) => 'streak:' + k;
+const validStreakKey = (k) => /^buzaglosfam-[A-Za-z0-9_-]{2,40}$/.test(k) && !/^buzaglosfam-v/.test(k);
+async function putStreak(env, key, b) {
+  const ex = (await env.SAVES.get(streakKey(key), 'json')) || {};
+  const pending = ex.override && ex.override.seq > num(b.appliedSeq);          // the admin changed something this phone has not applied yet
+  const live = { char: String(b.char || '').slice(0, 40), name: String(b.name || '').slice(0, 30), coins: num(b.coins), level: num(b.level, 999), shards: num(b.shards, 999) };
+  const rec = pending ? { ...ex, ...live } : { ...ex, ...live, count: num(b.count, 100000), best: num(b.best, 100000), freezes: num(b.freezes, 50), lastDay: /^\d{4}-\d\d-\d\d$/.test(b.lastDay || '') ? b.lastDay : null, lost: b.lost && typeof b.lost === 'object' ? { count: num(b.lost.count, 100000), day: String(b.lost.day || '').slice(0, 10), freezes: num(b.lost.freezes, 50), restored: !!b.lost.restored } : ex.lost || null, appliedSeq: num(b.appliedSeq) };
+  rec.updatedAt = Date.now();
+  await env.SAVES.put(streakKey(key), JSON.stringify(rec));
+  return rec;
+}
+async function allStreaks(env) {
+  const out = []; let cursor;
+  do {
+    const l = await env.SAVES.list({ prefix: 'streak:', cursor }); cursor = l.list_complete ? undefined : l.cursor;
+    for (const k of l.keys) { const v = await env.SAVES.get(k.name, 'json'); if (v) out.push({ key: k.name.slice(7), ...v }); }
+  } while (cursor);
+  return out;
+}
+async function adminStreak(env, { key, action, count, freezes }) {
+  if (!validStreakKey(key)) throw new Error('bad key');
+  const ex = await env.SAVES.get(streakKey(key), 'json'); if (!ex) throw new Error('שחקן לא נמצא');
+  const seq = num(ex.override?.seq) + 1;
+  if (action === 'restore') {
+    if (!ex.lost || ex.lost.restored) throw new Error('אין רצף אבוד לשחזור');
+    ex.override = { seq, count: ex.lost.count, freezes: Math.max(num(ex.freezes), num(ex.lost.freezes)), restored: true };
+    ex.count = ex.lost.count; ex.freezes = ex.override.freezes; ex.best = Math.max(num(ex.best), ex.count); ex.lost = { ...ex.lost, restored: true };
+  } else if (action === 'set') {
+    ex.override = { seq, count: num(count, 100000), freezes: num(freezes, 50) };
+    ex.count = ex.override.count; ex.freezes = ex.override.freezes; ex.best = Math.max(num(ex.best), ex.count);
+  } else throw new Error('bad action');
+  await env.SAVES.put(streakKey(key), JSON.stringify(ex));
+  return ex;
+}
+
 // ---------------------------------------------------------------- router
 export default {
   async fetch(req, env) {
@@ -193,7 +236,21 @@ export default {
         if (path === '/api/admin/content' && req.method === 'GET') return json({ files: await readContent(env) }, 200, h);
         if (path === '/api/admin/generate' && req.method === 'POST') { if (!(await rateLimit(env, req, 'gen', 20, 3600))) return json({ error: 'הגעתם למגבלת הבקשות לשעה' }, 429, h); return keepAlive(h, async () => generateStory(env, await req.json())); }
         if (path === '/api/admin/vision' && req.method === 'POST') { if (!(await rateLimit(env, req, 'vis', 30, 3600))) return json({ error: 'הגעתם למגבלת הבקשות לשעה' }, 429, h); return json(await visionLook(env, await req.json()), 200, h); }
+        if (path === '/api/admin/streaks' && req.method === 'GET') return json({ players: await allStreaks(env) }, 200, h);
+        if (path === '/api/admin/streak' && req.method === 'POST') return json({ player: await adminStreak(env, await req.json()) }, 200, h);
         if (path === '/api/admin/publish' && req.method === 'POST') { const { files, message } = await req.json(); return json({ published: await publish(env, files, message) }, 200, h); }
+      }
+      const stm = /^\/api\/streak\/([A-Za-z0-9_-]{8,60})$/.exec(path);
+      if (stm && env.SAVES) {
+        if (!validStreakKey(stm[1])) return json({ error: 'bad key' }, 400, h);
+        if (!(await rateLimit(env, req, 'streak', 1500, 3600))) return json({ error: 'rate limit' }, 429, h);
+        if (req.method === 'PUT') return json(await putStreak(env, stm[1], await req.json()), 200, h);
+        if (req.method === 'GET') { const v = await env.SAVES.get(streakKey(stm[1]), 'json'); return v ? json(v, 200, h) : json({ error: 'not found' }, 404, h); }
+      }
+      if (path === '/api/leaderboard' && env.SAVES) {
+        if (!(await rateLimit(env, req, 'board', 600, 3600))) return json({ error: 'rate limit' }, 429, h);
+        const all = await allStreaks(env);
+        return json({ players: all.map((p) => ({ char: p.char, name: p.name, coins: p.coins, level: p.level, shards: p.shards, count: p.count || 0, best: p.best || 0 })) }, 200, h);
       }
       const sm = /^\/api\/save\/([A-Za-z0-9_-]{8,40})$/.exec(path);
       if (sm && env.SAVES) {

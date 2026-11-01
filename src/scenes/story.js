@@ -3,6 +3,7 @@ import { content } from '../content.js';
 import { S, saveGame, addItem, removeItem, itemCount } from '../state.js';
 import { characterTexture, TILE } from '../art.js';
 import * as Q from '../systems/quests.js';
+import * as Streak from '../systems/streak.js';
 import * as UI from '../ui/ui.js';
 import { playMinigame } from '../ui/minigames.js';
 import { STR, tpl } from '../i18n.js';
@@ -16,6 +17,7 @@ export const storyMethods = {
   pickCaller() {
     this.mission = Q.currentMission();
     this.callerId = null; this.callerRec = null;
+    if (!Streak.canPlayToday()) return;      // one stage a day: nobody calls until tomorrow
     const isScene = this.mission && (this.mission.maps || []).includes(this.map.id);
     if (!this.mission || isScene) return;
     this.callerId = this.mission.callers.find((id) => content.npcs[id] && content.npcs[id].character !== S.state.activeChar) || null;
@@ -141,6 +143,7 @@ export const storyMethods = {
   /** Enter (or resume / replay) a story from the family album. */
   enterStory(qid) {
     const q = content.quests[qid]; if (!q?.scene) return;
+    if (S.state.quests[qid]?.state !== 'done' && !Streak.canPlayToday()) { UI.toast('כבר עשיתם שלב היום 🎉 השלב הבא ייפתח מחר'); return; }
     let st = S.state.quests[qid];
     if (st?.state === 'done') {                     // replay: no second reward
       S.state.quests[qid] = st = { state: 'active', step: 0, replay: true };

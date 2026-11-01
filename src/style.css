@@ -140,3 +140,64 @@ canvas { image-rendering: pixelated; }
 
 #ui button, .btn, .choice, .pick, .mcard { touch-action: manipulation; }
 #pvbar { position: fixed; left: 50%; bottom: calc(4px + var(--sab, 0px)); transform: translateX(-50%); background: rgba(13,7,32,.9); color: var(--gold, #ffd23f); border: 2px solid var(--gold, #ffd23f); padding: 3px 10px; font-size: 12px; z-index: 50; pointer-events: none; white-space: nowrap; }
+
+/* Home screen (Duolingo style) */
+#home { position: absolute; inset: 0; z-index: 9; background: linear-gradient(#241548, #150b2e); display: flex; flex-direction: column; font-size: 18px; }
+#home .grow { flex: 1; min-width: 0; }
+.hHead { display: flex; align-items: center; gap: 8px; padding: calc(10px + var(--sat)) calc(12px + var(--sar)) 8px calc(12px + var(--sal)); border-bottom: 2px solid rgba(255,255,255,.08); }
+.hChip { display: flex; align-items: center; gap: 5px; font-size: 20px; padding: 4px 10px; border-radius: 16px; background: rgba(255,255,255,.08); }
+.hChip b { font-size: 22px; }
+.hChip.fire b { color: #ff9600; } .hChip.ice b { color: #5bc0ff; } .hChip.coin b { color: var(--gold); }
+.hChip canvas { width: 22px; height: 22px; }
+#hFace { width: 42px; height: 42px; border-radius: 50%; background: #1b1033; border: 3px solid var(--gold); }
+.hBody { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; touch-action: pan-y; padding: 12px calc(14px + var(--sar)) 24px calc(14px + var(--sal)); }
+.hNav { display: flex; background: #0d0720; border-top: 3px solid rgba(255,255,255,.1); padding: 6px 4px calc(6px + var(--sab)); }
+.hTab { flex: 1; background: none; border: 0; border-radius: 14px; color: var(--dim); display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 6px 0; }
+.hTab span { font-size: 28px; line-height: 1.1; filter: grayscale(.6); } .hTab small { font-size: 13px; font-weight: 700; }
+.hTab.on { background: rgba(88,204,2,.18); color: #7be04a; box-shadow: inset 0 0 0 2px #58cc02; } .hTab.on span { filter: none; }
+.hHero { text-align: center; padding: 8px 0 4px; }
+.hFlame { font-size: 64px; line-height: 1; animation: flame 1.2s ease-in-out infinite alternate; }
+@keyframes flame { from { transform: scale(1) rotate(-4deg); } to { transform: scale(1.1) rotate(4deg); } }
+.hBig { font-size: 64px; font-weight: 700; color: #ff9600; line-height: 1; }
+.hLbl { font-size: 22px; font-weight: 700; color: #ffb84d; }
+.hSub { font-size: 14px; color: var(--dim); font-weight: 500; }
+.hNote { border-radius: 16px; padding: 12px 14px; text-align: center; font-size: 18px; font-weight: 700; margin: 10px 0; }
+.hNote.good { background: rgba(88,204,2,.2); color: #8ef058; box-shadow: inset 0 0 0 2px #58cc02; }
+.hNote.wait { background: rgba(91,192,255,.15); color: #8fd4ff; box-shadow: inset 0 0 0 2px #1cb0f6; }
+.hNote.bad { background: rgba(255,93,115,.18); color: #ff8da0; box-shadow: inset 0 0 0 2px var(--red); }
+.hPath { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 12px 0 18px; }
+.hRow { display: flex; flex-direction: column; align-items: center; gap: 4px; width: 150px; }
+.hNode { width: 84px; height: 84px; border-radius: 50%; border: 0; font-size: 36px; color: #fff; box-shadow: 0 8px 0 rgba(0,0,0,.35); }
+.hNode:active { transform: translateY(5px); box-shadow: 0 3px 0 rgba(0,0,0,.35); }
+.hNode.done { background: #58cc02; box-shadow: 0 8px 0 #3d8f00; }
+.hNode.today { background: #ffc800; color: #6b4a00; box-shadow: 0 8px 0 #c79500; animation: nodepulse 1s ease-in-out infinite alternate; }
+@keyframes nodepulse { from { transform: scale(1); } to { transform: scale(1.1); } }
+.hNode.wait { background: #1cb0f6; box-shadow: 0 8px 0 #1580b8; }
+.hNode.lock, .hNode.soon { background: #3a3560; color: #8a82b8; box-shadow: 0 8px 0 #25213f; }
+.hCap { font-size: 14px; font-weight: 700; color: var(--ink); text-align: center; min-height: 20px; max-width: 150px; }
+.hBtn { border: 0; border-radius: 14px; font-size: 18px; padding: 12px 20px; color: #fff; box-shadow: 0 5px 0 rgba(0,0,0,.3); }
+.hBtn.go { background: #58cc02; box-shadow: 0 5px 0 #3d8f00; } .hBtn.gray { background: #4a4478; box-shadow: 0 5px 0 #2d2850; }
+.hBtn.big { display: block; width: 100%; font-size: 22px; padding: 16px; }
+.hBtn:active:not(:disabled) { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,.3); }
+.hBtn:disabled { background: #3a3560; color: #8a82b8; box-shadow: 0 5px 0 #25213f; }
+.hModal { position: absolute; inset: 0; background: rgba(0,0,0,.7); display: flex; align-items: flex-end; z-index: 3; }
+.hSheet { width: 100%; background: #2a1b4d; border-radius: 22px 22px 0 0; padding: 20px 18px calc(18px + var(--sab)); text-align: center; }
+.hSheet h3 { margin: 0 0 6px; color: var(--gold); font-size: 24px; } .hSheet p { margin: 0 0 14px; font-size: 17px; color: var(--ink); line-height: 1.5; }
+.hBtns { display: flex; flex-direction: column; gap: 10px; }
+.hSeg { display: flex; background: rgba(255,255,255,.08); border-radius: 16px; padding: 4px; gap: 4px; margin-bottom: 12px; }
+.hSegBtn { flex: 1; border: 0; border-radius: 12px; background: none; color: var(--dim); font-size: 18px; padding: 10px; }
+.hSegBtn.on { background: #58cc02; color: #fff; }
+.hLine { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,.07); border-radius: 16px; padding: 10px 12px; margin-bottom: 8px; font-size: 20px; }
+.hLine.me { box-shadow: inset 0 0 0 3px var(--gold); background: rgba(255,210,63,.1); }
+.hLine canvas { width: 46px; height: 46px; border-radius: 50%; background: #1b1033; }
+.hRank { width: 34px; text-align: center; font-size: 24px; font-weight: 700; }
+.hVal { font-size: 22px; color: var(--gold); }
+.hCard { background: rgba(255,255,255,.07); border-radius: 18px; padding: 12px; margin-bottom: 10px; display: flex; flex-direction: column; gap: 10px; font-size: 17px; }
+.hCard b { color: var(--gold); } .hCardRow { display: flex; gap: 12px; align-items: center; }
+.hCardRow canvas { width: 52px; height: 52px; background: var(--bg); border-radius: 12px; flex: none; }
+.hEmoji { font-size: 42px; }
+.hH3 { color: var(--gold); font-size: 22px; margin: 16px 0 8px; }
+.hMenu { display: flex; align-items: center; gap: 14px; width: 100%; background: rgba(255,255,255,.07); border: 0; border-radius: 18px; padding: 16px; margin-bottom: 10px; color: var(--ink); font-size: 20px; text-align: start; }
+.hMenu span { font-size: 32px; }
+.adminBtn { position: fixed; top: calc(10px + env(safe-area-inset-top)); right: 10px; z-index: 30; background: rgba(255,255,255,.14); color: var(--ink); border: 2px solid rgba(255,255,255,.3); border-radius: 12px; font-size: 14px; padding: 6px 12px; }
+#hud .mbtn { font-size: 15px; }
