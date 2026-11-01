@@ -73,7 +73,8 @@
   "look": {
    "hat": "#e84b4b"
   },
-  "desc": "כובע ספורטיבי אדום."
+  "desc": "כובע ספורטיבי אדום.",
+  "slot": "hat"
  },
  "shirt_gold": {
   "id": "shirt_gold",
@@ -85,7 +86,8 @@
   "look": {
    "shirt": "#e8b33a"
   },
-  "desc": "נוצצת. נוצצת מאוד."
+  "desc": "נוצצת. נוצצת מאוד.",
+  "slot": "shirt"
  },
  "shirt_green": {
   "id": "shirt_green",
@@ -97,7 +99,8 @@
   "look": {
    "shirt": "#3fae6b"
   },
-  "desc": "מרגישה מזל."
+  "desc": "מרגישה מזל.",
+  "slot": "shirt"
  },
  "sneakers": {
   "id": "sneakers",
@@ -266,5 +269,633 @@
   "icon": "book",
   "color": "#4a8ad0",
   "desc": "דף סיכום באלגברה לינארית."
+ },
+ "shirt_red": {
+  "id": "shirt_red",
+  "name": "חולצה אדומה",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#e84b4b",
+  "price": 20,
+  "look": {
+   "shirt": "#e84b4b"
+  },
+  "desc": "חולצה בצבע חדש."
+ },
+ "shirt_blue": {
+  "id": "shirt_blue",
+  "name": "חולצה כחולה",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#3a7bd5",
+  "price": 20,
+  "look": {
+   "shirt": "#3a7bd5"
+  },
+  "desc": "חולצה בצבע חדש."
+ },
+ "shirt_pink": {
+  "id": "shirt_pink",
+  "name": "חולצה ורודה",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#ff8fb8",
+  "price": 20,
+  "look": {
+   "shirt": "#ff8fb8"
+  },
+  "desc": "חולצה בצבע חדש."
+ },
+ "shirt_purple": {
+  "id": "shirt_purple",
+  "name": "חולצה סגולה",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#8a5cc8",
+  "price": 25,
+  "look": {
+   "shirt": "#8a5cc8"
+  },
+  "desc": "חולצה בצבע חדש."
+ },
+ "shirt_orange": {
+  "id": "shirt_orange",
+  "name": "חולצה כתומה",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#ff8a3d",
+  "price": 25,
+  "look": {
+   "shirt": "#ff8a3d"
+  },
+  "desc": "חולצה בצבע חדש."
+ },
+ "shirt_black": {
+  "id": "shirt_black",
+  "name": "חולצה שחורה",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#2a2a35",
+  "price": 25,
+  "look": {
+   "shirt": "#2a2a35"
+  },
+  "desc": "חולצה בצבע חדש."
+ },
+ "shirt_white": {
+  "id": "shirt_white",
+  "name": "חולצה לבנה",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#f4f4f4",
+  "price": 20,
+  "look": {
+   "shirt": "#f4f4f4"
+  },
+  "desc": "חולצה בצבע חדש."
+ },
+ "shirt_teal": {
+  "id": "shirt_teal",
+  "name": "חולצה טורקיז",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#2fb5b0",
+  "price": 25,
+  "look": {
+   "shirt": "#2fb5b0"
+  },
+  "desc": "חולצה בצבע חדש."
+ },
+ "shirt_stripes": {
+  "id": "shirt_stripes",
+  "name": "חולצת פסים",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#2a4a8a",
+  "price": 35,
+  "look": {
+   "shirt": "#2a4a8a",
+   "stripes": true
+  },
+  "desc": "פסים לבנים על השרוולים."
+ },
+ "shirt_print": {
+  "id": "shirt_print",
+  "name": "חולצה עם הדפס",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#2b2b3a",
+  "price": 40,
+  "look": {
+   "shirt": "#2b2b3a",
+   "print": true
+  },
+  "desc": "הדפס צבעוני על החזה."
+ },
+ "shirt_collar": {
+  "id": "shirt_collar",
+  "name": "חולצה מכופתרת",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#ffffff",
+  "price": 35,
+  "look": {
+   "shirt": "#f2f2f2",
+   "collar": true
+  },
+  "desc": "חולצה אלגנטית עם צווארון."
+ },
+ "shirt_tee": {
+  "id": "shirt_tee",
+  "name": "חולצת טי קצרה",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#e0457b",
+  "price": 30,
+  "look": {
+   "shirt": "#e0457b",
+   "sleeves": "short"
+  },
+  "desc": "שרוול קצר לקיץ."
+ },
+ "shirt_tank": {
+  "id": "shirt_tank",
+  "name": "גופייה",
+  "type": "outfit",
+  "slot": "shirt",
+  "icon": "shirt",
+  "color": "#ffd23f",
+  "price": 25,
+  "look": {
+   "shirt": "#ffd23f",
+   "sleeves": "none"
+  },
+  "desc": "בלי שרוולים, ליום חם."
+ },
+ "pants_jeans": {
+  "id": "pants_jeans",
+  "name": "ג׳ינס",
+  "type": "outfit",
+  "slot": "pants",
+  "icon": "shirt",
+  "color": "#4a6a9a",
+  "price": 25,
+  "look": {
+   "pants": "#4a6a9a",
+   "bottom": "pants"
+  },
+  "desc": "מכנסיים בסגנון חדש."
+ },
+ "pants_black": {
+  "id": "pants_black",
+  "name": "מכנסיים שחורים",
+  "type": "outfit",
+  "slot": "pants",
+  "icon": "shirt",
+  "color": "#1f1f26",
+  "price": 25,
+  "look": {
+   "pants": "#1f1f26",
+   "bottom": "pants"
+  },
+  "desc": "מכנסיים בסגנון חדש."
+ },
+ "pants_khaki": {
+  "id": "pants_khaki",
+  "name": "מכנסי חאקי",
+  "type": "outfit",
+  "slot": "pants",
+  "icon": "shirt",
+  "color": "#b79a62",
+  "price": 25,
+  "look": {
+   "pants": "#b79a62",
+   "bottom": "pants"
+  },
+  "desc": "מכנסיים בסגנון חדש."
+ },
+ "pants_red": {
+  "id": "pants_red",
+  "name": "מכנסיים אדומים",
+  "type": "outfit",
+  "slot": "pants",
+  "icon": "shirt",
+  "color": "#b83a4b",
+  "price": 30,
+  "look": {
+   "pants": "#b83a4b",
+   "bottom": "pants"
+  },
+  "desc": "מכנסיים בסגנון חדש."
+ },
+ "pants_green": {
+  "id": "pants_green",
+  "name": "מכנסיים ירוקים",
+  "type": "outfit",
+  "slot": "pants",
+  "icon": "shirt",
+  "color": "#3f8f5a",
+  "price": 30,
+  "look": {
+   "pants": "#3f8f5a",
+   "bottom": "pants"
+  },
+  "desc": "מכנסיים בסגנון חדש."
+ },
+ "pants_gray": {
+  "id": "pants_gray",
+  "name": "מכנסיים אפורים",
+  "type": "outfit",
+  "slot": "pants",
+  "icon": "shirt",
+  "color": "#6b6b78",
+  "price": 25,
+  "look": {
+   "pants": "#6b6b78",
+   "bottom": "pants"
+  },
+  "desc": "מכנסיים בסגנון חדש."
+ },
+ "skirt_pink": {
+  "id": "skirt_pink",
+  "name": "חצאית ורודה",
+  "type": "outfit",
+  "slot": "pants",
+  "icon": "shirt",
+  "color": "#ff8fb8",
+  "price": 35,
+  "look": {
+   "pants": "#ff8fb8",
+   "bottom": "skirt"
+  },
+  "desc": "חצאית קצרה וחגיגית."
+ },
+ "skirt_long": {
+  "id": "skirt_long",
+  "name": "חצאית ארוכה",
+  "type": "outfit",
+  "slot": "pants",
+  "icon": "shirt",
+  "color": "#3a5a9a",
+  "price": 40,
+  "look": {
+   "pants": "#3a5a9a",
+   "bottom": "longskirt"
+  },
+  "desc": "חצאית ארוכה ואלגנטית."
+ },
+ "shoes_red": {
+  "id": "shoes_red",
+  "name": "נעליים אדומות",
+  "type": "outfit",
+  "slot": "shoes",
+  "icon": "shoe",
+  "color": "#e84b4b",
+  "price": 25,
+  "look": {
+   "shoes": "#e84b4b"
+  },
+  "desc": "נעליים בצבע חדש."
+ },
+ "shoes_blue": {
+  "id": "shoes_blue",
+  "name": "נעליים כחולות",
+  "type": "outfit",
+  "slot": "shoes",
+  "icon": "shoe",
+  "color": "#3a7bd5",
+  "price": 25,
+  "look": {
+   "shoes": "#3a7bd5"
+  },
+  "desc": "נעליים בצבע חדש."
+ },
+ "shoes_white": {
+  "id": "shoes_white",
+  "name": "נעליים לבנות",
+  "type": "outfit",
+  "slot": "shoes",
+  "icon": "shoe",
+  "color": "#f4f4f8",
+  "price": 25,
+  "look": {
+   "shoes": "#f4f4f8"
+  },
+  "desc": "נעליים בצבע חדש."
+ },
+ "shoes_gold": {
+  "id": "shoes_gold",
+  "name": "נעליים זהובות",
+  "type": "outfit",
+  "slot": "shoes",
+  "icon": "shoe",
+  "color": "#e8b33a",
+  "price": 45,
+  "look": {
+   "shoes": "#e8b33a"
+  },
+  "desc": "נעליים בצבע חדש."
+ },
+ "shoes_black": {
+  "id": "shoes_black",
+  "name": "נעליים שחורות",
+  "type": "outfit",
+  "slot": "shoes",
+  "icon": "shoe",
+  "color": "#1c1c24",
+  "price": 20,
+  "look": {
+   "shoes": "#1c1c24"
+  },
+  "desc": "נעליים בצבע חדש."
+ },
+ "shoes_green": {
+  "id": "shoes_green",
+  "name": "נעליים ירוקות",
+  "type": "outfit",
+  "slot": "shoes",
+  "icon": "shoe",
+  "color": "#3fae6b",
+  "price": 25,
+  "look": {
+   "shoes": "#3fae6b"
+  },
+  "desc": "נעליים בצבע חדש."
+ },
+ "hat_blue": {
+  "id": "hat_blue",
+  "name": "כובע כחול",
+  "type": "outfit",
+  "slot": "hat",
+  "icon": "hat",
+  "color": "#3a7bd5",
+  "price": 25,
+  "look": {
+   "hat": "#3a7bd5",
+   "hatStyle": "cap"
+  },
+  "desc": "כיסוי ראש חדש."
+ },
+ "hat_green": {
+  "id": "hat_green",
+  "name": "כובע ירוק",
+  "type": "outfit",
+  "slot": "hat",
+  "icon": "hat",
+  "color": "#3fae6b",
+  "price": 25,
+  "look": {
+   "hat": "#3fae6b",
+   "hatStyle": "cap"
+  },
+  "desc": "כיסוי ראש חדש."
+ },
+ "hat_yellow": {
+  "id": "hat_yellow",
+  "name": "כובע צהוב",
+  "type": "outfit",
+  "slot": "hat",
+  "icon": "hat",
+  "color": "#ffd23f",
+  "price": 25,
+  "look": {
+   "hat": "#ffd23f",
+   "hatStyle": "cap"
+  },
+  "desc": "כיסוי ראש חדש."
+ },
+ "hat_black": {
+  "id": "hat_black",
+  "name": "כובע שחור",
+  "type": "outfit",
+  "slot": "hat",
+  "icon": "hat",
+  "color": "#2a2a35",
+  "price": 25,
+  "look": {
+   "hat": "#2a2a35",
+   "hatStyle": "cap"
+  },
+  "desc": "כיסוי ראש חדש."
+ },
+ "hat_kippah_black": {
+  "id": "hat_kippah_black",
+  "name": "כיפה שחורה",
+  "type": "outfit",
+  "slot": "hat",
+  "icon": "hat",
+  "color": "#1c1c24",
+  "price": 20,
+  "look": {
+   "hat": "#1c1c24",
+   "hatStyle": "kippah"
+  },
+  "desc": "כיסוי ראש חדש."
+ },
+ "hat_kippah_color": {
+  "id": "hat_kippah_color",
+  "name": "כיפה צבעונית",
+  "type": "outfit",
+  "slot": "hat",
+  "icon": "hat",
+  "color": "#ff8a3d",
+  "price": 20,
+  "look": {
+   "hat": "#ff8a3d",
+   "hatStyle": "kippah"
+  },
+  "desc": "כיסוי ראש חדש."
+ },
+ "hat_kippah_white": {
+  "id": "hat_kippah_white",
+  "name": "כיפה לבנה",
+  "type": "outfit",
+  "slot": "hat",
+  "icon": "hat",
+  "color": "#f4f4f4",
+  "price": 20,
+  "look": {
+   "hat": "#f4f4f4",
+   "hatStyle": "kippah"
+  },
+  "desc": "כיסוי ראש חדש."
+ },
+ "hat_scarf_pink": {
+  "id": "hat_scarf_pink",
+  "name": "מטפחת ורודה",
+  "type": "outfit",
+  "slot": "hat",
+  "icon": "hat",
+  "color": "#ff8fb8",
+  "price": 30,
+  "look": {
+   "hat": "#ff8fb8",
+   "hatStyle": "scarf"
+  },
+  "desc": "כיסוי ראש חדש."
+ },
+ "hat_scarf_blue": {
+  "id": "hat_scarf_blue",
+  "name": "מטפחת כחולה",
+  "type": "outfit",
+  "slot": "hat",
+  "icon": "hat",
+  "color": "#3a7bd5",
+  "price": 30,
+  "look": {
+   "hat": "#3a7bd5",
+   "hatStyle": "scarf"
+  },
+  "desc": "כיסוי ראש חדש."
+ },
+ "face_glasses": {
+  "id": "face_glasses",
+  "name": "משקפיים",
+  "type": "outfit",
+  "slot": "face",
+  "icon": "gem",
+  "color": "#20202c",
+  "price": 25,
+  "look": {
+   "accessory": "glasses"
+  },
+  "desc": "משקפיים קלאסיים."
+ },
+ "face_sun": {
+  "id": "face_sun",
+  "name": "משקפי שמש",
+  "type": "outfit",
+  "slot": "face",
+  "icon": "gem",
+  "color": "#0c0c14",
+  "price": 35,
+  "look": {
+   "accessory": "sunglasses"
+  },
+  "desc": "מגניב ושמשי."
+ },
+ "face_round": {
+  "id": "face_round",
+  "name": "משקפיים עגולים",
+  "type": "outfit",
+  "slot": "face",
+  "icon": "gem",
+  "color": "#3a2a1a",
+  "price": 30,
+  "look": {
+   "accessory": "round"
+  },
+  "desc": "מסגרת עגולה."
+ },
+ "face_cat": {
+  "id": "face_cat",
+  "name": "משקפי חתולה",
+  "type": "outfit",
+  "slot": "face",
+  "icon": "gem",
+  "color": "#101014",
+  "price": 35,
+  "look": {
+   "accessory": "catglasses"
+  },
+  "desc": "מסגרת חתולית."
+ },
+ "ear_rings": {
+  "id": "ear_rings",
+  "name": "עגילים",
+  "type": "outfit",
+  "slot": "ear",
+  "icon": "star",
+  "color": "#ffd23f",
+  "price": 30,
+  "look": {
+   "extras": [
+    "earrings"
+   ]
+  },
+  "desc": "עגילי זהב."
+ },
+ "ear_phones": {
+  "id": "ear_phones",
+  "name": "אוזניות",
+  "type": "outfit",
+  "slot": "ear",
+  "icon": "star",
+  "color": "#e84b4b",
+  "price": 45,
+  "look": {
+   "extras": [
+    "headphones"
+   ]
+  },
+  "desc": "אוזניות אדומות."
+ },
+ "neck_chain": {
+  "id": "neck_chain",
+  "name": "שרשרת",
+  "type": "outfit",
+  "slot": "neck",
+  "icon": "star",
+  "color": "#ffd23f",
+  "price": 35,
+  "look": {
+   "extras": [
+    "necklace"
+   ]
+  },
+  "desc": "שרשרת זהב עם אבן כחולה."
+ },
+ "neck_bowtie": {
+  "id": "neck_bowtie",
+  "name": "פפיון",
+  "type": "outfit",
+  "slot": "neck",
+  "icon": "star",
+  "color": "#e84b4b",
+  "price": 25,
+  "look": {
+   "extras": [
+    "bowtie"
+   ]
+  },
+  "desc": "פפיון אלגנטי."
+ },
+ "hold_bag": {
+  "id": "hold_bag",
+  "name": "תיק גב",
+  "type": "outfit",
+  "slot": "hold",
+  "icon": "toy",
+  "color": "#2a2a31",
+  "price": 40,
+  "look": {
+   "bag": true
+  },
+  "desc": "תיק על הכתף."
+ },
+ "hold_book": {
+  "id": "hold_book",
+  "name": "ספר ביד",
+  "type": "outfit",
+  "slot": "hold",
+  "icon": "book",
+  "color": "#d8b64a",
+  "price": 30,
+  "look": {
+   "book": true
+  },
+  "desc": "ספר לקריאה בדרך."
  }
 }

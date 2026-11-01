@@ -11,7 +11,7 @@ import * as Streak from '../systems/streak.js';
 import { sfx, setMusic, setSfx, audioSettings } from '../audio.js';
 import { STR, tpl } from '../i18n.js';
 
-export const hooks = { enterStory: null, teleport: null, ending: null, charChanged: null, resetCooldown: null, newGame: null, continueGame: null, toTitle: null, showHome: null };
+export const hooks = { enterStory: null, teleport: null, ending: null, charChanged: null, resetCooldown: null, newGame: null, continueGame: null, toTitle: null, showHome: null, openWardrobe: null, homeRefresh: null };
 const $ = (id) => document.getElementById(id);
 const el = (tag, cls, html) => { const e = document.createElement(tag); if (cls) e.className = cls; if (html != null) e.innerHTML = html; return e; };
 const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -38,10 +38,6 @@ export function buildHud() {
   hud.appendChild(box);
   const q = el('div', 'hudbox'); q.id = 'hudQuest';
   hud.appendChild(q);
-  const mb = el('button', 'mbtn', STR.menu); mb.onclick = () => { sfx('tap'); openMenu(undefined, false); };
-  hud.appendChild(mb);
-  const hb = el('button', 'mbtn', '🏠'); hb.onclick = () => { sfx('tap'); hooks.showHome?.('path'); };
-  hud.appendChild(hb);
   if (!$('timerBox')) { const tb = el('div', 'hidden'); tb.id = 'timerBox'; $('ui').appendChild(tb); }
   paintIcon($('hudCoin'), 'coin');
   refreshHud();
@@ -215,19 +211,7 @@ function tabBag(body) {
     if (it.type === 'consumable') { const b = el('button', 'btn', STR.bag.use); b.onclick = () => { removeItem(id, 1); if (it.use?.xp) addXp(it.use.xp); if (it.use?.resetCooldown) hooks.resetCooldown?.(); sfx('pickup'); toast(STR.bag.used(it.name)); refreshHud(); openMenu(); }; row.appendChild(b); }
     c.appendChild(row); body.appendChild(c);
   });
-  const owned = S.state.owned.outfits;
-  if (owned.length) {
-    body.appendChild(el('h3', '', STR.bag.outfits));
-    const ch = S.state.activeChar;
-    const none = card(`<div class="row"><span class="grow">${STR.bag.defaultLook}</span></div>`); const nb = el('button', 'btn alt', S.state.equipped[ch] ? STR.bag.wear : STR.bag.worn); nb.disabled = !S.state.equipped[ch];
-    nb.onclick = () => { delete S.state.equipped[ch]; hooks.charChanged?.(); sfx('tap'); openMenu(); }; none.querySelector('.row').appendChild(nb); body.appendChild(none);
-    owned.forEach((id) => {
-      const it = content.items[id]; const c = card(''); const row = el('div', 'row'); row.append(iconCanvas(it));
-      const info = el('div', 'grow', `<b>${esc(it.name)}</b><br><span class="sub">${esc(it.desc || '')}</span>`); row.appendChild(info);
-      const worn = S.state.equipped[ch] === id; const b = el('button', 'btn alt', worn ? STR.bag.worn : STR.bag.wear); b.disabled = worn;
-      b.onclick = () => { S.state.equipped[ch] = id; hooks.charChanged?.(); sfx('pickup'); openMenu(); }; row.appendChild(b); c.appendChild(row); body.appendChild(c);
-    });
-  }
+  { const c = card('<b>👕 בגדים ומראה</b><br><span class="sub">הבגדים והמראה נמצאים בחדר שלי.</span>'); const bt = el('button', 'btn alt', 'לחדר שלי'); bt.onclick = () => { sfx('tap'); hooks.openWardrobe?.('clothes'); }; c.appendChild(bt); body.appendChild(c); }
   const ups = S.state.owned.upgrades;
   if (ups.length) { body.appendChild(el('h3', '', STR.bag.upgrades)); ups.forEach((id) => { const it = content.items[id]; const c = card(''); const row = el('div', 'row'); row.append(iconCanvas(it), el('div', 'grow', `<b>${esc(it.name)}</b><br><span class="sub">${esc(it.desc)}</span>`)); c.appendChild(row); body.appendChild(c); }); }
 }
@@ -314,7 +298,7 @@ export function showReward(title, lines, onClose) {
 function titleHeader(t) {
   const cfg = content.config;
   const banner = el('canvas'); paintTitleBanner(banner, Object.values(content.characters).map((c) => c.look));
-  t.append(banner, el('h1', '', esc(cfg.title)), el('p', '', esc(cfg.tagline)));
+  t.append(banner, el('h1', '', esc(cfg.title)), el('div', 'ribbon', esc(cfg.tagline)));
 }
 /** The streak a saved player would have if they opened the game now (days that passed are applied to a copy). */
 function savedStreak(saved) {
@@ -333,6 +317,7 @@ export function showTitle() {
     const b = el('button', 'pick' + (id === last ? ' last' : '')); const cv = el('canvas'); paintPortrait(cv, c.look);
     b.append(cv, el('span', '', esc(c.name)), el('small', saved ? 'has' : '', saved ? `🔥 ${savedStreak(saved)}` : STR.title.newTag));
     b.dataset.id = id;
+    if (id === last && saved) b.appendChild(el('span', 'badge', 'המשך'));
     b.onclick = async () => {
       try {
         sfx('tap');
@@ -348,12 +333,12 @@ export function showTitle() {
     };
     grid.appendChild(b);
   }
-  t.append(grid, el('p', '', STR.title.pickHelp));
+  t.append(grid, el('p', 'pickNote', STR.title.pickHelp));
   if (cloudEnabled()) {
-    t.appendChild(el('p', 'sub', '☁ ההתקדמות נשמרת גם בענן, כך שהיא חוזרת בכל טלפון (גם אחרי גלישה פרטית).'));
+    t.appendChild(el('p', 'pickNote', '☁ ההתקדמות נשמרת גם בענן, כך שהיא חוזרת בכל טלפון.'));
     syncAllFromCloud().then((n) => { if (n && !$('title').classList.contains('hidden')) showTitle(); });
   }
-  t.appendChild(el('p', '', STR.title.tip));
+  t.appendChild(el('p', 'pickNote', STR.title.tip));
 }
 /** A visible "loading" message over the title screen. */
 function showLoading(text) {

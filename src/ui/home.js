@@ -5,6 +5,7 @@ import { paintPortrait, paintIcon } from '../art.js';
 import * as Q from '../systems/quests.js';
 import * as Streak from '../systems/streak.js';
 import * as UI from './ui.js';
+import * as Wardrobe from './wardrobe.js';
 import { sfx } from '../audio.js';
 import { tpl } from '../i18n.js';
 
@@ -15,33 +16,45 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&l
 const TABS = [['path', '🏠', 'מסלול'], ['game', '🎮', 'משחק'], ['board', '🏆', 'דירוג'], ['shop', '🛒', 'חנות'], ['more', '⚙️', 'עוד']];
 let tab = 'path', boardSort = 'streak', boardCache = null;
 
-export const isOpen = () => !!$('home') && !$('home').classList.contains('hidden');
-export function hide() { const h = $('home'); if (h) h.classList.add('hidden'); }
+export const isOpen = () => !!$('home') && !$('home').classList.contains('hidden') && !$('home').classList.contains('inGame');
+/** The tab bar is part of the game too: in play mode only the bar stays on screen. */
+function setNav(on) { $('ui').classList.toggle('hasNav', on); }
+export function hide() { const h = $('home'); if (h) { h.classList.remove('hidden'); renderBar(h); } }
+/** Leaves the home screen completely (back to the player picker). */
+export function off() { const h = $('home'); if (h) h.classList.add('hidden'); setNav(false); }
 export function show(t) {
   let h = $('home');
   if (!h) { h = el('div', 'hidden'); h.id = 'home'; $('ui').insertBefore(h, $('panel')); }
   if (t) tab = t;
-  h.classList.remove('hidden'); UI.closePanel?.(); render();
+  h.classList.remove('hidden', 'inGame'); UI.closePanel?.(); setNav(true); render();
 }
 export const refresh = () => { if (isOpen()) render(); };
 
-function render() {
-  if (tab === 'game') { hide(); return; }
-  const h = $('home'); h.innerHTML = '';
-  const st = S.state, s = Streak.info();
-  const head = el('div', 'hHead');
-  head.innerHTML = `<div class="hChip fire"><span>🔥</span><b>${s.count}</b></div><div class="hChip ice"><span>❄️</span><b>${s.freezes}</b></div><div class="hChip coin"><canvas id="hCoin" width="16" height="16"></canvas><b>${st.coins}</b></div><span class="grow"></span><canvas id="hFace" width="16" height="16"></canvas>`;
-  h.appendChild(head);
-  paintIcon(head.querySelector('#hCoin'), 'coin'); paintPortrait(head.querySelector('#hFace'), equippedLook(st.activeChar));
-  const body = el('div', 'hBody'); h.appendChild(body);
-  ({ path: tabPath, board: tabBoard, shop: tabShop, more: tabMore })[tab](body);
+function navBar() {
   const nav = el('div', 'hNav');
   TABS.forEach(([k, ico, label]) => {
     const b = el('button', 'hTab' + (tab === k ? ' on' : ''), `<span>${ico}</span><small>${label}</small>`);
     b.onclick = () => { sfx('tap'); tab = k; render(); };
     nav.appendChild(b);
   });
-  h.appendChild(nav);
+  return nav;
+}
+/** Play mode: transparent screen, only the bottom tab bar is shown. */
+function renderBar(h) { h.innerHTML = ''; h.classList.add('inGame'); setNav(true); h.appendChild(navBar()); }
+
+function render() {
+  const h = $('home');
+  if (tab === 'game') { UI.closePanel?.(); renderBar(h); return; }
+  h.classList.remove('inGame'); h.innerHTML = '';
+  const st = S.state, s = Streak.info();
+  const head = el('div', 'hHead');
+  head.innerHTML = `<div class="hChip fire"><span>🔥</span><b>${s.count}</b></div><div class="hChip ice"><span>❄️</span><b>${s.freezes}</b></div><div class="hChip coin"><canvas id="hCoin" width="16" height="16"></canvas><b>${st.coins}</b></div><span class="grow"></span><button class="hFaceBtn" aria-label="שינוי מראה"><canvas id="hFace" width="16" height="16"></canvas></button>`;
+  head.querySelector('.hFaceBtn').onclick = () => { sfx('tap'); Wardrobe.open('look'); };
+  h.appendChild(head);
+  paintIcon(head.querySelector('#hCoin'), 'coin'); paintPortrait(head.querySelector('#hFace'), equippedLook(st.activeChar));
+  const body = el('div', 'hBody'); h.appendChild(body);
+  ({ path: tabPath, board: tabBoard, shop: tabShop, more: tabMore })[tab](body);
+  h.appendChild(navBar());
 }
 
 function modal(inner, buttons) {
@@ -108,7 +121,7 @@ function tabBoard(body) {
     if (!all.length) list.appendChild(el('div', 'hNote wait', 'אין עדיין נתונים. משחקים והדירוג יתמלא!'));
     all.forEach((r, i) => {
       const row = el('div', 'hLine' + (r.char === S.state.activeChar ? ' me' : ''));
-      const cv = el('canvas'); cv.width = 16; cv.height = 16; paintPortrait(cv, content.characters[r.char].look);
+      const cv = el('canvas'); cv.width = 16; cv.height = 16; paintPortrait(cv, r.char === S.state.activeChar ? equippedLook(r.char) : (r.look || content.characters[r.char].look));
       row.append(el('span', 'hRank', ['🥇', '🥈', '🥉'][i] || String(i + 1)), cv, el('span', 'grow hName', esc(content.characters[r.char].name)),
         el('b', 'hVal', boardSort === 'streak' ? `🔥 ${r.count || 0}` : `◎ ${r.coins || 0}`));
       list.appendChild(row);
@@ -141,10 +154,14 @@ function tabShop(body) {
 
 // ------------------------------------------------------------------ more
 function tabMore(body) {
-  const items = [['settings', '⚙️', 'הגדרות ושמירה'], ['awards', '🏅', 'הישגים'], ['album', '📖', 'אלבום זיכרונות'], ['bag', '🎒', 'תיק ולבוש']];
+  const items = [['quests', '📜', 'משימות ובחירת השלב הבא'], ['settings', '⚙️', 'הגדרות ושמירה'], ['awards', '🏅', 'הישגים'], ['album', '📖', 'אלבום זיכרונות'], ['bag', '🎒', 'תיק ולבוש']];
   items.forEach(([k, ico, label]) => { const b = el('button', 'hMenu', `<span>${ico}</span><b>${label}</b>`); b.onclick = () => { sfx('tap'); UI.openMenu(k, true); }; body.appendChild(b); });
-  const out = el('button', 'hMenu', '<span>🚪</span><b>החלפת שחקן / מסך פתיחה</b>'); out.onclick = () => { hide(); saveGame(); UI.hooks.toTitle?.(); }; body.appendChild(out);
+  const wr = el('button', 'hMenu', '<span>👕</span><b>החדר שלי: מראה ובגדים</b>'); wr.onclick = () => { sfx('tap'); Wardrobe.open('clothes'); }; body.insertBefore(wr, body.firstChild);
+  const out = el('button', 'hMenu', '<span>🚪</span><b>החלפת שחקן / מסך פתיחה</b>'); out.onclick = () => { off(); saveGame(); UI.hooks.toTitle?.(); }; body.appendChild(out);
 }
+
+UI.hooks.homeRefresh = () => refresh();
+UI.hooks.openWardrobe = (t) => Wardrobe.open(t);
 
 // ------------------------------------------------------------------ streak events
 onChange((type, data) => {

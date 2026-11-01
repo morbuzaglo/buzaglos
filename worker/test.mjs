@@ -58,6 +58,9 @@ r = await call('/api/streak/' + K, { method: 'PUT', body: { char: 'eden', name: 
 t('streak PUT stores the mirror', r.status === 200 && rec.count === 12);
 r = await call('/api/streak/buzaglosfam-vabc12345', { method: 'PUT', body: { char: 'visitor', count: 5 } }); t('streak: guest keys rejected', r.status === 400);
 r = await call('/api/leaderboard'); let lb = await r.json(); t('leaderboard lists players', lb.players.length === 1 && lb.players[0].count === 12 && lb.players[0].coins === 50);
+r = await call('/api/streak/' + K, { method: 'PUT', body: { char: 'eden', name: 'עדן', coins: 50, level: 2, shards: 3, count: 12, best: 12, freezes: 1, lastDay: '2026-11-03', lost: null, appliedSeq: 0, look: { skin: '#f1c9a0', shirt: '#e84b4b', extras: ['earrings'], evil: { x: 1 }, 'bad key!': 'x' } } }); rec = await r.json();
+t('look is stored and sanitised', rec.look.shirt === '#e84b4b' && rec.look.extras[0] === 'earrings' && !rec.look.evil && !rec.look['bad key!']);
+r = await call('/api/leaderboard'); lb = await r.json(); t('leaderboard carries the look', lb.players[0].look?.skin === '#f1c9a0');
 r = await call('/api/admin/streaks'); t('admin streaks needs a token', r.status === 401);
 r = await call('/api/streak/' + K, { method: 'PUT', body: { char: 'eden', name: 'עדן', coins: 60, level: 2, shards: 3, count: 0, best: 12, freezes: 0, lastDay: null, lost: { count: 12, day: '2026-11-09', freezes: 0 }, appliedSeq: 0 } }); rec = await r.json();
 t('streak loss is recorded', rec.count === 0 && rec.lost.count === 12);

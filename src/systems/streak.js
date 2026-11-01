@@ -2,7 +2,7 @@
 // A day only counts as "missed" if the player really had a stage waiting that day (a stage is stamped with the day it was added).
 // So if no new stage is published, nobody loses a freeze or the streak.
 import { content } from '../content.js';
-import { S, emit, saveGame, getCloudCode, cloudEnabled } from '../state.js';
+import { S, emit, saveGame, getCloudCode, cloudEnabled, equippedLook } from '../state.js';
 
 export const FREEZE_PRICE = 60;          // coins
 export const FREEZE_MAX = 2;             // freezes a player can hold
@@ -91,7 +91,7 @@ let timer = null;
 export function pushSoon() { if (!syncOn()) return; clearTimeout(timer); timer = setTimeout(() => sync(), 1500); }
 function summary() {
   const s = ensure(), c = content.characters[S.state.activeChar] || {};
-  return { char: S.state.activeChar, name: c.name || S.state.activeChar, coins: S.state.coins, level: S.state.level, shards: S.state.shards.length, ...s };
+  return { char: S.state.activeChar, name: c.name || S.state.activeChar, coins: S.state.coins, level: S.state.level, shards: S.state.shards.length, look: equippedLook(S.state.activeChar), ...s };
 }
 /** Applies what the admin decided (restore / set) when the server has a newer instruction. */
 function applyOverride(o) {

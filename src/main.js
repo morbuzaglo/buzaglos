@@ -78,7 +78,7 @@ function boot() {
     Streak.start().then(() => { UI.refreshHud(); Home.refresh(); }); Home.show('path');
   };
   UI.hooks.showHome = (t) => Home.show(t);
-  UI.hooks.toTitle = () => { Home.hide(); S.started = false; stopMusic(); showGameChrome(false); if (world) world.busy = true; UI.showTitle(); };
+  UI.hooks.toTitle = () => { Home.off(); S.started = false; stopMusic(); showGameChrome(false); if (world) world.busy = true; UI.showTitle(); };
 
   // register the service worker (offline play + installable PWA)
   if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {

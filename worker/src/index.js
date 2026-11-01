@@ -184,10 +184,22 @@ function keepAlive(h, job) {
 const num = (v, max = 1e9) => Math.max(0, Math.min(max, Math.floor(Number(v) || 0)));
 const streakKey = (k) => 'streak:' + k;
 const validStreakKey = (k) => /^buzaglosfam-[A-Za-z0-9_-]{2,40}$/.test(k) && !/^buzaglosfam-v/.test(k);
+/** A player's look, reduced to the plain values the pixel-character drawer understands. */
+function cleanLook(l) {
+  if (!l || typeof l !== 'object') return null;
+  const out = {};
+  for (const [k, v] of Object.entries(l)) {
+    if (!/^[a-zA-Z]{2,12}$/.test(k)) continue;
+    if (typeof v === 'string' && v.length <= 24) out[k] = v;
+    else if (typeof v === 'boolean') out[k] = v;
+    else if (Array.isArray(v) && v.length <= 8 && v.every((x) => typeof x === 'string' && x.length <= 16)) out[k] = v;
+  }
+  return Object.keys(out).length ? out : null;
+}
 async function putStreak(env, key, b) {
   const ex = (await env.SAVES.get(streakKey(key), 'json')) || {};
   const pending = ex.override && ex.override.seq > num(b.appliedSeq);          // the admin changed something this phone has not applied yet
-  const live = { char: String(b.char || '').slice(0, 40), name: String(b.name || '').slice(0, 30), coins: num(b.coins), level: num(b.level, 999), shards: num(b.shards, 999) };
+  const live = { look: cleanLook(b.look) || ex.look || null, char: String(b.char || '').slice(0, 40), name: String(b.name || '').slice(0, 30), coins: num(b.coins), level: num(b.level, 999), shards: num(b.shards, 999) };
   const rec = pending ? { ...ex, ...live } : { ...ex, ...live, count: num(b.count, 100000), best: num(b.best, 100000), freezes: num(b.freezes, 50), lastDay: /^\d{4}-\d\d-\d\d$/.test(b.lastDay || '') ? b.lastDay : null, lost: b.lost && typeof b.lost === 'object' ? { count: num(b.lost.count, 100000), day: String(b.lost.day || '').slice(0, 10), freezes: num(b.lost.freezes, 50), restored: !!b.lost.restored } : ex.lost || null, appliedSeq: num(b.appliedSeq) };
   rec.updatedAt = Date.now();
   await env.SAVES.put(streakKey(key), JSON.stringify(rec));
@@ -250,7 +262,7 @@ export default {
       if (path === '/api/leaderboard' && env.SAVES) {
         if (!(await rateLimit(env, req, 'board', 600, 3600))) return json({ error: 'rate limit' }, 429, h);
         const all = await allStreaks(env);
-        return json({ players: all.map((p) => ({ char: p.char, name: p.name, coins: p.coins, level: p.level, shards: p.shards, count: p.count || 0, best: p.best || 0 })) }, 200, h);
+        return json({ players: all.map((p) => ({ char: p.char, name: p.name, coins: p.coins, level: p.level, shards: p.shards, look: p.look || null, count: p.count || 0, best: p.best || 0 })) }, 200, h);
       }
       const sm = /^\/api\/save\/([A-Za-z0-9_-]{8,40})$/.exec(path);
       if (sm && env.SAVES) {

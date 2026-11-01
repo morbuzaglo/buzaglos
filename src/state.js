@@ -13,7 +13,9 @@ export function newState() {
     coins: cfg.startCoins, xp: 0, level: 1,
     inv: {}, flags: { ...(cfg.startFlags || {}) }, quests: {}, shards: [], achievements: [], collected: {},
     owned: { outfits: [], upgrades: [] },
-    equipped: {},               // charId -> outfit item id
+    equipped: {},               // (old saves) charId -> outfit item id; moved into `wear` on load
+    wear: {},                   // charId -> { slot: outfit item id }  (clothes the player put on)
+    custom: {},                 // charId -> own appearance choices { skin, hair, hairStyle, eyes, beard }
     stats: { steps: 0, talks: 0, minigames: 0, coinsEarned: 0, abilityUses: 0, purchases: 0 },
     unlockedChars: [...cfg.startChars],
     settings: { music: true, sfx: true },
@@ -66,6 +68,7 @@ function migrate(saved) {
   const base = newState();
   const merged = { ...base, ...saved, stats: { ...base.stats, ...saved.stats }, settings: { ...base.settings, ...saved.settings }, owned: { ...base.owned, ...saved.owned }, streak: { ...base.streak, ...saved.streak } };
   if (!content.characters[merged.activeChar]) merged.activeChar = base.activeChar;
+  migrateWear(merged);
   // a quest that gained steps since the save was written: move the saved step along so progress is never lost or repeated
   for (const [qid, st] of Object.entries(merged.quests || {})) {
     const q = content.quests[qid]; if (!q || st.state !== 'active' || (st.rev || 0) >= (q.rev || 0)) continue;
@@ -120,10 +123,34 @@ export function removeItem(id, n = 1) {
 export function setFlag(key, value = true) { S.state.flags[key] = value; emit('flag', key); checkAchievements(); }
 export const getFlag = (key) => S.state.flags[key];
 
+export const WEAR_SLOTS = ['shirt', 'pants', 'shoes', 'hat', 'face', 'ear', 'neck', 'hold'];
+/** Moves an old single `equipped` outfit into the new per-slot `wear` map. */
+export function migrateWear(st) {
+  st.wear ||= {}; st.custom ||= {};
+  for (const [ch, id] of Object.entries(st.equipped || {})) {
+    const it = content.items[id]; if (!it) continue;
+    const slot = it.slot || (it.look?.hat ? 'hat' : 'shirt');
+    (st.wear[ch] ||= {})[slot] ||= id;
+  }
+  st.equipped = {};
+}
+/** The character's own look (their profile + the player's appearance choices), with the clothes they wear on top. */
 export function equippedLook(charId) {
-  const base = content.characters[charId]?.look || {};
-  const outfit = content.items[S.state.equipped[charId]];
-  return outfit ? { ...base, ...outfit.look } : base;
+  const st = S.state, c = (st.custom || {})[charId] || {}, wear = (st.wear || {})[charId] || {};
+  let look = { ...(content.characters[charId]?.look || {}) };
+  for (const k of ['skin', 'hair', 'hairStyle', 'eyes']) if (c[k]) look[k] = c[k];
+  if (c.hairStyle === 'bald') look.hairStyle = 'bald';
+  const extras = [...(look.extras || [])];
+  for (const slot of WEAR_SLOTS) {
+    const it = content.items[wear[slot]]; if (!it) continue;
+    const { extras: ex, ...rest } = it.look || {};
+    look = { ...look, ...rest }; if (ex) extras.push(...ex);
+  }
+  const glasses = look.accessory === 'glasses' || look.accessory === 'both', hasBeard = look.accessory === 'beard' || look.accessory === 'both';
+  if (c.beard === true && !hasBeard) look.accessory = glasses ? 'both' : (look.accessory === 'none' || !look.accessory ? 'beard' : look.accessory);
+  if (c.beard === false && hasBeard) look.accessory = glasses ? 'glasses' : 'none';
+  if (extras.length) look.extras = [...new Set(extras)]; else delete look.extras;
+  return look;
 }
 
 export function buy(itemId) {
