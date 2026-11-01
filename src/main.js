@@ -88,7 +88,7 @@ function boot() {
     if (w && !closed) {
       closed = true; if (S.started) saveGame(); pauseAudio(); game.pause();
       const o = document.createElement('div'); o.id = 'shabbat';
-      o.innerHTML = `<div class="shCandles">🕯️ 🕯️</div><h1>${w.holiday ? 'חג שמח' : 'שבת שלום'}</h1><p>המשחק סגור בשבתות ובחגים, מכניסת ${w.holiday ? 'החג' : 'השבת'} ועד צאתו${w.holiday ? '' : 'ה'}.</p><p class="shTime">ייפתח שוב ${w.holiday ? 'במוצאי החג' : 'במוצאי שבת'}<br><b>${Shabbat.clock(w.to)}</b></p><p class="shSmall">זמנים לפי ${Shabbat.place().startsWith('Jerusalem') ? 'ירושלים' : Shabbat.place().replace(', Israel', '')}. ${w.holiday ? 'חג שמח ומבורך!' : 'שבת שלום ומבורך!'}</p>`;
+      o.innerHTML = `<div class="shCandles">🕯️ 🕯️</div><h1>${w.holiday ? 'חג שמח' : 'שבת שלום'}</h1><p>המשחק סגור בשבתות ובחגים, מכניסת ${w.holiday ? 'החג' : 'השבת'} ועד צאתו${w.holiday ? '' : 'ה'}.</p><p class="shTime">ייפתח שוב ${w.holiday ? 'במוצאי החג' : 'במוצאי שבת'}<br><b>${Shabbat.clock(w.to)}</b></p><p class="shSmall">זמנים לפי ${Shabbat.place().startsWith('Ramat Gan') ? 'רמת גן' : Shabbat.place().startsWith('Jerusalem') ? 'ירושלים' : Shabbat.place().replace(', Israel', '')}. ${w.holiday ? 'חג שמח ומבורך!' : 'שבת שלום ומבורך!'}</p>`;
       document.body.appendChild(o);
     } else if (!w && closed) { closed = false; box?.remove(); game.resume(); resumeAudio(); }
   };
